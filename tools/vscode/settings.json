@@ -1,0 +1,147 @@
+// To have some extension working, do not forget to update your system PATH:
+// %APPS_ROOT%/PortableApps/PortableGit/bin;%APPS_ROOT%/home/.venv/3.1.0;%APPS_ROOT%/home/.venv/3.1.0/Scripts
+{
+  // Git
+  "git.path": "%APPS_ROOT%/PortableApps/PortableGit/bin/git.exe",
+
+  // Python
+  "python.pythonPath": "%APPS_ROOT%/home/.venv/3.8.1/Scripts/python.exe",
+
+  // VSCode
+  "extensions.autoUpdate": false,
+
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.associations": {
+    "*.snap": "log",
+    "*.md": "markdown"
+  },
+  "files.exclude": {
+    "build": true,
+    "**/*.pyc": true
+  },
+
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[log]": {
+    "files.trimTrailingWhitespace": false,
+    "editor.formatOnSave": false
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python",
+    "editor.formatOnSave": true
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "shakram02.bash-beautify",
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  "workbench.colorTheme": "Visual Studio Dark",
+
+  // Prettier
+  "prettier.bracketSpacing": true,
+  "prettier.endOfLine": "lf",
+  "prettier.htmlWhitespaceSensitivity": "css",
+  "prettier.insertPragma": false,
+  "prettier.jsxBracketSameLine": false,
+  "prettier.jsxSingleQuote": false,
+  "prettier.printWidth": 140,
+  "prettier.proseWrap": "preserve",
+  "prettier.quoteProps": "as-needed",
+  "prettier.requirePragma": false,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.tabWidth": 2,
+  "prettier.trailingComma": "all",
+  "prettier.useTabs": false,
+  "prettier.vueIndentScriptAndStyle": false,
+
+  // Python
+  "python.formatting.provider": "autopep8",
+  "python.formatting.autopep8Args": ["--indent-size=2 --max-line-length=140"],
+  "python.linting.enabled": true,
+  "python.linting.lintOnSave": true,
+
+  // Javascript
+  "javascript.preferences.quoteStyle": "single",
+
+  // Bash Beautify
+  "bashBeautify.tabSize": 2,
+
+  // Git blame
+  "gitblame.infoMessageFormat": "${author.name} (${time.ago}): ${commit.summary}",
+  "gitblame.statusBarMessageFormat": "${commit.hash_short,6} ${author.name} (${time.ago}): ${commit.summary}",
+
+  // Terminal
+  "terminal.integrated.shell.windows": "%APPS_ROOT%/PortableApps/PortableGit/bin/bash.exe",
+  "terminal.integrated.shellArgs.windows": ["--init-file", "%APPS_ROOT%/home/.bashrc"],
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.scrollback": 10000,
+
+  // Shell launcher for several terminal configuration
+  "shellLauncher.shells.windows": [
+    {
+      "shell": "C:\\windows\\System32\\cmd.exe",
+      "label": "cmd"
+    },
+    {
+      "shell": "C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "label": "PowerShell"
+    },
+    {
+      "shell": "%APPS_ROOT%/PortableApps/PortableGit/bin/bash.exe",
+      "args": ["--init-file", "%APPS_ROOT%/home/.bashrc"],
+      "label": "Git_bash"
+    },
+    {
+      "shell": "%APPS_ROOT%/PortableApps/PuTTYPortable/App/putty/PUTTY.EXE",
+      "args": ["-load", "config_name", "-t"],
+      "label": "putty"
+    }
+  ],
+
+  "cmake.cmakePath": "%APPS_ROOT%/PortableApps/CommonFiles/cmake-3.10.1-win64-x64/bin/cmake.exe",
+  /*"cmake.mingwSearchDirs": [
+        "%APPS_ROOT%/PortableApps/CommonFiles/gcc/x64/x86_64-w64-mingw32",
+        "%APPS_ROOT%/PortableApps/CommonFiles/gcc/x64/bin",
+        "%APPS_ROOT%/PortableApps/GitPortable/App/Git/mingw32"
+    ],*/
+  /*"cmake.preferredGenerators": [
+        "Unix Makefiles"
+    ],*/
+  "cmake.configureSettings": {
+    "CMAKE_MAKE_PROGRAM": "%APPS_ROOT%/PortableApps/CommonFiles/gcc/x64/bin/make.exe",
+    "CMAKE_GENERATOR": "Unix Makefiles"
+  },
+  //"cmake.generator": "Unix Makefiles",
+  "cmake.buildDirectory": "${workspaceRoot}/build",
+  "cmake.useCMakeServer": false,
+  //"cmake-tools-helper.cmake_download_path": "%APPS_ROOT%/PortableApps/CommonFiles/cmake-3.10.1-win64-x64",
+  "C_Cpp.intelliSenseEngine": "Default"
+}

@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "lfurzewaddock.vscode-wsl-workspacefolder", // WSL extensions
+    "esbenp.prettier-vscode", // Prettier
+    "davidanson.vscode-markdownlint", // Markdown linter
+    "ms-vscode.notepadplusplus-keybindings", // Notepad++ keymap binding
+    "shakram02.bash-beautify", // Bash prettifier
+    "dbaeumer.vscode-eslint",
+    "MS-vsliveshare.vsliveshare",
+    "bierner.markdown-preview-github-styles", // Markdown Github view style
+    "waderyan.gitblame", // Git blame
+    "msjsdiag.debugger-for-chrome",
+    "firefox-devtools.vscode-firefox-debug",
+    "dzannotti.vscode-babel-coloring",
+    "ms-vscode.powershell", // PowerShell
+    "tyriar.shell-launcher", // Multi shell
+    "ms-python.python" // Python
+  ]
+}

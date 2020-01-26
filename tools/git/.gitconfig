@@ -1,0 +1,125 @@
+# Check config here https://git-scm.com/docs/git-config to know how to configure all the sections
+# eg. look for core.pager if you want to know about pager option of [core] section
+# eg. look for color.ui if you want to know about ui option of [color] section
+
+# colors can be: normal, black, red, green, yellow, blue, magenta, cyan or white
+# attributes can be: bold, dim, ul, blink, reverse, italic, or strike
+# or also the negative: nobold, nodim, noul, noblink, noreverse, noitalic, or nostrike
+
+[color]
+  ui = true
+
+[color "status"]
+  added = bold yellow
+  changed = green
+  untracked = cyan
+
+[color "branch"]
+  current = blink ul reverse white
+  local = yellow
+  remote = cyan
+
+[color "diff"]
+  meta = blue black bold
+
+[core]
+  pager = less -FRSX
+  symlinks = false
+  autocrlf = input
+  whitespace = trailing-space,-space-before-tab,tab-in-indent,cr-at-eol
+  longpaths = true
+
+[rebase]
+  autosquash = true
+
+[push]
+    default = upstream
+
+[alias]
+  st = status
+  co = checkout
+  addu = add -u
+  gitv = !vi .git/config
+
+  ## LS
+  ls = ls-files
+  lsu = ls-files -o # list untracked files
+
+  ## REMOTE REPOSITORIES
+  upstream = remote add upstream # git upstream <repo_url> --> add upstream repo
+  origin = remote set-url # git origin <repo_url> --> change origin repo
+
+  # FETCH/PULL
+  fetchu = fetch upstream # fetch from upstream (only retrieve the list of commits, refs, etc.)
+  pullr = pull --rebase # pull and rebase your change on top
+  pullu = !git pull upstream $(git brcurrent) # pull from upstream (really apply the commits retrieved from upstream)
+  pullur = !git pull upstream $(git brcurrent) --rebase # pull from upsrteam and rebase your change on top of it
+  rebaseu = !git rebase upstream/$(git brcurrent) $(git brcurrent) # rebase from upstream
+  rebasea = rebase --abort # abort rebase
+  rebasec = rebase --continue # continue rebase
+  pushf = push -f # force push (useful when using git ca)
+  pushu = !git push upstream $(git brcurrent) # push to upstream
+  pushuf = !git push -f upstream $(git brcurrent) # push to upstream
+
+  ## BRANCH
+  brcurrent = !git symbolic-ref --short HEAD # gives current branch
+  br = branch -vv # verbose display of local branches
+  bra = branch -vva # verbose display of all branches
+  # git brn <branch_name> --> create branch locally and push it to origin
+  brn = "!(test $# -eq 1 && git checkout -b $1 && git push -u origin $1) || echo -e 'Please specify the name of the branch to create.\nUsage: git brn <branch_name>\nDescription: create <branch_name> locally and push it to origin/<branch_name>\neg.: git brn feature'"
+  brc = checkout --track # git brc origin/<branch_name> --> checkout remote branch and track it
+  brd = branch -D # git brd <branch_name> [<branch_name> ...] --> delete given branches from local
+  brdo = push origin --delete # git brdo <branch_name> [<branch_name> ...] --> delete given remote branches from origin
+  brdu = push upstream --delete # git brdu <branch_name> [<branch_name> ...] --> delete given remote branches from upstream
+  bro = !git remotebr origin # list origin branches
+  bru = !git remotebr upstream # list upstream branches
+
+  ## COMMIT
+  ci = commit -m
+  cav = commit -a -v -m # automatically add all modified files in the commit
+  ca = commit --amend --no-edit # append to the previous commit
+
+  ## RESET COMMITS
+  resets= !nb=$1 && shift && git reset --soft HEAD~$nb # git resets x --> softly remove x commits
+  reseth = !nb=$1 && shift && git reset --hard HEAD~$nb # git reseth x --> remove x commits
+  rmc = !commit=$1 && shift && git rebase --onto $commit^ $commit # git rmc c96d2c8 --> remove commit c96d2c8
+  #git rebase --onto HEAD~1^ HEAD~1 --> remove second commit
+  rebasei = !nb=$1 && shift && git rebase -i HEAD~$nb # git rebasei x --> interactively manage x last commits
+
+  # RESET BRANCH
+  resetbo = !git reset --hard origin/$(git brcurrent)
+  resetbu = !git reset --hard upstream/$(git brcurrent)
+
+  ## DIFF
+  df = diff
+  dc = diff --cached # diff of added modif
+  dw = diff --word-diff --color-words
+  dis = diff --ignore-all-space
+
+  ## LOG
+  lg = !git log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
+  lg5 = !git --no-pager lg -5 && echo # limit to 5 commits
+  lg10 = !git --no-pager lg -10 && echo # limit to 10 commits
+  lg20 = !git --no-pager lg -20 && echo # limit to 20 commits
+  lga = !git lg --all  # full all branches log
+  lga5 = !git --no-pager lga -5 && echo # limit to 5 commits
+  lga10 = !git --no-pager lga -10 && echo # limit to 10 commits
+  lga20 = !git --no-pager lga -20 && echo  # limit to 20 commits
+  lgl   = !echo "Local changes not in origin/$(git brcurrent)" && git lg origin/$(git brcurrent)..HEAD # Local changes compared to origin
+  lglu  = !git hasupstream && echo "Local changes not in upstream/$(git brcurrent)" && git lg upstream/$(git brcurrent)..HEAD # Local changes compared to upstream
+  lgr   = !echo "Remote changes from origin/$(git brcurrent)" && git lg HEAD..origin/$(git brcurrent) # Changes from origin
+  lgru  = !git hasupstream && echo "Remote changes from upstream/$(git brcurrent)" && git lg HEAD..upstream/$(git brcurrent)  # Changes from upstream
+  lgb   = !branch=$1 && shift && git hasbranch $branch && echo "Changes in $branch not in HEAD" && git lg HEAD..$branch # Changes from given local branch to HEAD
+  lgbh  = !branch=$1 && shift && git hasbranch $branch && echo "Changes in HEAD not in $branch" && git lg $branch..HEAD # Changes from HEAD to given local branch
+  lgbl  = !branch=$1 && shift && git hasbrancho $branch && echo "Changes in origin/$branch not in HEAD" && git lg HEAD..origin/$branch # Changes from given origin branch to HEAD
+  lgbr  = !branch=$1 && shift && git hasbrancho $branch && echo "Changes in HEAD not in origin/$branch" && git lg origin/$branch..HEAD # Changes from HEAD to given origin branch
+  lgblu = !git hasupstream && branch=$1 && shift && git hasbranchu $branch && echo "Changes in upstream/$branch not in HEAD" && git lg HEAD..upstream/$branch # Changes from given upstream branch to HEAD
+  lgbru = !git hasupstream && branch=$1 && shift && git hasbranchu $branch && echo "Changes in HEAD not in upstream/$branch" && git lg upstream/$branch..HEAD # Changes from HEAD to given upstream branch
+
+  ## TOOLS
+  remotebr = !repo=$1 && (shift || (echo "remotebr needs the remote repo" >&2 && exit 1)) && shift && git ls-remote --heads $repo | tr '[[:space:]]' '\n' | grep refs/heads | cut -d'/' -f3 # List remote branch
+  hasupstream = !test $(git remote | grep -cE '^upstream$') -eq 1 || (echo "You need to setup the upstream" >&2 && exit 1) # Check if upstream is set
+  hasbranch = !branch=$1 && shift 1 && test $(git branch --list | tr '[:space:]' '\n' | grep -cE "^$branch$") -eq 1 || (echo "Branch $branch does not exist" && exit 1) || shift 666 # Check if local branch exist
+  hasremotebranch = !repo=$1 && branch=$2 && shift 2 && test $(git remotebr $repo | grep -cE "^$branch$") -eq 1 || (echo "Branch $repo/$branch does not exist" && exit 1) || shift 666 # Check if remote branch exist
+  hasbrancho = !branch=$1 && shift 1 && git hasremotebranch origin $branch # Check if branch from origin exist
+  hasbranchu = !branch=$1 && shift 1 && git hasremotebranch upstream $branch # Check if branch from upstream exist

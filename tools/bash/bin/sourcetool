@@ -1,0 +1,21 @@
+#! /bin/sh
+
+SOURCETOOL_SCRIPT=${BASH_SOURCE[0]}
+if [ -z "$SOURCETOOL_SCRIPT" ] || [ "$SOURCETOOL_SCRIPT" = "bash" ]; then
+  SOURCETOOL_SCRIPT=$0
+fi
+SOURCETOOL_ROOT=$(dirname $(readlink -f "${SOURCETOOL_SCRIPT}"))
+
+SOURCETOOL_BIN=${SOURCETOOL_ROOT}/bin
+if [ ! -z "$1" ]; then
+  SOURCETOOL_BIN=$1
+fi
+
+mkdir -p "${SOURCETOOL_BIN}"
+
+"${SOURCETOOL_ROOT}/toolupdatelink.sh" "${SOURCETOOL_BIN}" > /dev/null
+
+if ! echo ${PATH} | grep -E -q "(^|:)${SOURCETOOL_BIN}(\$|:)"; then
+  export PATH=${PATH}:${SOURCETOOL_BIN}
+fi
+

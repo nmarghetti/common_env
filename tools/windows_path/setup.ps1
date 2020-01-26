@@ -1,0 +1,1 @@
+Set-ItemProperty -path HKCU:\Environment\ -Name Path -Value "%WIN_APPS_ROOT%\PortableApps\PortableGit\bin;%WIN_APPS_ROOT%\home\.venv\3.8.1;%WIN_APPS_ROOT%\home\.venv\3.8.1\Scripts;$((Get-ItemProperty -path HKCU:\Environment\ -Name Path).Path)"
