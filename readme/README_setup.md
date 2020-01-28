@@ -39,8 +39,10 @@ git clone https://github.com/nmarghetti/common_env.git "${APPS_ROOT}/Documents/d
 
 It will install and configure the following tools:
 
-- Visual Studio Code [portable](https://code.visualstudio.com/docs/editor/portable) version [1.41.1](https://code.visualstudio.com/download) (64 bit).
+- Visual Studio Code [portable](https://code.visualstudio.com/docs/editor/portable) 64 bit version [1.41.1](https://code.visualstudio.com/download).
 - Python 64 bit version [3.8.1](https://www.python.org/downloads/release/python-381/)
+- CMake 64 bit version [3.16.3](https://github.com/Kitware/CMake/releases/download/v3.16.3/cmake-3.16.3-win64-x64.zip)
+- GCC [9.2](https://gcc.gnu.org/onlinedocs/) build with a [release](http://repo.msys2.org/distrib/x86_64/) of [msys2](https://www.msys2.org/).
 
 **!!! IMPORTANT !!!**\
 Close the terminal opened and the PortableApps. As the PATH has been updated, those application needs to be restarted to take it into account.

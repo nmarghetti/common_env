@@ -14,6 +14,9 @@
     "dzannotti.vscode-babel-coloring",
     "ms-vscode.powershell", // PowerShell
     "tyriar.shell-launcher", // Multi shell
-    "ms-python.python" // Python
+    "ms-python.python", // Python
+    "ms-vscode.cpptools", // C++
+    "twxs.cmake", // CMake
+    "ms-vscode.cmake-tools" // CMake Tools
   ]
 }

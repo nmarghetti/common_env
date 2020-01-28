@@ -20,20 +20,22 @@ function set_env() {
   type python
 }
 
+SAVE_PWD=$PWD
 case $1 in
   create)
     shift
-    (create_env "$@")
-    ;;
+    create_env "$@"
+  ;;
   list)
     shift
     test -d "$HOME/.venv" && ls -1 "$HOME/.venv"
-    ;;
+  ;;
   set)
     shift
-    (set_env "$@")
-    ;;
+    set_env "$@"
+  ;;
   *)
     echo "Unknown command '$@', must be create|list|set"
     exit 1
 esac
+cd $SAVE_PWD

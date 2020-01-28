@@ -1,7 +1,9 @@
-ms-python.python                          : python
+ms-python.python                          : Python
 esbenp.prettier-vscode                    : Prettier
 shakram02.bash-beautify                   : Bash prettier
 davidanson.vscode-markdownlint            : Markdown linter
 lfurzewaddock.vscode-wsl-workspacefolder  : WSL
 ms-vscode.notepadplusplus-keybindings     : Notepad++ keymap binding
 waderyan.gitblame                         : Git blame
+ms-vscode.cpptools                        : C++
+ms-vscode.cmake-tools                     : CMake Tools

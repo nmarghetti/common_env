@@ -6,19 +6,26 @@ if [ ! "$(basename "${BASH_SOURCE[0]}")" = ".bashrc" ]; then
 fi
 
 export APPS_ROOT=$(cd && cd .. && pwd)
+export MSYS_SHELL=$APPS_ROOT/PortableApps/CommonFiles/msys64/msys2_shell.cmd
+
 source "${MAIN_BASHRC_ROOT}/path.sh"
 source "${MAIN_BASHRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
 
-pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python3.8.1/Scripts"
-pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python3.8.1"
+pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/mingw64/bin"
+pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/cmake/bin"
+pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python/Scripts"
+pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python"
 pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
 pathPrepend "${HOME}/bin"
 
+alias vvsource="vi '$MAIN_BASHRC_ROOT/.bashrc'"
+alias esource='echo ~/.bashrc'
 alias vsource='vi ~/.bashrc'
 alias rsource='source ~/.bashrc'
 alias csource='cat ~/.bashrc'
-alias tsource="source ${MAIN_BASHRC_ROOT}/tool/sourcetool ${MAIN_BASHRC_ROOT}/bin"
+alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
 alias vgit='vi ~/.gitconfig'
+alias egit='echo ~/.gitconfig'
 alias ls='ls --color=auto'
 alias la='ls -lhA'
 alias ll='ls -lh'
@@ -39,3 +46,5 @@ export GIT_PS1_SHOWUPSTREAM="auto"
 if [ ! "$(type -t __git_ps1)" = "function" ]; then
   source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
 fi
+
+source pythonenv set 3.8.1
