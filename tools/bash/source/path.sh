@@ -87,7 +87,7 @@ function pathAdd() {
       export $pathVar="$path:${!pathVar}"
     fi
   else
-    echo "pathAdd [prepend] [%Variable_to_update] path_to_remove..."
+    echo "pathAdd [prepend] [%Variable_to_update] path_to_add..."
   fi
 }
 

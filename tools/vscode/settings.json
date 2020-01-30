@@ -1,6 +1,6 @@
-// To have some extension working, do not forget to update your system PATH:
-// %APPS_ROOT%/PortableApps/PortableGit/bin;%APPS_ROOT%/home/.venv/3.1.0;%APPS_ROOT%/home/.venv/3.1.0/Scripts
 {
+  // BEGIN - GENERATED CONTENT, DO NOT EDIT !!!
+
   // Git
   "git.path": "%APPS_ROOT%/PortableApps/PortableGit/bin/git.exe",
 
@@ -147,4 +147,6 @@
 
   // C/C++
   "C_Cpp.intelliSenseEngine": "Default"
+
+  // END - GENERATED CONTENT, DO NOT EDIT !!!
 }

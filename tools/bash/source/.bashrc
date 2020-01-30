@@ -1,3 +1,5 @@
+#! /bin/sh
+
 MAIN_BASHRC_ROOT=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
 
 if [ ! "$(basename "${BASH_SOURCE[0]}")" = ".bashrc" ]; then

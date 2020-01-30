@@ -36,10 +36,15 @@
     default = upstream
 
 [alias]
+  gitv = !vi .git/config # edit git config
   st = status
   co = checkout
-  addu = add -u
-  gitv = !vi .git/config
+  addu = add -u # add all modified files
+
+  # SUBMODULES
+  clones = clone --recursive # git clones <repo_url> --> clone the repo and its submodules
+  subm = submodule update --init --recursive # init the submodules
+  submu = submodule update --remote # update the submodules to their latest version
 
   ## LS
   ls = ls-files
@@ -97,12 +102,12 @@
   dis = diff --ignore-all-space
 
   ## LOG
-  lg = !git log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
-  lg5 = !git --no-pager lg -5 && echo # limit to 5 commits
-  lg10 = !git --no-pager lg -10 && echo # limit to 10 commits
-  lg20 = !git --no-pager lg -20 && echo # limit to 20 commits
-  lga = !git lg --all  # full all branches log
-  lga5 = !git --no-pager lga -5 && echo # limit to 5 commits
+  lg    = !git log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
+  lg5   = !git --no-pager lg -5 && echo # limit to 5 commits
+  lg10  = !git --no-pager lg -10 && echo # limit to 10 commits
+  lg20  = !git --no-pager lg -20 && echo # limit to 20 commits
+  lga   = !git lg --all  # full all branches log
+  lga5  = !git --no-pager lga -5 && echo # limit to 5 commits
   lga10 = !git --no-pager lga -10 && echo # limit to 10 commits
   lga20 = !git --no-pager lga -20 && echo  # limit to 20 commits
   lgl   = !echo "Local changes not in origin/$(git brcurrent)" && git lg origin/$(git brcurrent)..HEAD # Local changes compared to origin

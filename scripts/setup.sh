@@ -3,6 +3,9 @@
 SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
 
+SETUP_ERROR_CONTINUE=100
+SETUP_ERROR_STOP=101
+
 function echoColor() {
   color=$1
   shift
@@ -18,16 +21,26 @@ function echoSectionDone() {
 }
 
 function echoSectionError() {
-  echoColor 31 "Setup for $@ failed !!!"
+  echoColor 31 "Setup for $@ failed !!!\n"
 }
 
-for tool in bash git vscode windows_path python cmake msys2;   do
+for tool in bash git vscode windows_path python cmake msys2; do
   if [ -f "$SETUP_TOOLS_ROOT/$tool/setup.sh" ]; then
     echoSection $tool
     source "$SETUP_TOOLS_ROOT/$tool/setup.sh"
     "setup_$tool"
-    test $? -ne 0 && echoSectionError $tool && exit 1
-    echoSectionDone $tool
+    ret=$?
+    if [ $ret -eq 0 ]; then
+      echoSectionDone $tool
+    else
+      echoSectionError "$tool (code $ret)"
+      case $ret in
+        $SETUP_ERROR_CONTINUE)
+        ;;
+        *)
+          exit $ret
+      esac
+    fi
   fi
 done
 

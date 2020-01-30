@@ -16,15 +16,33 @@ function setup_vscode() {
     rm -f $tarball
   fi
   
-  # Setup VSCode user settings
-  if [ ! -f "$VSCode/data/user-data/User/settings.json" ]; then
-    mkdir -vp "$VSCode/data/user-data/User"
-    cp -vf "$SETUP_TOOLS_ROOT/vscode/settings.json" "$VSCode/data/user-data/User/"
-    sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" "$VSCode/data/user-data/User/settings.json"
+  if [ ! -f "$VSCode/Code.exe" ]; then
+    return $SETUP_ERROR_CONTINUE
   fi
   
+  # Setup VSCode user settings
+  local setting_path="$VSCode/data/user-data/User/settings.json"
+  if [ ! -f "$setting_path" ]; then
+    mkdir -vp "$VSCode/data/user-data/User"
+    echo "Create $setting_path"
+    cat > "$setting_path" << EOM
+// To have some extension working, do not forget to update your system PATH:
+// %APPS_ROOT%/PortableApps/PortableGit/bin;%APPS_ROOT%/home/.venv/3.1.0;%APPS_ROOT%/home/.venv/3.1.0/Scripts
+{
+  // BEGIN - GENERATED CONTENT, DO NOT EDIT !!!
+  // END - GENERATED CONTENT, DO NOT EDIT !!!
+
+}
+EOM
+  fi
+  local content="$("$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=content "$SETUP_TOOLS_ROOT/vscode/settings.json" | sed -re 's#\\#\\\\#g')"
+  local settings="$(cat "$setting_path")"
+  echo "$settings" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v content="$content" > "$setting_path"
+  sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" "$setting_path"
+  
+  
   # Install extensions
-  installed_extensions=$(mktemp)
+  local installed_extensions=$(mktemp)
   "$APPS_ROOT/PortableApps/VSCode/bin/code" --list-extensions > "$installed_extensions"
   while IFS=: read -r extension extra; do
     extension=$(echo "$extension" | tr -d '[:space:]')
