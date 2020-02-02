@@ -24,7 +24,7 @@ function echoSectionError() {
   echoColor 31 "Setup for $@ failed !!!\n"
 }
 
-for tool in bash git vscode windows_path python cmake msys2; do
+for tool in bash git vscode windows_path python node cmake msys2; do
   if [ -f "$SETUP_TOOLS_ROOT/$tool/setup.sh" ]; then
     echoSection $tool
     source "$SETUP_TOOLS_ROOT/$tool/setup.sh"

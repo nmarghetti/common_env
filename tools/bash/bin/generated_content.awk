@@ -11,10 +11,12 @@ BEGIN	{
   if (!begin) begin = "BEGIN - GENERATED CONTENT, DO NOT EDIT !!!"
   if (!end) end = "END - GENERATED CONTENT, DO NOT EDIT !!!"
   if (!action) action = "content"
+  if (!replace_comment) replace_comment = "#"
   begin_found = 0
   end_found = 0
 }
 {
+  last_line = $0
   # Print the beginning of the file
   if (action == "begin") {
     if (match($0, begin)) exit 0
@@ -40,6 +42,16 @@ BEGIN	{
   }
 }
 END	{
+  if (action == "replace") {
+    if (replace_append && (!begin_found && !end_found)) {
+      print "\n" replace_comment begin
+      if (content) print content
+      else if (content_file) system("cat "content_file)
+      print replace_comment end
+      last_line = end
+    }
+  }
+  if (last_line != "") print ""
 }
 function usage() {
   print "Usage: generated_content [option] file..."
@@ -54,6 +66,8 @@ function usage() {
   print "\t\treplace: it will display the full file but will replace its generated content by either the content option is set either the content of the file given by the option content_file if set either nothing"
   print "\tcontent: content to use when option action=replace"
   print "\tcontent_file: path to the file to use when option action=replace"
+  print "\treplace_append: append the content to the file if begin and end not found"
+  print "\treplace_comment: comment to add begin and replace in case of replace"
   print "\neg. generated_content -v begin='BEGIN .*' -v end='END' -v action=begin ~/.bashrc"
   print "eg. generated_content -v action=replace -v content=\"$(generated_content -v action=content .bashrc)\" ~/.bashrc"
 }
