@@ -15,11 +15,11 @@ function setup_vscode() {
     echo
     rm -f $tarball
   fi
-  
+
   if [ ! -f "$VSCode/Code.exe" ]; then
     return $SETUP_ERROR_CONTINUE
   fi
-  
+
   # Setup VSCode user settings
   local setting_path="$VSCode/data/user-data/User/settings.json"
   if [ ! -f "$setting_path" ]; then
@@ -37,10 +37,10 @@ EOM
   fi
   local content="$("$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=content "$SETUP_TOOLS_ROOT/vscode/settings.json" | sed -re 's#\\#\\\\#g')"
   local settings="$(cat "$setting_path")"
-  echo "$settings" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v content="$content" > "$setting_path"
+  echo "$settings" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v content="$content" >| "$setting_path"
   sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" "$setting_path"
-  
-  
+
+
   # Install extensions
   local installed_extensions=$(mktemp)
   "$APPS_ROOT/PortableApps/VSCode/bin/code" --list-extensions > "$installed_extensions"

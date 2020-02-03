@@ -9,7 +9,8 @@ function setup_bash() {
     test -z "${!var}" && echo "Error: $var is not set !!!" && return 1
     test ! -d "${!var}" && echo "Error with $var: '${!var}' does not exist !!!" && return 1
   done
-  export WIN_APPS_ROOT="$(echo $APPS_ROOT | cut -b 2 | tr '[:lower:]' '[:upper:]'):$(echo $APPS_ROOT | cut -b 3-)"
+  export WIN_APPS_ROOT="$(echo "$APPS_ROOT" | cut -b 2 | tr '[:lower:]' '[:upper:]'):$(echo "$APPS_ROOT" | cut -b 3-)"
+  export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
 
   # Create template .bashrc if not there yet
   if [ ! -f "$HOME/.bashrc" ]; then
@@ -34,5 +35,6 @@ source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
 EOM
 )
   local bashrc="$(cat "$HOME/.bashrc")"
-  echo "$bashrc" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 -v content="$(echo "$content" | sed -re 's#\\#\\\\#g')" > "$HOME/.bashrc"
+  echo "$bashrc" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 \
+  -v content="$(echo "$content" | sed -re 's#\\#\\\\#g')" >| "$HOME/.bashrc"
 }

@@ -15,7 +15,7 @@
   untracked = cyan
 
 [color "branch"]
-  current = blink ul reverse white
+  current = blink reverse white
   local = yellow
   remote = cyan
 
@@ -36,6 +36,8 @@
     default = upstream
 
 [alias]
+  alias = !git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
+
   gitv = !vi .git/config # edit git config
   st = status
   co = checkout
@@ -80,9 +82,9 @@
   bru = !git remotebr upstream # list upstream branches
 
   ## COMMIT
-  ci = commit -m
-  cav = commit -a -v -m # automatically add all modified files in the commit
+  ci = commit -m # git ci 'commit message'
   ca = commit --amend --no-edit # append to the previous commit
+  cav = commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
 
   ## RESET COMMITS
   resets= !nb=$1 && shift && git reset --soft HEAD~$nb # git resets x --> softly remove x commits
@@ -92,6 +94,7 @@
   rebasei = !nb=$1 && shift && git rebase -i HEAD~$nb # git rebasei x --> interactively manage x last commits
 
   # RESET BRANCH
+  resetb  = reset --hard # git resetb <branch_name> -> hardly reset to branch_name
   resetbo = !git reset --hard origin/$(git brcurrent)
   resetbu = !git reset --hard upstream/$(git brcurrent)
 

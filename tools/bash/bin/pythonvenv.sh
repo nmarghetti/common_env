@@ -1,21 +1,23 @@
 #! /bin/sh
 
 function create_env() {
-  version=$1
+  local version=$1
   if [ -z "$version" ]; then
     version=$(python --version | cut -d' ' -f2 | tr -d '[[:space:]]')
   fi
-  cd && mkdir -p .venv && cd ".venv" || ( echo "Unable to go to .venv in home directory" && return )
-  test -d "$version" && echo "Version $version already exist" && return
+  cd && mkdir -p .venv && cd ".venv"
+  test $? -ne 0 && echo "Unable to go to .venv in home directory" && return 1
+  test -d "$version" && echo "Version $version already exist" && return 1
   echo "Create python env version $version"
   python -m venv "$version"
 }
 
 function set_env() {
   version=$1
-  test -z "$version" && echo "Please specify version" && return
-  cd && mkdir -p .venv && cd ".venv" || ( echo "Unable to go to .venv in home directory" && return )
-  test -d "$version" || ( echo "Version $version doest not exist, please create first" && return )
+  test -z "$version" && echo "Please specify version" && return 1
+  cd && mkdir -p .venv && cd ".venv"
+  test $? -ne 0 && echo "Unable to go to .venv in home directory" && return 1
+  test ! -d "$version" && echo "Version $version doest not exist, please create first" && return 1
   source "$version/Scripts/activate"
   type python
 }

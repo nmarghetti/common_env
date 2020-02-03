@@ -34,15 +34,18 @@ export HOME="${APPS_ROOT}/home"
 mkdir -p ${APPS_ROOT}/Documents/dev
 # If you want to contribute, fork it and clone your own fork
 git clone https://github.com/nmarghetti/common_env.git "${APPS_ROOT}/Documents/dev/common_env"
-"${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh"
+
+# Select the applications you want to install as parameter (vscode, node, cpp or all if you want them all)
+"${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh" all
 ```
 
 It will install and configure the following tools:
 
-- Visual Studio Code [portable](https://code.visualstudio.com/docs/editor/portable) 64 bit version [1.41.1](https://code.visualstudio.com/download).
+- Visual Studio Code [portable](https://code.visualstudio.com/docs/editor/portable) 64 bit version [1.41.1](https://code.visualstudio.com/download)
 - Python 64 bit version [3.8.1](https://www.python.org/downloads/release/python-381/)
+- NodeJs version [v12.14.1](https://nodejs.org/dist/v12.14.1/) and the latest version of yarn
 - CMake 64 bit version [3.16.3](https://github.com/Kitware/CMake/releases/download/v3.16.3/cmake-3.16.3-win64-x64.zip)
-- GCC [9.2](https://gcc.gnu.org/onlinedocs/) build with a [release](http://repo.msys2.org/distrib/x86_64/) of [msys2](https://www.msys2.org/).
+- GCC [9.2](https://gcc.gnu.org/onlinedocs/) build with a [release](http://repo.msys2.org/distrib/x86_64/) of [msys2](https://www.msys2.org/)
 
 **!!! IMPORTANT !!!**\
 Close the terminal opened and the PortableApps. As the PATH has been updated, those application needs to be restarted to take it into account.

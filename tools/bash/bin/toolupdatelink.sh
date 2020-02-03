@@ -27,7 +27,7 @@ LINK_PATH=${SCRIPT_DIR}
 if [ ! -z "$1" ]; then
   DEST_DIR=$(cd $1 2>/dev/null && pwd)
   [[ ! -d "${DEST_DIR}" ]] && exitMsg "Destination directory '${1}' doest not exist"
-  echo "last_dir=${DEST_DIR}" > "${SAVE_FILE}"
+  echo "last_dir=${DEST_DIR}" >| "${SAVE_FILE}"
 elif [ -f "${SAVE_FILE}" ]; then
   DEST_DIR=$(grep 'last_dir=' "${SAVE_FILE}" | head -1 | cut -d= -f2)
   [[ ! -d "${DEST_DIR}" ]] && exitMsg "Destination directory '${1}' taken from '${SAVE_FILE}' doest not exist"
@@ -45,7 +45,7 @@ cd "${SCRIPT_DIR}"
 # Clean wrong link in destination directory
 find -L "${DEST_DIR}" -maxdepth 1 -type l -exec rm -vf {} \;
 
-for ext in sh pl py; do
+for ext in awk sh pl py; do
   for i in $(ls *.${ext} 2>/dev/null); do
     ln -vsf "${LINK_PATH}/$i" "${DEST_DIR}/$(basename $i .${ext})" 2>/dev/null
   done
