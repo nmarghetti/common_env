@@ -10,7 +10,7 @@ function usage() {
   echo -e "Usage: $(basename $0) [destination_folder]
     Creates links of all .sh files in destination_folder without .sh extension.
     By default it goes in bin folder where $(basename $0) is located (${SCRIPT_DIR}/bin).
-    If already ran and no destination_folder given, it uses the last path used (saved in ${SAVE_FILE})"
+  If already ran and no destination_folder given, it uses the last path used (saved in ${SAVE_FILE})"
 }
 
 function exitMsg() {
@@ -28,7 +28,7 @@ if [ ! -z "$1" ]; then
   DEST_DIR=$(cd $1 2>/dev/null && pwd)
   [[ ! -d "${DEST_DIR}" ]] && exitMsg "Destination directory '${1}' doest not exist"
   echo "last_dir=${DEST_DIR}" >| "${SAVE_FILE}"
-elif [ -f "${SAVE_FILE}" ]; then
+  elif [ -f "${SAVE_FILE}" ]; then
   DEST_DIR=$(grep 'last_dir=' "${SAVE_FILE}" | head -1 | cut -d= -f2)
   [[ ! -d "${DEST_DIR}" ]] && exitMsg "Destination directory '${1}' taken from '${SAVE_FILE}' doest not exist"
 else

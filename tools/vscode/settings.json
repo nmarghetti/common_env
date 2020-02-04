@@ -146,7 +146,7 @@
   //"cmake-tools-helper.cmake_download_path": "%APPS_ROOT%/PortableApps/CommonFiles/cmake-3.10.1-win64-x64",
 
   // C/C++
-  "C_Cpp.intelliSenseEngine": "Default"
+  "C_Cpp.intelliSenseEngine": "Default",
 
   // END - GENERATED CONTENT, DO NOT EDIT !!!
 }
