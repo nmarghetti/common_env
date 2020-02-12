@@ -12,6 +12,7 @@ usage() {
   echo "    vscode: install Visual Studio Code" 1>&2
   echo "    node: install NodeJs" 1>&2
   echo "    cpp: install cmake and GNU C++ compiler" 1>&2
+  echo "    xampp: install apache" 1>&2
   echo "    all: install everything above" 1>&2
   echo "In any case it will setup some bash and git config and python" 1>&2
 }
@@ -26,8 +27,11 @@ while [ $# -gt 0 ]; do
     node)
       APPS="$APPS node"
       ;;
+    xampp)
+      APPS="$APPS xampp"
+      ;;
     all)
-      APPS="bash git python vscode windows_path node cmake msys2"
+      APPS="bash git python vscode windows_path node cmake msys2 xampp"
       ;;
     -h|--help)
       usage
