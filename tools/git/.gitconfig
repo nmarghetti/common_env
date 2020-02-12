@@ -24,7 +24,8 @@
 
 [core]
   pager = less -FRSX
-  symlinks = false
+  filemode = true
+  symlinks = true
   autocrlf = input
   whitespace = trailing-space,-space-before-tab,tab-in-indent,cr-at-eol
   longpaths = true
@@ -33,7 +34,7 @@
   autosquash = true
 
 [push]
-    default = upstream
+  default = upstream
 
 [alias]
   alias = !git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
@@ -46,9 +47,9 @@
   v = conf
 
   # Status
-  st = status -b --ahead-behind --show-stash -M
+  st = status
   sta = st --ignored=matching
-  s = st -s
+  s = status -b --ahead-behind --show-stash -M -s
   sa = s --ignored=matching
   ss = s --untracked-files=no
 

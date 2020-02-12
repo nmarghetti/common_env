@@ -10,8 +10,8 @@ function setup_node() {
       test $? -ne 0 && echo "Error, unable to retrieve the zip." && return 1
     fi
     unzip $tarball -d "$APPS_ROOT/PortableApps/CommonFiles/" | awk 'BEGIN {ORS="."} {print "."}'
-    mv "$APPS_ROOT/PortableApps/CommonFiles/$(basename $tarball .zip)" "$nodejs_path"
     test $? -ne 0 && echo -e "\nError, unable unzip the archive." && return 1
+    mv "$APPS_ROOT/PortableApps/CommonFiles/$(basename $tarball .zip)" "$nodejs_path"
     echo
     rm -f $tarball
   fi

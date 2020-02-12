@@ -2,7 +2,7 @@
 
 function setup_cmake() {
   cmake_path="$APPS_ROOT/PortableApps/CommonFiles/cmake"
-  # Install VSCode
+  # Install cmake
   if [ ! -f "$cmake_path/bin/cmake.exe" ]; then
     tarball=cmake-3.16.3-win64-x64.zip
     if [ ! -f $tarball ]; then

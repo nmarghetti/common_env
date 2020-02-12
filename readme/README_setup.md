@@ -52,7 +52,7 @@ Install the portable apps you want, eg:
   git clone https://github.com/nmarghetti/common_env.git "${APPS_ROOT}/Documents/dev/common_env"
 
   # Select the applications you want to install as parameter (vscode, node, cpp, xampp or all if you want them all)
-  "${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh" all
+  "${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh" vscode
   ```
 
   It will install and configure the following tools:
@@ -66,7 +66,9 @@ Install the portable apps you want, eg:
 
 - You can create shortcuts for
   - "%APPS_ROOT%/home/bash.cmd": run git bash through windows cmd
+    - copy/pasting with the mouse is not configurable
   - "%APPS_ROOT%/home/mintty.cmd": run git bash through mintty
+    - python does not work
 
 **!!! IMPORTANT !!!**\
 Close the terminal opened and the PortableApps. As the PATH has been updated, those application needs to be restarted to take it into account.

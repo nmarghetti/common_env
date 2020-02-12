@@ -17,6 +17,7 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   if [ -z "$BASH_VERSION" ]; then
     echo "ERROR !!! You are are not sourcing with bash, you might encounter problem !!!" >&2
   fi
+  
   source "${MAIN_BASHRC_ROOT}/path.sh"
   
   export MSYS_SHELL=$APPS_ROOT/PortableApps/CommonFiles/msys64/msys2_shell.cmd
@@ -28,6 +29,9 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python"
   pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
   pathPrepend "${HOME}/bin"
+  
+  # Check for update
+  source "${MAIN_BASHRC_ROOT}/check_update.sh"
   
   alias esource='echo ~/.bashrc'
   alias vsource='vi ~/.bashrc'
@@ -50,7 +54,7 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
   fi
   
-  source pythonvenv set 3.8.1
+  # source pythonvenv set 3.8.1
 else
   unset APPS_ROOT
 fi

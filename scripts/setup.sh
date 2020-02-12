@@ -20,27 +20,27 @@ while [ $# -gt 0 ]; do
   case $1 in
     vscode)
       APPS="$APPS vscode windows_path"
-      ;;
+    ;;
     cpp)
       APPS="$APPS cmake msys2"
-      ;;
+    ;;
     node)
       APPS="$APPS node"
-      ;;
+    ;;
     xampp)
       APPS="$APPS xampp"
-      ;;
+    ;;
     all)
       APPS="bash git python vscode windows_path node cmake msys2 xampp"
-      ;;
+    ;;
     -h|--help)
       usage
       exit 0
-      ;;
+    ;;
     *)
       usage
       exit 1
-      ;;
+    ;;
   esac
   shift
 done

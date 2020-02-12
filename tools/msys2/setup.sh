@@ -16,22 +16,24 @@ function setup_msys2() {
     echo
     rm -f $tarball
   fi
-  
+
   # Install GCC
   if [ ! -f "$msys2_path/mingw64/bin/g++.exe" ]; then
     "$msys2_path/msys2_shell.cmd"
     echo "Wait for the terminal to finish its installation, close it and press enter."
     read
-    
+
     for i in $(seq 5); do
       "$msys2_path/msys2_shell.cmd" -no-start -c 'pacman -Syuu'
       echo "$i/5 Wait for the terminal to finish its installation and press enter."
       read
     done
-    
+
     echo "Installing gcc"
     echo "Press enter to select all and enter again to proceed with the installation"
     "$msys2_path/msys2_shell.cmd" -no-start -c 'pacman -S mingw-w64-x86_64-toolchain'
+    echo "Press enter to continue"
+    read
   fi
-  
+
 }

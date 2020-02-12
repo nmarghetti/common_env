@@ -13,7 +13,7 @@ function setup_python() {
   local python_winpath="$(echo $WIN_APPS_ROOT/$python_path | tr '/' '\\')"
   python_path="$APPS_ROOT/$python_path"
   export PATH=$python_path:$PATH
-  
+
   if ! check_python 2>/dev/null; then
     mkdir -vp "$python_path"
     local exe=python-3.8.1-amd64.exe
@@ -37,7 +37,7 @@ function setup_python() {
   if [ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | wc -l) -eq 0 ]; then
     local version="$("$python_path/python" --version | cut -d' ' -f2 | tr -d '[[:space:]]')"
     "$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" create "$version" || (echo "Error, unable to set python virtual env." && return 1)
-    sed -ri -e "s#$(echo "$WINDOWS_APPS_ROOT" | sed -re "s#\\\\#\\\\\\\\#")\\\\PortableApps\\\\CommonFiles\\\\python#$APPS_ROOT/PortableApps/CommonFiles/python#" "$HOME/.venv/$version/pyvenv.cfg"
-    sed -ri -e "s#$(echo "$WINDOWS_APPS_ROOT" | sed -re "s#\\\\#\\\\\\\\#")\\\\home\\\\.venv\\\\$version#$APPS_ROOT/home/.venv/$version#" "$HOME/.venv/$version/Scripts/activate"
+    # sed -ri -e "s#$(echo "$WINDOWS_APPS_ROOT" | sed -re "s#\\\\#\\\\\\\\#")\\\\PortableApps\\\\CommonFiles\\\\python#$APPS_ROOT/PortableApps/CommonFiles/python#" "$HOME/.venv/$version/pyvenv.cfg"
+    # sed -ri -e "s#$(echo "$WINDOWS_APPS_ROOT" | sed -re "s#\\\\#\\\\\\\\#")\\\\home\\\\.venv\\\\$version#$APPS_ROOT/home/.venv/$version#" "$HOME/.venv/$version/Scripts/activate"
   fi
 }
