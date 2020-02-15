@@ -22,8 +22,10 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   
   export MSYS_SHELL=$APPS_ROOT/PortableApps/CommonFiles/msys64/msys2_shell.cmd
   
-  pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/mingw64/bin" 2>/dev/null
+  pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/mingw64/bin" 2>/dev/null
+  # pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/usr/bin" 2>/dev/null
   pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/cmake/bin" 2>/dev/null
+  pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/make/bin" 2>/dev/null
   pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/node" 2>/dev/null
   pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python/Scripts"
   pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python"
