@@ -4,7 +4,7 @@ SCRIPT_NAME=$(basename "$0")
 SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
 
-APPS="bash git python"
+APPS="bash git"
 
 usage() {
   echo "Usage: $SCRIPT_NAME [app [app...] | all]" 1>&2
@@ -18,6 +18,9 @@ usage() {
 }
 while [ $# -gt 0 ]; do
   case $1 in
+    python)
+      APPS="$APPS python"
+    ;;
     vscode)
       APPS="$APPS vscode windows_path"
     ;;

@@ -51,11 +51,12 @@ Install the portable apps you want, eg:
   # If you want to contribute, fork it and clone your own fork
   git clone https://github.com/nmarghetti/common_env.git "${APPS_ROOT}/Documents/dev/common_env"
 
-  # Select the applications you want to install as parameter (vscode, node, cpp, xampp or all if you want them all)
-  "${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh" vscode
+  # Select the applications you want to install as parameter (python, vscode, node, cpp, xampp or all if you want them all)
+  # It will anyway configure your .bashrc and .gitconfig
+  "${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh" python vscode
   ```
 
-  It will install and configure the following tools:
+  It can install and configure the following tools:
 
   - Visual Studio Code [portable](https://code.visualstudio.com/docs/editor/portable) 64 bit version [1.41.1](https://code.visualstudio.com/download) ~850Mo
   - Python 64 bit version [3.8.1](https://www.python.org/downloads/release/python-381/) ~50Mo
