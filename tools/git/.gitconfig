@@ -15,7 +15,7 @@
   untracked = cyan
 
 [color "branch"]
-  current = blink reverse white
+  current = reverse white
   local = yellow
   remote = cyan
 
@@ -38,103 +38,128 @@
 
 [alias]
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
-  co = checkout
+  co = ! git cmd checkout
   v = ! git --version
-  addu = add -u # add all modified files
+  addu = ! git cmd add -u # add all modified files
 
   # Config
-  conf = ! vi .git/config # edit git config
+  gconf = ! vi $HOME/.gitconfig # edit global git config
+  conf = ! vi .git/config # edit repo git config
   cfg = conf
 
   # Status
-  st = status
-  sta = ! git st --ignored=matching
-  s = status -b --ahead-behind --show-stash -M -s
-  sa = s --ignored=matching
-  ss = s --untracked-files=no
+  st  = ! git cmd status # basic status
+  sta = ! git st --ignored=matching # basic status + ignored files
+  s   = ! git st -b --ahead-behind --show-stash -M -s # short status
+  sa  = s --ignored=matching # short status with ignored files
+  ss  = s --untracked-files=no # short status without untracked files
 
   # SUBMODULES
-  clones = clone --recursive # git clones <repo_url> --> clone the repo and its submodules
-  subm = submodule update --init --recursive # init the submodules
-  submu = submodule update --remote # update the submodules to their latest version
+  clones = ! git cmd clone --recursive # git clones <repo_url> --> clone the repo and its submodules
+  subm = ! git cmd submodule update --init --recursive # init the submodules
+  submu = ! git cmd submodule update --remote # update the submodules to their latest version
 
   ## LS
-  ls = ls-files
-  lsu = ls-files -o # list untracked files
+  ls = ! git cmd ls-files
+  lsu = ! git ls -o # list untracked files
 
   ## REMOTE REPOSITORIES
-  upstream = remote add upstream # git upstream <repo_url> --> add upstream repo
-  origin = remote set-url # git origin <repo_url> --> change origin repo
+  upstream = ! git cmd remote add upstream # git upstream <repo_url> --> add upstream repo
+  origin = ! git cmd remote set-url # git origin <repo_url> --> change origin repo
 
-  # FETCH/PULL
-  f = fetch -t
+  # FETCH
+  f = ! git cmd fetch -t
   fetchu = ! git f upstream # fetch from upstream (only retrieve the list of commits, refs, etc.)
   fu = ! git fetchu
-  pullr = pull --rebase # pull and rebase your change on top
-  pullu = ! git pull upstream $(git brcurrent) # pull from upstream (really apply the commits retrieved from upstream)
-  pullur = ! git pull upstream $(git brcurrent) --rebase # pull from upsrteam and rebase your change on top of it
-  rebaseo = ! git rebase origin/$(git brcurrent) $(git brcurrent) # rebase from origin
-  rbo = ! git rebaseo
-  rebaseu = ! git rebase upstream/$(git brcurrent) $(git brcurrent) # rebase from upstream
-  rbu = ! git rebaseu
-  rebasea = rebase --abort # abort rebase
-  rba = ! git rebasea
-  rebasec = rebase --continue # continue rebase
-  rbc = ! git rebasec
-  p = push
-  pushf = push -f # force push (useful when using git ca)
-  pf = ! git pushf
-  pushu = ! git push upstream $(git brcurrent) # push to upstream
-  pu = ! git pushu
-  pushuf = ! git push -f upstream $(git brcurrent) # push to upstream
-  puf = ! git pushuf
-  pfu = ! git puf
+
+  # PULL
+  pullr = ! git cmd pull --rebase # pull and rebase your change on top
+  pullu = ! git cmd pull upstream $(git brcurrent) # pull from upstream (really apply the commits retrieved from upstream)
+  pullur = ! git pullu --rebase # pull from upsrteam and rebase your change on top of it
+
+  # REBASE
+  rb      = !git cmd rebase
+  rebaseo = ! git cmd rebase origin/$(git brcurrent) $(git brcurrent) # rebase from origin
+  rbo     = ! git rebaseo
+  rebaseu = ! git cmd rebase upstream/$(git brcurrent) $(git brcurrent) # rebase from upstream
+  rbu     = ! git rebaseu
+  rebasea = ! git cmd rebase --abort # abort rebase
+  rba     = ! git rebasea
+  rebasec = ! git cmd rebase --continue # continue rebase
+  rbc     = ! git rebasec
+
+  # PUSH
+  p      = ! git cmd push
+  pushf  = ! git p -f # force push (useful when using git ca)
+  pf     = ! git pushf
+  pushu  = ! git p upstream $(git brcurrent) # push to upstream
+  pu     = ! git pushu
+  pushuf = ! git p -f upstream $(git brcurrent) # push to upstream
+  puf    = ! git pushuf
+  pfu    = ! git puf
 
   ## BRANCH
-  brcurrent = ! git symbolic-ref --short HEAD # gives current branch
-  brcur = ! git brcurrent
-  br = branch -vv # verbose display of local branches
-  bra = branch -vva # verbose display of all branches
-  # git brn <branch_name> --> create branch locally and push it to origin
-  brn = "! (test $# -eq 1 && git checkout -b $1 && git push -u origin $1) || echo -e 'Please specify the name of the branch to create.\nUsage: git brn <branch_name>\nDescription: create <branch_name> locally and push it to origin/<branch_name>\neg.: git brn feature'"
-  brc = checkout --track # git brc origin/<branch_name> --> checkout remote branch and track it
-  brd = branch -D # git brd <branch_name> [<branch_name> ...] --> delete given branches from local
-  brdo = push origin --delete # git brdo <branch_name> [<branch_name> ...] --> delete given remote branches from origin
-  brdu = push upstream --delete # git brdu <branch_name> [<branch_name> ...] --> delete given remote branches from upstream
-  bro = ! git remotebr origin # list origin branches
-  bru = ! git remotebr upstream # list upstream branches
+  brcur = ! git cmd symbolic-ref --short HEAD # gives current branch
+  br    = ! git cmd branch -vv # verbose display of local branches
+  bra   = ! git br -a # verbose display of all branches
+  brn   = "! (test $# -eq 1 && git checkout -b $1 && git push -u origin $1) || echo -e 'Please specify the name of the branch to create.\nUsage: git brn <branch_name>\nDescription: create <branch_name> locally and push it to origin/<branch_name>\neg.: git brn feature'" # git brn <branch_name> --> create branch locally and push it to origin
+  brc   = ! git co --track # git brc origin/<branch_name> --> checkout remote branch and track it
+  brd   = ! git cmd branch -D # git brd <branch_name> [<branch_name> ...] --> delete given branches from local
+  brdo  = ! git cmd push origin --delete # git brdo <branch_name> [<branch_name> ...] --> delete given remote branches from origin
+  brdu  = ! git cmd push upstream --delete # git brdu <branch_name> [<branch_name> ...] --> delete given remote branches from upstream
+  bro   = ! git remotebr origin # list origin branches
+  bru   = ! git remotebr upstream # list upstream branches
 
   ## COMMIT
-  ci = commit -m # git ci 'commit message'
-  ca = commit --amend --no-edit # append to the previous commit
-  cav = commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
+  ci  = ! git cmd commit -m # git ci 'commit message'
+  ca  = ! git cmd commit --amend --no-edit # append to the previous commit
+  cav = ! git cmd commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
 
   ## RESET COMMITS
-  resets= !nb=$1 && shift && git reset --soft HEAD~$nb # git resets x --> softly remove x commits
-  rs = ! git resets
-  reseth = ! nb=$1 && shift && git reset --hard HEAD~$nb # git reseth x --> remove x commits
-  rsh = ! git reseth
-  rmc = ! commit=$1 && shift && git rebase --onto $commit^ $commit # git rmc c96d2c8 --> remove commit c96d2c8
+  rstc    = ! git cmd reset . # reset current changes ready to commit
+  rst     = ! git cmd reset
+  resets  = !nb=$1 && shift && git rst --soft HEAD~$nb # git resets x --> softly remove x commits
+  rs      = ! git resets
+  reseth  = ! nb=$1 && shift && git rst --hard HEAD~$nb # git reseth x --> remove x commits
+  rsh     = ! git reseth
+  rmc     = ! commit=$1 && shift && git rsb --onto $commit^ $commit # git rmc c96d2c8 --> remove commit c96d2c8
   #git rebase --onto HEAD~1^ HEAD~1 --> remove second commit
-  rebasei = ! nb=$1 && shift && git rebase -i HEAD~$nb # git rebasei x --> interactively manage x last commits
-  rbi = ! git rebasei
+  rebasei = ! nb=$1 && shift && git rsb -i HEAD~$nb # git rebasei x --> interactively manage x last commits
+  rbi     = ! git rebasei
 
   # RESET BRANCH
-  resetb  = reset --hard # git resetb <branch_name> -> hardly reset to branch_name
-  rsb = ! git resetb
-  resetbo = ! git reset --hard origin/$(git brcurrent)
-  rsbo = ! git resetbo
-  resetbu = ! git reset --hard upstream/$(git brcurrent)
-  rsbu = ! git resetbu
+  resetb  = ! git rst --hard # git resetb <branch_name> -> hardly reset to branch_name
+  rsb     = ! git resetb
+  resetbo = ! git rst --hard origin/$(git brcurrent)
+  rsbo    = ! git resetbo
+  resetbu = ! git rst --hard upstream/$(git brcurrent)
+  rsbu    = ! git resetbu
 
   ## DIFF
-  df = diff
-  dc = diff --cached # diff of added modif
-  dw = diff --word-diff --color-words
-  dis = diff --ignore-all-space
+  df     = ! git cmd diff
+  dc     = ! git df --cached # diff of added modif
+  dw     = ! git df --word-diff --color-words
+  dis    = ! git df --ignore-all-space
+  dfs    = ! git df --stat # diff with files stat
+  dfl    = ! git echoi 'Diff from local to origin' && git df origin/$(git brcurrent)..HEAD
+  dfr    = ! git echoi 'Diff from origin to local' && git df HEAD..origin/$(git brcurrent)
+  dfsl   = ! git dfl --stat
+  dfsr   = ! git dfr --stat
+  dflu   = ! git hasupstream && git echoi 'Diff from local to upstream' && git df upstream/$(git brcurrent)..HEAD
+  dfru   = ! git hasupstream && git echoi 'Diff from upstream to local' && git df HEAD upstream/$(git brcurrent)
+  dfslu  = ! git dflu --stat
+  dfsru  = ! git dfru --stat
+  dfdl   = ! git echoi "Diff from local to origin default branch $(git defbro)" && git df origin/$(git defbro)..HEAD
+  dfdr   = ! git echoi "Diff from origin default branch $(git defbro) to local" && git df HEAD..origin/$(git defbro)
+  dfdsl  = ! git dfl --stat
+  dfdsr  = ! git dfr --stat
+  dfdlu  = ! git hasupstream && git echoi "Diff from local to upstream default branch $(git defbru)" && git df upstream/$(git defbru)..HEAD
+  dfdru  = ! git hasupstream && git echoi "Diff from upstream default branch $(git defbru) to local" && git df HEAD upstream/$(git defbru)
+  dfdslu = ! git dflu --stat
+  dfdsru = ! git dfru --stat
 
   ## LOG
-  lg     = ! git log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
+  lg     = ! git cmd log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
   lg5    = ! git --no-pager lg -5 && echo # limit to 5 commits
   lg10   = ! git --no-pager lg -10 && echo # limit to 10 commits
   lg20   = ! git --no-pager lg -20 && echo # limit to 20 commits
@@ -164,12 +189,13 @@
   lgdlru = ! git lgdlu && echo && git lgdru # Show local and default upstream changes
 
   ## TOOLS
+  echoi = ! "f(){ echo -e \"\\e[39m$@\\e[0m\"; } ; f" # echo with info color (default)
+  cmd = ! "f(){ echo -e \"\\e[32mgit $@\\e[0m\" >&2; git \"$@\"; } ; f" # echo with cmd color (green) and run cmd
+  brcurrent = symbolic-ref --short HEAD # gives current branch
   defbr = ! repo=$1 && (shift || (echo "defbr needs the remote repo" >&2 && exit 1)) && shift && git remote show $repo | grep 'HEAD branch' | cut -d: -f2 | tr -d '[:space:]' # Get default remote branch
   defbro = ! git defbr origin
   defbru = ! git defbr upstream
   remotebr = ! repo=$1 && (shift || (echo "remotebr needs the remote repo" >&2 && exit 1)) && shift && git ls-remote --heads $repo | tr '[[:space:]]' '\n' | grep refs/heads | cut -d'/' -f3 # List remote branch
-  remotebro = ! git remotebr origin
-  remotebru = ! git remotebr upstream
   hasupstream = ! test $(git remote | grep -cE '^upstream$') -eq 1 || (echo "You need to setup the upstream" >&2 && exit 1) # Check if upstream is set
   hasbranch = ! branch=$1 && shift 1 && test $(git branch --list | tr '[:space:]' '\n' | grep -cE "^$branch$") -eq 1 || (echo "Branch $branch does not exist" && exit 1) || shift 666 # Check if local branch exist
   hasremotebranch = ! repo=$1 && branch=$2 && shift 2 && test $(git remotebr $repo | grep -cE "^$branch$") -eq 1 || (echo "Branch $repo/$branch does not exist" && exit 1) || shift 666 # Check if remote branch exist
