@@ -68,9 +68,11 @@
   origin = ! git cmd remote set-url # git origin <repo_url> --> change origin repo
 
   # FETCH
-  f = ! git cmd fetch -t
+  f = ! git cmd fetch
+  ft = ! git f -t # fetch tags
   fetchu = ! git f upstream # fetch from upstream (only retrieve the list of commits, refs, etc.)
   fu = ! git fetchu
+  fut = ! git fu -t # fetch upstream tags
 
   # PULL
   pullr = ! git cmd pull --rebase # pull and rebase your change on top
