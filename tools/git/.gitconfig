@@ -38,9 +38,13 @@
 
 [alias]
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
-  co = ! git cmd checkout
   v = ! git --version
   addu = ! git cmd add -u # add all modified files
+
+  # Checkout
+  co    = ! git cmd checkout
+  codb  = ! git co $(git defbro) # checkout default branch from origin
+  codbu = ! git co $(git defbru) # checkout default branch from upstream
 
   # Config
   gconf = ! vi $HOME/.gitconfig # edit global git config
@@ -57,50 +61,54 @@
   # SUBMODULES
   clones = ! git cmd clone --recursive # git clones <repo_url> --> clone the repo and its submodules
   subm = ! git cmd submodule update --init --recursive # init the submodules
-  submu = ! git cmd submodule update --remote # update the submodules to their latest version
+  submu = ! "f() { git cmd submodule update --remote \"$@\"; git cmd submodule foreach git subm ; }; f" # update the submodules to their latest version
 
-  ## LS
+  # LS
   ls = ! git cmd ls-files
   lsu = ! git ls -o # list untracked files
 
-  ## REMOTE REPOSITORIES
+  # REMOTE REPOSITORIES
   upstream = ! git cmd remote add upstream # git upstream <repo_url> --> add upstream repo
   origin = ! git cmd remote set-url # git origin <repo_url> --> change origin repo
 
   # FETCH
-  f = ! git cmd fetch
-  ft = ! git f -t # fetch tags
-  fetchu = ! git f upstream # fetch from upstream (only retrieve the list of commits, refs, etc.)
-  fu = ! git fetchu
-  fut = ! git fu -t # fetch upstream tags
+  f      = ! "f(){ git cmd fetch -p \"$@\"; git cmd fetch -t \"$@\"; } ; f" # fetch HEAD and tags from origin
+  fetchu = ! git f upstream # fetch from upstream
+  fu     = ! git fetchu # fetch from upstream
+  fetcha = ! git f --all # fetch all remotes
+  fa     = ! git fetcha # fetch all remotes
 
   # PULL
-  pullr = ! git cmd pull --rebase # pull and rebase your change on top
-  pullu = ! git cmd pull upstream $(git brcurrent) # pull from upstream (really apply the commits retrieved from upstream)
+  pullr  = ! git cmd pull --rebase # pull and rebase your change on top
+  pullu  = ! git cmd pull upstream $(git brcurrent) # pull from upstream (really apply the commits retrieved from upstream)
   pullur = ! git pullu --rebase # pull from upsrteam and rebase your change on top of it
 
   # REBASE
   rb      = !git cmd rebase
-  rebaseo = ! git cmd rebase origin/$(git brcurrent) $(git brcurrent) # rebase from origin
-  rbo     = ! git rebaseo
-  rebaseu = ! git cmd rebase upstream/$(git brcurrent) $(git brcurrent) # rebase from upstream
-  rbu     = ! git rebaseu
-  rebasea = ! git cmd rebase --abort # abort rebase
-  rba     = ! git rebasea
-  rebasec = ! git cmd rebase --continue # continue rebase
-  rbc     = ! git rebasec
+  rebaseo = ! git rb origin/$(git brcurrent) $(git brcurrent) # rebase from origin
+  rbo     = ! git rebaseo # rebase from origin
+  rbdo    = ! git rb origin/$(git defbro) $(git brcurrent) # rebase from origin default branch
+  rebaseu = ! git rb upstream/$(git brcurrent) $(git brcurrent) # rebase from upstream
+  rbu     = ! git rebaseu # rebase from upstream
+  rbdu    = ! git rb upstream/$(git defbru) $(git brcurrent) # rebase from upstream default branch
+  rebasea = ! git rb --abort # abort rebase
+  rba     = ! git rebasea # abort rebase
+  rebasec = ! git rb --continue # continue rebase
+  rbc     = ! git rebasec # continue rebase
 
   # PUSH
   p      = ! git cmd push
+  pt     = ! git p --tags # push tags
+  ptu    = ! git pt upstream $(git brcurrent) # push tags to upstream
   pushf  = ! git p -f # force push (useful when using git ca)
   pf     = ! git pushf
   pushu  = ! git p upstream $(git brcurrent) # push to upstream
   pu     = ! git pushu
-  pushuf = ! git p -f upstream $(git brcurrent) # push to upstream
+  pushuf = ! git p -f upstream $(git brcurrent) # force push to upstream
   puf    = ! git pushuf
   pfu    = ! git puf
 
-  ## BRANCH
+  # BRANCH
   brcur = ! git cmd symbolic-ref --short HEAD # gives current branch
   br    = ! git cmd branch -vv # verbose display of local branches
   bra   = ! git br -a # verbose display of all branches
@@ -112,21 +120,21 @@
   bro   = ! git remotebr origin # list origin branches
   bru   = ! git remotebr upstream # list upstream branches
 
-  ## COMMIT
+  # COMMIT
   ci  = ! git cmd commit -m # git ci 'commit message'
   ca  = ! git cmd commit --amend --no-edit # append to the previous commit
   cav = ! git cmd commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
 
-  ## RESET COMMITS
+  # RESET COMMITS
   rstc    = ! git cmd reset . # reset current changes ready to commit
   rst     = ! git cmd reset
-  resets  = !nb=$1 && shift && git rst --soft HEAD~$nb # git resets x --> softly remove x commits
+  resets  = ! nb=$1 && shift && git rst --soft HEAD~$nb # git resets x --> softly remove x commits
   rs      = ! git resets
   reseth  = ! nb=$1 && shift && git rst --hard HEAD~$nb # git reseth x --> remove x commits
   rsh     = ! git reseth
-  rmc     = ! commit=$1 && shift && git rsb --onto $commit^ $commit # git rmc c96d2c8 --> remove commit c96d2c8
+  rmc     = ! commit=$1 && shift && git rb --onto $commit^ $commit # git rmc c96d2c8 --> remove commit c96d2c8
   #git rebase --onto HEAD~1^ HEAD~1 --> remove second commit
-  rebasei = ! nb=$1 && shift && git rsb -i HEAD~$nb # git rebasei x --> interactively manage x last commits
+  rebasei = ! nb=$1 && shift && git rb -i HEAD~$nb # git rebasei x --> interactively manage x last commits
   rbi     = ! git rebasei
 
   # RESET BRANCH
@@ -137,7 +145,7 @@
   resetbu = ! git rst --hard upstream/$(git brcurrent)
   rsbu    = ! git resetbu
 
-  ## DIFF
+  # DIFF
   df     = ! git cmd diff
   dc     = ! git df --cached # diff of added modif
   dw     = ! git df --word-diff --color-words
@@ -160,7 +168,16 @@
   dfdslu = ! git dflu --stat
   dfdsru = ! git dfru --stat
 
-  ## LOG
+  # LAST COMMITER
+  lc     = ! git cmd log -1 --pretty=format:'%an' # Last commiter
+  lcr    = ! git lc origin/$(git brcurrent) # Last commiter from origin
+  lcru   = ! git lc upstream/$(git brcurrent) # Last commiter from upstream
+  lcd    = ! git lc origin/$(git defbro) # Last commiter from origin default branch
+  lcdu   = ! git lc upstream/$(git defbru) # Last commiter from upstream default branch
+  lcb    = ! branch=$1 && shift && git lc origin/$branch # Last commiter from given branch from origin
+  lcbu   = ! branch=$1 && shift && git lc upstream/$branch # Last commiter from given branch from upstream
+
+  # LOG
   lg     = ! git cmd log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
   lg5    = ! git --no-pager lg -5 && echo # limit to 5 commits
   lg10   = ! git --no-pager lg -10 && echo # limit to 10 commits
@@ -190,7 +207,7 @@
   lgdlr  = ! git lgdl && echo && git lgdr # Show local and default origin changes
   lgdlru = ! git lgdlu && echo && git lgdru # Show local and default upstream changes
 
-  ## TOOLS
+  # TOOLS
   echoi = ! "f(){ echo -e \"\\e[39m$@\\e[0m\"; } ; f" # echo with info color (default)
   cmd = ! "f(){ echo -e \"\\e[32mgit $@\\e[0m\" >&2; git \"$@\"; } ; f" # echo with cmd color (green) and run cmd
   brcurrent = symbolic-ref --short HEAD # gives current branch
