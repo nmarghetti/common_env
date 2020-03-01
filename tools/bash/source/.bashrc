@@ -79,4 +79,4 @@ alias pyset='source pythonvenv set'
 alias pyunset='deactivate 2>/dev/null'
 
 # Update git config
-type ugit &>/dev/null && ugit
+type rgit &>/dev/null && rgit
