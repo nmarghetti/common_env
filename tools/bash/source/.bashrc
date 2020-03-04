@@ -56,6 +56,9 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
   fi
   
+  export LC_ALL=C.UTF-8
+  export LESSCHARSET=UTF-8
+  
   # source pythonvenv set 3.8.1
 else
   unset APPS_ROOT

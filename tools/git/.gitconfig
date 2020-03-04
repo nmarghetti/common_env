@@ -30,6 +30,9 @@
   whitespace = trailing-space,-space-before-tab,tab-in-indent,cr-at-eol
   longpaths = true
 
+[i18n]
+  logOutputEncoding = utf-8
+
 [rebase]
   autosquash = true
 
@@ -40,28 +43,37 @@
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   addu = ! git cmd add -u # add all modified files
+  mg = ! git cmd merge --no-edit
 
-  # Checkout
-  co    = ! git cmd checkout
-  codb  = ! git co $(git defbro) # checkout default branch from origin
-  codbu = ! git co $(git defbru) # checkout default branch from upstream
-
-  # Config
+  # CONFIG
   gconf = ! vi $HOME/.gitconfig # edit global git config
   conf = ! vi .git/config # edit repo git config
   cfg = conf
+  user = ! git cmd config --global user.name # git user <username> --> set your username
+  mail = ! git cmd config --global user.email # git mail <email> --> set your email
 
-  # Status
+  # STATUS
   st  = ! git cmd status # basic status
   sta = ! git st --ignored=matching # basic status + ignored files
-  s   = ! git st -b --ahead-behind --show-stash -M -s # short status
+  s   = ! param=; git versionmajor2 && param="--ahead-behind --show-stash --find-renames"; git st --short --branch # short status
   sa  = s --ignored=matching # short status with ignored files
   ss  = s --untracked-files=no # short status without untracked files
+
+  # CHECKOUT
+  co    = ! git cmd checkout
+  codb  = ! git co $(git defbro) # checkout default branch from origin
+  codbu = ! git co $(git defbru) # checkout default branch from upstream
 
   # SUBMODULES
   clones = ! git cmd clone --recursive # git clones <repo_url> --> clone the repo and its submodules
   subm = ! git cmd submodule update --init --recursive # init the submodules
   submu = ! "f() { git cmd submodule update --remote \"$@\"; git cmd submodule foreach git subm ; }; f" # update the submodules to their latest version
+
+  # CHERRY-PICK
+  cp  = ! git cmd cherry-pick
+  cps = ! git cp --skip
+  cpc = ! git cp --continue
+  cpa = ! git cp --abort
 
   # LS
   ls = ! git cmd ls-files
@@ -72,7 +84,7 @@
   origin = ! git cmd remote set-url # git origin <repo_url> --> change origin repo
 
   # FETCH
-  f      = ! "f(){ git cmd fetch -p \"$@\"; git cmd fetch -t \"$@\"; } ; f" # fetch HEAD and tags from origin
+  f      = ! "f(){ git cmd fetch --prune \"$@\"; git cmd fetch --force --tags \"$@\"; } ; f" # fetch HEAD and tags from origin
   fetchu = ! git f upstream # fetch from upstream
   fu     = ! git fetchu # fetch from upstream
   fetcha = ! git f --all # fetch all remotes
@@ -99,14 +111,20 @@
   # PUSH
   p      = ! git cmd push
   pt     = ! git p --tags # push tags
-  ptu    = ! git pt upstream $(git brcurrent) # push tags to upstream
-  pushf  = ! git p -f # force push (useful when using git ca)
+  ptu    = ! git pt upstream # push tags to upstream
+  pushf  = ! git p --force # force push (useful when using git ca)
   pf     = ! git pushf
   pushu  = ! git p upstream $(git brcurrent) # push to upstream
   pu     = ! git pushu
-  pushuf = ! git p -f upstream $(git brcurrent) # force push to upstream
+  pushuf = ! git p --force upstream $(git brcurrent) # force push to upstream
   puf    = ! git pushuf
   pfu    = ! git puf
+
+  # TAG
+  t   = ! git cmd tag
+  td  = ! git t --delete # git td <tag_name> --> remove local tag
+  tdo = ! git cmd push --delete origin # git tdo <tag_name> --> remove tag from origin
+  tdu = ! git cmd push --delete upstream # git tdo <tag_name> --> remove tag from origin
 
   # BRANCH
   brcur = ! git cmd symbolic-ref --short HEAD # gives current branch
@@ -115,8 +133,8 @@
   brn   = "! (test $# -eq 1 && git checkout -b $1 && git push -u origin $1) || echo -e 'Please specify the name of the branch to create.\nUsage: git brn <branch_name>\nDescription: create <branch_name> locally and push it to origin/<branch_name>\neg.: git brn feature'" # git brn <branch_name> --> create branch locally and push it to origin
   brc   = ! git co --track # git brc origin/<branch_name> --> checkout remote branch and track it
   brd   = ! git cmd branch -D # git brd <branch_name> [<branch_name> ...] --> delete given branches from local
-  brdo  = ! git cmd push origin --delete # git brdo <branch_name> [<branch_name> ...] --> delete given remote branches from origin
-  brdu  = ! git cmd push upstream --delete # git brdu <branch_name> [<branch_name> ...] --> delete given remote branches from upstream
+  brdo  = ! git cmd push --delete origin # git brdo <branch_name> [<branch_name> ...] --> delete given remote branches from origin
+  brdu  = ! git cmd push --delete upstream # git brdu <branch_name> [<branch_name> ...] --> delete given remote branches from upstream
   bro   = ! git remotebr origin # list origin branches
   bru   = ! git remotebr upstream # list upstream branches
 
@@ -124,6 +142,7 @@
   ci  = ! git cmd commit -m # git ci 'commit message'
   ca  = ! git cmd commit --amend --no-edit # append to the previous commit
   cav = ! git cmd commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
+  acf = ! git addu && git ca && git pf # amend all modified files to the last commit and push force to origin
 
   # RESET COMMITS
   rstc    = ! git cmd reset . # reset current changes ready to commit
@@ -151,6 +170,8 @@
   dw     = ! git df --word-diff --color-words
   dis    = ! git df --ignore-all-space
   dfs    = ! git df --stat # diff with files stat
+  dfh    = ! git cmd show HEAD # show diff of last HEAD commit
+  dfsh   = ! git cmd show --stat HEAD # show stat diff of last HEAD commit
   dfl    = ! git echoi 'Diff from local to origin' && git df origin/$(git brcurrent)..HEAD
   dfr    = ! git echoi 'Diff from origin to local' && git df HEAD..origin/$(git brcurrent)
   dfsl   = ! git dfl --stat
@@ -208,8 +229,13 @@
   lgdlru = ! git lgdlu && echo && git lgdru # Show local and default upstream changes
 
   # TOOLS
-  echoi = ! "f(){ echo -e \"\\e[39m$@\\e[0m\"; } ; f" # echo with info color (default)
-  cmd = ! "f(){ echo -e \"\\e[32mgit $@\\e[0m\" >&2; git \"$@\"; } ; f" # echo with cmd color (green) and run cmd
+  echo = ! "f() { echo \"$@\" >&2 ;}; f" # simply echo what is given
+  echotty = ! "f() { color=$1; shift; echo -e "\\\\e[${color}m$@\\\\e[0m" >&2; }; f" # echo given arguments with given color for tty terminal
+  echobash = ! "f() { color=$1; shift; param=\"$@\"; bash -c \"echo -e \\\"\\e[${color}m$param\\e[0m\\\" >&2\"; }; f" # echo given arguments with given color using bash
+  echocmd = ! "f() { val=$(tty &>/dev/null); if [ $? -ne 0 ]; then echo -n echo; return; fi; if [ ! \"$val\" = \"not a tty\" ]; then echo -n echotty; return; fi; echo echobash; }; f" # gives the echo command to use based on the current terminal info
+  echocolor = ! "f() { color=$1; shift; cmd=\"$(git echocmd)\"; git $cmd $color \"$@\"; }; f" # echo given info with given color
+  echoi = ! "f(){ git echocolor 39 \"$@\"; } ; f" # echo with info color (default)
+  cmd = ! "f(){ git echocolor 32 \"git $@\"; git \"$@\"; } ; f" # echo with cmd color (green) and run cmd
   brcurrent = symbolic-ref --short HEAD # gives current branch
   defbr = ! repo=$1 && (shift || (echo "defbr needs the remote repo" >&2 && exit 1)) && shift && git remote show $repo | grep 'HEAD branch' | cut -d: -f2 | tr -d '[:space:]' # Get default remote branch
   defbro = ! git defbr origin
@@ -220,3 +246,5 @@
   hasremotebranch = ! repo=$1 && branch=$2 && shift 2 && test $(git remotebr $repo | grep -cE "^$branch$") -eq 1 || (echo "Branch $repo/$branch does not exist" && exit 1) || shift 666 # Check if remote branch exist
   hasbrancho = ! branch=$1 && shift 1 && git hasremotebranch origin $branch # Check if branch from origin exist
   hasbranchu = ! branch=$1 && shift 1 && git hasremotebranch upstream $branch # Check if branch from upstream exist
+  versionmajor = ! git --version | cut -d' ' -f3 | cut -d'.' -f1
+  versionmajor2 = ! test $(git versionmajor) -ge 2
