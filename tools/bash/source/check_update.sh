@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 function check_repo_update() {
   if [ ! -z "$1" ]; then

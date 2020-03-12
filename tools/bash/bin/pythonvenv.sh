@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 function create_env() {
   local version=$1

@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # Check documentation https://docs.python.org/3/using/windows.html#installing-without-ui
 
@@ -13,7 +13,7 @@ function setup_python() {
   local python_winpath="$(echo $WIN_APPS_ROOT/$python_path | tr '/' '\\')"
   python_path="$APPS_ROOT/$python_path"
   export PATH=$python_path:$PATH
-
+  
   if ! check_python 2>/dev/null; then
     mkdir -vp "$python_path"
     local exe=python-3.8.1-amd64.exe

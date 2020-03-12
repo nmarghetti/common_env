@@ -53,7 +53,7 @@ Install the portable apps you want, eg:
 
   # Select the applications you want to install as parameter (python, vscode, node, cpp, xampp or all if you want them all)
   # It will anyway configure your .bashrc and .gitconfig
-  "${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh" python vscode
+  bash "${APPS_ROOT}/Documents/dev/common_env/scripts/setup.sh" python vscode
   ```
 
   It can install and configure the following tools:

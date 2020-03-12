@@ -1,10 +1,11 @@
-#! /bin/sh
+#! /bin/bash
 
 SCRIPT_NAME=$(basename "$0")
 SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
 
-APPS="bash git"
+DEFAULT_APPS="bash git"
+APPS=$DEFAULT_APPS
 
 usage() {
   echo "Usage: $SCRIPT_NAME [app [app...] | all]" 1>&2
@@ -13,9 +14,21 @@ usage() {
   echo "    node: install NodeJs" 1>&2
   echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
-  echo "    all: install everything above" 1>&2
+  echo "    all: install all the apps above" 1>&2
   echo "In any case it will setup some bash and git config and python" 1>&2
 }
+
+check_dir_var() {
+  var=$1
+  msg="Error"
+  if [ ! -z "$2" ]; then
+    msg=$2
+  fi
+  test -z "${!var}" && echo "$msg: $var is not set !!!" >&2 && return 1
+  test ! -d "${!var}" && echo "$msg with $var: '${!var}' does not exist !!!" >&2 && return 1
+  return 0
+}
+
 while [ $# -gt 0 ]; do
   case $1 in
     python)
@@ -68,6 +81,30 @@ function echoSectionDone() {
 function echoSectionError() {
   echoColor 31 "Setup for $@ failed !!!\n"
 }
+
+# check $HOME
+check_dir_var HOME || exit $?
+# check $APPS_ROOT
+check_dir_var APPS_ROOT Info
+if [ $? -ne 0 ]; then
+  unset APPS_ROOT
+  APPS=$DEFAULT_APPS
+  echo "Only apps that dont need \$APPS_ROOT will be installed: $APPS" >&2
+else
+  export WIN_APPS_ROOT="$(echo "$APPS_ROOT" | cut -b 2 | tr '[:lower:]' '[:upper:]'):$(echo "$APPS_ROOT" | cut -b 3-)"
+  export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
+  # check wget is installed
+  if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/wget.exe" ]; then
+    if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/mingw64/bin/wget.exe" ]; then
+      APPS=$DEFAULT_APPS
+      echo "Please read the README, download wget and put it there: $APPS_ROOT/PortableApps/PortableGit/mingw64/bin/wget.exe" >&2
+      echo "Only apps that dont need wget will be installed: $APPS" >&2
+    else
+      cp -vf "$APPS_ROOT/PortableApps/PortableGit/mingw64/bin/wget.exe" "$APPS_ROOT/PortableApps/PortableGit/usr/bin/"
+    fi
+  fi
+fi
+
 
 for tool in $APPS; do
   if [ -f "$SETUP_TOOLS_ROOT/$tool/setup.sh" ]; then

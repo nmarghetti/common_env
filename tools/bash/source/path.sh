@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # Remove all given paths from $PATH, or the variable of the first arg if it starts with %, eg. %LD_LIBRARY_PATH
 # a given can be multiple if contaning ':', in that case each path is removed one by one

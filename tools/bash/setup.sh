@@ -1,22 +1,15 @@
-#! /bin/sh
+#! /bin/bash
 
 function setup_bash() {
   if [ ! -z "$HOME" ]; then
     mkdir -vp "$HOME"
   fi
 
-  for var in APPS_ROOT HOME; do
-    test -z "${!var}" && echo "Error: $var is not set !!!" && return 1
-    test ! -d "${!var}" && echo "Error with $var: '${!var}' does not exist !!!" && return 1
-  done
-  export WIN_APPS_ROOT="$(echo "$APPS_ROOT" | cut -b 2 | tr '[:lower:]' '[:upper:]'):$(echo "$APPS_ROOT" | cut -b 3-)"
-  export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
-
   # Create template .bashrc if not there yet
   if [ ! -f "$HOME/.bashrc" ]; then
     echo "Create $HOME/.bashrc"
     cat > "$HOME/.bashrc" << EOM
-#! /bin/sh
+#! /bin/bash
 # BEGIN - GENERATED CONTENT, DO NOT EDIT !!!
 # END - GENERATED CONTENT, DO NOT EDIT !!!
 

@@ -32,19 +32,6 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
   pathPrepend "${HOME}/bin"
   
-  # Check for update
-  source "${MAIN_BASHRC_ROOT}/check_update.sh"
-  
-  alias esource='echo ~/.bashrc'
-  alias vsource='vi ~/.bashrc'
-  alias rsource='source ~/.bashrc'
-  alias csource='cat ~/.bashrc'
-  alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
-  
-  alias setup="'${MAIN_BASHRC_ROOT}/../../../scripts/setup.sh'"
-  
-  alias cddev="cd ${APPS_ROOT}/Documents/dev"
-  
   # Git Prompt
   # For more information; check thoses files:
   # ${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh
@@ -56,20 +43,39 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
   fi
   
-  export LC_ALL=C.UTF-8
-  export LESSCHARSET=UTF-8
+  alias cddev="cd ${APPS_ROOT}/Documents/dev"
   
   # source pythonvenv set 3.8.1
 else
   unset APPS_ROOT
 fi
 
+# Check for update if access to github
+pingopt="-c"
+if [ "$OSTYPE" = "msys" ]; then
+  pingopt="-n"
+fi
+ping $pingopt 1 -w 1 github.com &>/dev/null && source "${MAIN_BASHRC_ROOT}/check_update.sh"
+
+# Ensure terminal output are UTF8
+export LC_ALL=C.UTF-8
+export LESSCHARSET=UTF-8
+
+# For env using bashrc
+if [ -f "$HOME/.bashrc" ]; then
+  alias esource='echo "$HOME/.bashrc"'
+  alias vsource='vi "$HOME/.bashrc"'
+  alias rsource='source "$HOME/.bashrc"'
+  alias csource='cat "$HOME/.bashrc"'
+  alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
+  alias setup="'${MAIN_BASHRC_ROOT}/../../../scripts/setup.sh'"
+fi
 
 alias vvsource="vi '$MAIN_BASHRC_ROOT/.bashrc'"
 alias vvgit="vi '$MAIN_BASHRC_ROOT/../../git/.gitconfig'"
-alias vgit='vi ~/.gitconfig'
+alias vgit='vi "$HOME/.gitconfig"'
 alias gitv='vi .git/config'
-alias egit='echo ~/.gitconfig'
+alias egit='echo "$HOME/.gitconfig"'
 alias ugit="bash '${MAIN_BASHRC_ROOT}/../bin/update_git_config.sh'"
 alias rgit="ugit -f"
 alias ls='ls --color=auto'

@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 function setup_xampp() {
   xampp_path="$APPS_ROOT/PortableApps/XAMPP/App/xampp"

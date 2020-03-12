@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 function setup_make() {
   make_path="$APPS_ROOT/PortableApps/CommonFiles/make"

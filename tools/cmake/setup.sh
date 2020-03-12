@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 function setup_cmake() {
   cmake_path="$APPS_ROOT/PortableApps/CommonFiles/cmake"

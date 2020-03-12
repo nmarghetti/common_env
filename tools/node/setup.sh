@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 function setup_node() {
   nodejs_path="$APPS_ROOT/PortableApps/CommonFiles/node"

@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 SOURCETOOL_SCRIPT=${BASH_SOURCE[0]}
 if [ -z "$SOURCETOOL_SCRIPT" ] || [ "$SOURCETOOL_SCRIPT" = "bash" ]; then
