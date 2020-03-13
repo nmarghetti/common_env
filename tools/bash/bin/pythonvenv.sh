@@ -1,15 +1,29 @@
 #! /bin/bash
 
+# create_env [python_bin] [version]
 function create_env() {
+  local pythonbin="python"
+  which "$1" &>/dev/null
+  if [ $? -eq 0 ]; then
+    pythonbin=$(which "$1")
+    shift
+    unset PYTHONHOME PYTHONPATH
+  fi
   local version=$1
   if [ -z "$version" ]; then
-    version=$(python --version | cut -d' ' -f2 | tr -d '[[:space:]]')
+    version=$($pythonbin --version | cut -d' ' -f2 | tr -d '[[:space:]]')
+  fi
+  echo "python bin path: $pythonbin"
+  echo "python version: $version"
+  if [[ ! "$version" =~ ^[-.a-zA-Z0-9]+$ ]]; then
+    echo "Version '$version' is not valid"
+    return 1
   fi
   cd && mkdir -p .venv && cd ".venv"
   test $? -ne 0 && echo "Unable to go to .venv in home directory" && return 1
   test -d "$version" && echo "Version $version already exist" && return 1
-  echo "Create python env version $version"
-  python -m venv "$version"
+  echo "Create python env $PWD/$version"
+  $pythonbin -m venv "$version"
 }
 
 function set_env() {
@@ -18,7 +32,16 @@ function set_env() {
   cd && mkdir -p .venv && cd ".venv"
   test $? -ne 0 && echo "Unable to go to .venv in home directory" && return 1
   test ! -d "$version" && echo "Version $version doest not exist, please create first" && return 1
-  source "$version/Scripts/activate"
+  local pythonactivate=
+  if [ -f "$version/Scripts/activate" ]; then
+    pythonactivate="$version/Scripts/activate"
+    elif [ -f "$version/bin/activate" ]; then
+    pythonactivate="$version/bin/activate"
+  else
+    echo "Error: Unable to active this python env !"
+    return 1
+  fi
+  source "$pythonactivate"
   type python
 }
 

@@ -84,6 +84,7 @@ alias ll='ls -lh'
 
 # Python env management
 alias pylist='pythonvenv list'
+alias pycreate='pythonvenv create'
 alias pyset='source pythonvenv set'
 alias pyunset='deactivate 2>/dev/null'
 
