@@ -1,0 +1,46 @@
+# Check there for the free amount we have https://help.github.com/en/github/setting-up-and-managing-billing-and-payments-on-github/about-billing-for-github-actions
+# Check there for doc https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#on
+
+name: Build
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest,ubuntu-latest] # windows-latest also available
+        python-version: [3.8]
+    steps:
+    # Checkout repo
+    - uses: actions/checkout@v1
+    # Setup Mac
+    - name: Setup OS if Mac
+      run: bash ./scripts/setup_mac.sh -s
+    # Setup
+    - name: Setup
+      run: |
+        test -e /usr/local/Cellar/gawk && export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$(ls -1d /usr/local/Cellar/gawk/*/bin | head -1):/usr/local/opt/coreutils/libexec/gnubin:$PATH" || echo
+        bash ./scripts/setup.sh -s
+    # Check
+    - name: Check
+      run: |
+        test -e /usr/local/Cellar/gawk && export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$(ls -1d /usr/local/Cellar/gawk/*/bin | head -1):/usr/local/opt/coreutils/libexec/gnubin:$PATH" || echo
+        export TMPDIR=$(mktemp -d)
+        export MAIN=$TMPDIR/main
+        export FORK=$TMPDIR/fork
+        export LOCAL=$TMPDIR/local
+        export MODULE=$TMPDIR/module
+        mkdir -p "$MAIN" && cd "$MAIN" && git cmd init && echo "Read the README" > README.md && git aa && git ci "Initial commit"
+        git br
+        git lg
+        mkdir -p "$FORK" && cd "$FORK" && git cmd init && git cmd remote add origin "$MAIN" && git f && git brcd
+        git bra
+        git lga
+        git clones "$FORK" "$LOCAL" && cd "$LOCAL" && git upstream "$MAIN" && git fu
+        git bra
+        git lga

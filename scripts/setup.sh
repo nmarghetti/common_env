@@ -1,14 +1,27 @@
 #! /bin/bash
 
+readlink -f "$0" &>/dev/null
+if [ $? -ne 0 ]; then
+  echo "Error, 'readlink -f' is not supported on your system. If you are using Mac, you can run \"source setup_mac.sh\" first."
+  exit 1
+fi
+
 SCRIPT_NAME=$(basename "$0")
 SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
+
+if [ ! "$(basename "$SHELL")" = "bash" ]; then
+  echo "You should run $0 with bash"
+  exit 1
+fi
 
 DEFAULT_APPS="bash git"
 APPS=$DEFAULT_APPS
 
 usage() {
-  echo "Usage: $SCRIPT_NAME [app [app...] | all]" 1>&2
+  echo "Usage: $SCRIPT_NAME [-s|--silent] [app [app...] | all]" 1>&2
+  echo "  Options:" 1>&2
+  echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    vscode: install Visual Studio Code" 1>&2
   echo "    node: install NodeJs" 1>&2
@@ -48,6 +61,9 @@ while [ $# -gt 0 ]; do
     ;;
     all)
       APPS="bash git python vscode windows_path node make cmake msys2 xampp"
+    ;;
+    -s|--silent)
+      SETUP_SILENT=1
     ;;
     -h|--help)
       usage

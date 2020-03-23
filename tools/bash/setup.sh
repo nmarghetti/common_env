@@ -21,13 +21,14 @@ EOM
   local content=$(cat <<-EOM
 if [ ! "\$(basename "\${BASH_SOURCE[0]}")" = ".bashrc" ]; then
   echo "ERROR !!! Unable to find the path of .bashrc, not sourcing it, many things will probably not work !!!" >&2
-  return
+else
+  # Ensure that \$HOME points to where is located the current file being sourced
+  export HOME=\$(cd \$(dirname "\${BASH_SOURCE[0]}") && pwd)
+  source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
 fi
-export HOME=\$(cd \$(dirname "\${BASH_SOURCE[0]}") && pwd)
-source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
 EOM
 )
   local bashrc="$(cat "$HOME/.bashrc")"
-  echo "$bashrc" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 \
+  echo "$bashrc" | awk -f "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 \
   -v content="$(echo "$content" | sed -re 's#\\#\\\\#g')" >| "$HOME/.bashrc"
 }
