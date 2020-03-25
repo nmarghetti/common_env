@@ -17,11 +17,12 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   if [ -z "$BASH_VERSION" ]; then
     echo "ERROR !!! You are are not sourcing with bash, you might encounter problem !!!" >&2
   fi
-  
+
   source "${MAIN_BASHRC_ROOT}/path.sh"
-  
+  source "${MAIN_BASHRC_ROOT}/system.sh"
+
   export MSYS_SHELL=$APPS_ROOT/PortableApps/CommonFiles/msys64/msys2_shell.cmd
-  
+
   pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/mingw64/bin" 2>/dev/null
   # pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/usr/bin" 2>/dev/null
   pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/cmake/bin" 2>/dev/null
@@ -31,7 +32,7 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python"
   pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
   pathPrepend "${HOME}/bin"
-  
+
   # Git Prompt
   # For more information; check thoses files:
   # ${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh
@@ -42,9 +43,9 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   if [ ! "$(type -t __git_ps1)" = "function" ]; then
     source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
   fi
-  
+
   alias cddev="cd ${APPS_ROOT}/Documents/dev"
-  
+
   # source pythonvenv set 3.8.1
 else
   unset APPS_ROOT

@@ -13,34 +13,56 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest,ubuntu-latest] # windows-latest also available
+        os: [macos-latest,ubuntu-latest,windows-latest]
         python-version: [3.8]
     steps:
-    # Checkout repo
-    - uses: actions/checkout@v1
-    # Setup Mac
-    - name: Setup OS if Mac
-      run: bash ./scripts/setup_mac.sh -s
-    # Setup
-    - name: Setup
-      run: |
-        test -e /usr/local/Cellar/gawk && export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$(ls -1d /usr/local/Cellar/gawk/*/bin | head -1):/usr/local/opt/coreutils/libexec/gnubin:$PATH" || echo
-        bash ./scripts/setup.sh -s
-    # Check
-    - name: Check
-      run: |
-        test -e /usr/local/Cellar/gawk && export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$(ls -1d /usr/local/Cellar/gawk/*/bin | head -1):/usr/local/opt/coreutils/libexec/gnubin:$PATH" || echo
-        export TMPDIR=$(mktemp -d)
-        export MAIN=$TMPDIR/main
-        export FORK=$TMPDIR/fork
-        export LOCAL=$TMPDIR/local
-        export MODULE=$TMPDIR/module
-        mkdir -p "$MAIN" && cd "$MAIN" && git cmd init && echo "Read the README" > README.md && git aa && git ci "Initial commit"
-        git br
-        git lg
-        mkdir -p "$FORK" && cd "$FORK" && git cmd init && git cmd remote add origin "$MAIN" && git f && git brcd
-        git bra
-        git lga
-        git clones "$FORK" "$LOCAL" && cd "$LOCAL" && git upstream "$MAIN" && git fu
-        git bra
-        git lga
+      # Check OS
+      - name: Check OS
+        run: |
+          git --version
+          which bash
+          bash -c 'echo hello from $SHELL located at $(readlink $SHELL)'
+          env
+      # Checkout repo
+      - uses: actions/checkout@v1
+      # Setup Mac
+      - name: Setup Mac
+        if: runner.os == 'macOS'
+        run: |
+          bash ./scripts/setup_mac.sh -s
+      # Setup
+      - name: Setup
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$(ls -1d /usr/local/Cellar/gawk/*/bin | head -1):/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+          fi
+          bash ./scripts/setup.sh -s
+          git lga20
+        shell: bash
+      # Check Git
+      - name: Check Git
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$(ls -1d /usr/local/Cellar/gawk/*/bin | head -1):/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+          fi
+          export TMPDIR=$(mktemp -d)
+          export MAIN=$TMPDIR/main
+          export FORK=$TMPDIR/fork
+          export LOCAL=$TMPDIR/local
+          export MODULE=$TMPDIR/module
+          mkdir -p "$MAIN" && cd "$MAIN" && git cmd init && echo "Read the README" > README.md && git aa && git ci "Initial commit"
+          git br
+          git lg
+          mkdir -p "$FORK" && cd "$FORK" && git cmd init && git cmd remote add origin "$MAIN" && git f && git brcd
+          git bra
+          git lga
+          git clones "$FORK" "$LOCAL" && cd "$LOCAL" && git upstream "$MAIN" && git fu
+          git bra
+          git lga
+      # Check Windows Git on Powershell
+      - name: Check Windows Git on Powershell
+        if: matrix.os == 'windows-latest'
+        run: |
+          git st
+          git lga20
