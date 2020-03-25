@@ -4,6 +4,7 @@ function check_repo_update() {
   if [ ! -z "$1" ]; then
     cd "$1" || return
   fi
+  echo "Checking for update on $PWD..." >&2
   git st &>/dev/null || return
   git f 2>/dev/null
   if [ $(echo "$(git lgr 2>/dev/null)" | wc -l) -gt 1 ]; then
@@ -31,6 +32,8 @@ function check_repo_update() {
         fi
       fi
     fi
+  else
+    echo "Up to date." >&2
   fi
 }
 

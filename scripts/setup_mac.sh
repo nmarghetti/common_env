@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 SETUP_SILENT=$(echo "$@" | tr '[:space:]' '\n' | grep -cE '^(-s|--silent)$')
 

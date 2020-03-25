@@ -54,7 +54,8 @@
   # STATUS
   st  = ! git cmd status # basic status
   sta = ! git st --ignored=matching # basic status + ignored files
-  s   = ! param=; git versionmajor2 && param="--ahead-behind --show-stash --find-renames"; git st --short --branch # short status
+  sts = ! git st --untracked-files=no # basic status without untracked files
+  s   = ! "param=; git versionmajor2 && param='--ahead-behind --show-stash --find-renames'; git st $param --short --branch" # short status
   sa  = s --ignored=matching # short status with ignored files
   ss  = s --untracked-files=no # short status without untracked files
 
