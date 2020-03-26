@@ -265,6 +265,7 @@
   echoi = ! "f(){ \
       git echocolor 39 \"$@\"; \
     } ; f" # echo with info color (default)
+  debugo = ! git cmd cecho && echo && git cmd echocmd && echo
   cecho = ! "f(){ \
       val=$(echo -en 'x' 2>&1); \
       if [ $? -eq 0 ] && [ \"$val\" = \"x\" ]; then \

@@ -46,6 +46,7 @@ jobs:
           if [ "$RUNNER_OS" = "macOS" ]; then
             export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$(ls -1d /usr/local/Cellar/gawk/*/bin | head -1):/usr/local/opt/coreutils/libexec/gnubin:$PATH"
           fi
+          git debugo
           export TMPDIR=$(mktemp -d)
           export MAIN=$TMPDIR/main
           export FORK=$TMPDIR/fork
