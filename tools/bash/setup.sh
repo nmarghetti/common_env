@@ -10,6 +10,7 @@ function setup_bash() {
     echo "Create $HOME/.bashrc"
     cat > "$HOME/.bashrc" << EOM
 #! /bin/bash
+
 # BEGIN - GENERATED CONTENT, DO NOT EDIT !!!
 # END - GENERATED CONTENT, DO NOT EDIT !!!
 

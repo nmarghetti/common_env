@@ -1,11 +1,5 @@
 #! /bin/bash
 
-readlink -f "$0" &>/dev/null
-if [ $? -ne 0 ]; then
-  echo "Error, 'readlink -f' is not supported on your system. If you are using Mac, you can run \"source setup_mac.sh\" first."
-  exit 1
-fi
-
 SCRIPT_NAME=$(basename "$0")
 SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
@@ -13,6 +7,13 @@ SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
 if [ ! "$(basename "$SHELL")" = "bash" ]; then
   echo "You should run $0 with bash"
   exit 1
+fi
+
+readlink -f "$0" &>/dev/null
+if [ $? -ne 0 ]; then
+  # Try to run the Mac setup if readlink -f is not available
+  bash "$SETUP_SCRIPT_ROOT/setup_mac.sh" "$@"
+  [ $? -ne 0 ] && exit 1
 fi
 
 DEFAULT_APPS="bash git"

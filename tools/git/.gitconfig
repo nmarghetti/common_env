@@ -221,22 +221,22 @@
   lga10  = ! git --no-pager lga -10 && echo # limit to 10 commits
   lga20  = ! git --no-pager lga -20 && echo  # limit to 20 commits
   lga40  = ! git --no-pager lga -40 && echo  # limit to 40 commits
-  lgl    = ! echo "Local changes not in origin/$(git brcurrent)" && git lg origin/$(git brcurrent)..HEAD # Local changes compared to origin
-  lglu   = ! git hasupstream && echo "Local changes not in upstream/$(git brcurrent)" && git lg upstream/$(git brcurrent)..HEAD # Local changes compared to upstream
-  lgr    = ! echo "Remote changes from origin/$(git brcurrent)" && git lg HEAD..origin/$(git brcurrent) # Changes from origin
-  lgru   = ! git hasupstream && echo "Remote changes from upstream/$(git brcurrent)" && git lg HEAD..upstream/$(git brcurrent)  # Changes from upstream
+  lgl    = ! git echoi "Local changes not in origin/$(git brcurrent)" && git lg origin/$(git brcurrent)..HEAD # Local changes compared to origin
+  lglu   = ! git hasupstream && git echoi "Local changes not in upstream/$(git brcurrent)" && git lg upstream/$(git brcurrent)..HEAD # Local changes compared to upstream
+  lgr    = ! git echoi "Remote changes from origin/$(git brcurrent)" && git lg HEAD..origin/$(git brcurrent) # Changes from origin
+  lgru   = ! git hasupstream && git echoi "Remote changes from upstream/$(git brcurrent)" && git lg HEAD..upstream/$(git brcurrent)  # Changes from upstream
   lglr   = ! git lgl && echo && git lgr # Show local and origin changes
   lglru  = ! git lglu && echo && git lgru # Show local and upstream changes
-  lgb    = ! branch=$1 && shift && git hasbranch $branch && echo "Changes in $branch not in HEAD" && git lg HEAD..$branch # Changes from given local branch to HEAD
-  lgbh   = ! branch=$1 && shift && git hasbranch $branch && echo "Changes in HEAD not in $branch" && git lg $branch..HEAD # Changes from HEAD to given local branch
-  lgbl   = ! branch=$1 && shift && git hasbrancho $branch && echo "Changes in origin/$branch not in HEAD" && git lg HEAD..origin/$branch # Changes from given origin branch to HEAD
-  lgbr   = ! branch=$1 && shift && git hasbrancho $branch && echo "Changes in HEAD not in origin/$branch" && git lg origin/$branch..HEAD # Changes from HEAD to given origin branch
-  lgblu  = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && echo "Changes in HEAD not in upstream/$branch" && git lg upstream/$branch..HEAD # Changes from HEAD to given upstream branch
-  lgbru  = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && echo "Changes in upstream/$branch not in HEAD" && git lg HEAD..upstream/$branch # Changes from given upstream branch to HEAD
-  lgdl   = ! echo "Changes in origin default branch $(git defbro) not in HEAD" && git lg HEAD..origin/$(git defbro) # Changes from default origin branch to HEAD
-  lgdr   = ! echo "Changes in HEAD not in default origin branch $(git defbro)" && git lg origin/$(git defbro)..HEAD # Changes from HEAD to default origin branch
-  lgdlu  = ! echo "Changes in HEAD not in default upstream branch $(git defbru)" && git lg upstream/$(git defbru)..HEAD # Changes from HEAD to default upstream branch
-  lgdru  = ! echo "Changes in upstream default branch $(git defbru) not in HEAD" && git lg HEAD..upstream/$(git defbru) # Changes from default upstream branch to HEAD
+  lgb    = ! branch=$1 && shift && git hasbranch $branch && git echoi "Changes in $branch not in HEAD" && git lg HEAD..$branch # Changes from given local branch to HEAD
+  lgbh   = ! branch=$1 && shift && git hasbranch $branch && git echoi "Changes in HEAD not in $branch" && git lg $branch..HEAD # Changes from HEAD to given local branch
+  lgbl   = ! branch=$1 && shift && git hasbrancho $branch && git echoi "Changes in origin/$branch not in HEAD" && git lg HEAD..origin/$branch # Changes from given origin branch to HEAD
+  lgbr   = ! branch=$1 && shift && git hasbrancho $branch && git echoi "Changes in HEAD not in origin/$branch" && git lg origin/$branch..HEAD # Changes from HEAD to given origin branch
+  lgblu  = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && git echoi "Changes in HEAD not in upstream/$branch" && git lg upstream/$branch..HEAD # Changes from HEAD to given upstream branch
+  lgbru  = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && git echoi "Changes in upstream/$branch not in HEAD" && git lg HEAD..upstream/$branch # Changes from given upstream branch to HEAD
+  lgdl   = ! git echoi "Changes in HEAD not in default origin branch $(git defbro)" && git lg origin/$(git defbro)..HEAD # Changes from HEAD to default origin branch
+  lgdr   = ! git echoi "Changes in origin default branch $(git defbro) not in HEAD" && git lg HEAD..origin/$(git defbro) # Changes from default origin branch to HEAD
+  lgdlu  = ! git echoi "Changes in HEAD not in default upstream branch $(git defbru)" && git lg upstream/$(git defbru)..HEAD # Changes from HEAD to default upstream branch
+  lgdru  = ! git echoi "Changes in upstream default branch $(git defbru) not in HEAD" && git lg HEAD..upstream/$(git defbru) # Changes from default upstream branch to HEAD
   lgdlr  = ! git lgdl && echo && git lgdr # Show local and default origin changes
   lgdlru = ! git lgdlu && echo && git lgdru # Show local and default upstream changes
 
@@ -255,6 +255,7 @@
   versionmajor2 = ! test $(git versionmajor) -ge 2
 
   # Tools to display full git command, more complex then expected !!!
+  # TODO: to optimize, each display takes too much time !!!
   cmd = ! "f(){ \
       git echocolor 32 \"git $@\"; \
       if [ ! \"$(git echocmd)\" = \"echo\" ]; then \
@@ -265,7 +266,7 @@
   echoi = ! "f(){ \
       git echocolor 39 \"$@\"; \
     } ; f" # echo with info color (default)
-  debugo = ! git cmd cecho && echo && git cmd echocmd && echo
+  debugo = ! git cmd cecho && echo && git cmd echocmd && echo # echo debug info about the echo used
   cecho = ! "f(){ \
       val=$(echo -en 'x' 2>&1); \
       if [ $? -eq 0 ] && [ \"$val\" = \"x\" ]; then \
@@ -295,13 +296,16 @@
       color=$1; \
       shift; \
       ECHO=$(git decho); \
-      $ECHO -e "\\\\e[${color}m$@\\\\e[0m" >&2; \
+      param=\"$@\"; `# Worst trick even to allow to display ' around format for git log commands`; \
+      param=\"$(echo \"$@\" | sed -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
+      $ECHO -e "\\\\e[${color}m$param\\\\e[0m" >&2; \
     }; f" # echo given arguments with given color for tty terminal
   echobash = ! "f() { \
       color=$1; \
       shift; \
       ECHO=$(git decho); \
-      param=\"$@\"; \
+      param=\"$@\"; `# Worst trick even to allow to display ' around format for git log commands`; \
+      param=\"$(echo \"$@\" | sed -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
       bash -c \"$ECHO -e \\\"\\e[${color}m$param\\e[0m\\\" >&2\"; \
     }; f" # echo given arguments with given color using bash
   echocmd = ! "f() { \
