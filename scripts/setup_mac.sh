@@ -36,20 +36,17 @@ brew install coreutils >&2
 brew install gnu-sed >&2
 brew install gawk >&2
 
-# Chek the shell profile to update
-shell_file="$HOME/.bashrc"
-if [ -f "$HOME/.zshenv" ]; then
-  shell_file="$HOME/.zshenv"
-fi
-# Setup PATH in the shell profile
-path="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin"
-path_to_add="$path"
-echo 'export PATH="'$path':$PATH"' >> "$shell_file"
+# Check path to add
+path_to_add="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin"
 for prog in gawk; do
   for path in /usr/local/Cellar/$prog/*/bin; do
     path_to_add="$path:$path_to_add"
-    echo 'export PATH="'$i':$PATH"' >> "$shell_file"
   done
+done
+
+# Update the shells profile
+for shell_profile in .bashrc .zshenv; do
+  echo 'export PATH="'$path_to_add':$PATH"' >> "$HOME/$shell_profile"
 done
 
 if [ $SETUP_SILENT -eq 0 ]; then

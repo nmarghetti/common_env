@@ -12,11 +12,11 @@ function pathRm() {
       pathVar=${1#%}
       shift
     fi
-    
+
     # Trick: add ':' to avoid to treat special case of first or last element in the path
     local path=:${!pathVar}:
     local pathToRemove
-    
+
     while [ $# -gt 0 ]; do
       # Split $1 by ':' and treat each element one by one
       while read pathToRemove; do
@@ -25,7 +25,7 @@ function pathRm() {
       done < <(echo $1 | tr ':' '\n')
       shift
     done
-    
+
     # Trick: remove ':' previsouly added
     path=${path#:}
     path=${path%:}
@@ -46,20 +46,20 @@ function pathAdd() {
       append=0
       shift
     fi
-    
+
     # First remove the path before to add
     pathRm "$@"
-    
+
     local pathVar=PATH
     # If arg starts with '%', it defines the varible to modify
     if [ "${1::1}" = "%" ]; then
       pathVar=${1#%}
       shift
     fi
-    
+
     local path=
     local pathToAdd=
-    
+
     while [ $# -gt 0 ]; do
       # Split $1 by ':' and treat each element one by one
       while read pathToAdd; do
@@ -78,7 +78,7 @@ function pathAdd() {
       shift
     done
     path=${path#:}
-    
+
     # append
     if [ $append -eq 1 ]; then
       export $pathVar="${!pathVar}:$path"
@@ -102,4 +102,6 @@ function pathPrepend() {
 }
 
 # display the path
-alias pathList='echo $PATH | tr ":" "\n"'
+function pathList () {
+  echo "$PATH" | tr ":" "\n"
+}
