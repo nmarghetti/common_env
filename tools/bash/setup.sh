@@ -23,6 +23,7 @@ EOM
 if [ ! "\$(basename "\${BASH_SOURCE[0]}")" = ".bashrc" ]; then
   echo "ERROR !!! Unable to find the path of .bashrc, not sourcing it, many things will probably not work !!!" >&2
 else
+  [ "\$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing \$(readlink -f "\${BASH_SOURCE[0]}") ..."
   # Ensure that \$HOME points to where is located the current file being sourced
   export HOME=\$(cd \$(dirname "\${BASH_SOURCE[0]}") && pwd)
   source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
