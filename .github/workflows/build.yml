@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - '*'
+env:
+  COMMON_ENV_DEBUG: '1'
 
 jobs:
   build:
@@ -19,47 +21,95 @@ jobs:
       # Check OS
       - name: Check OS
         run: |
-          git --version
-          echo "$SHELL"
-          which bash
+          echo "  * Check git version: $(git --version)"
+          echo "  * Check shell: $SHELL"
+          echo "  * Check bash: $(which bash)"
           bash -c 'echo hello from $SHELL'
-          echo ''
+          echo "  * Check env:"
           env | sort
       # Checkout repo
       - uses: actions/checkout@v2
         with:
           fetch-depth: 5
           submodules: false
+      # Configure python version
+      - name: Use Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      # Check system on Linux and Mac
+      - name: Check system on Linux and Mac
+        if: runner.os == 'Linux' || runner.os == 'macOs'
+        run: |
+          source tools/bash/source/system.sh
+          echo "  * Current system: $(system_get_os)"
+          echo "  * Current shell: $(system_get_current_shell)"
+          echo "  * Installed shells:"
+          system_get_shells
+          echo "  * Current shell info:"
+          system_display_shell_info
       # Setup Mac
       - name: Setup Mac
         if: runner.os == 'macOS'
-        run: bash ./scripts/setup_mac.sh -s | tee "$HOME/.bashrc.env"
-      # Display Mac ~/.bashrc.env
-      - name: Display Mac ~/.bashrc.env
+        run: bash ./scripts/setup_mac.sh -s | tee "$HOME/.mac_shell_env"
+      # Display Mac ~/.mac_shell_env
+      - name: Display Mac ~/.mac_shell_env
         if: matrix.os == 'macos-latest'
-        run: cat "$HOME/.bashrc.env"
-      # Setup
-      - name: Setup
-        shell: bash
-        run: |
-          touch "$HOME/.bashrc.env"
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            source "$HOME/.bashrc.env"
-          fi
-          bash ./scripts/setup.sh -s
-          git lga20
+        run: cat "$HOME/.mac_shell_env"
       # Display ~/.bashrc
       - name: Display ~/.bashrc
-        run: cat $HOME/.bashrc | nl -ba
+        shell: bash
+        run: |
+          if [ -f "$HOME/.bashrc" ]; then
+            cat "$HOME/.bashrc" | nl -ba
+          else
+            echo "'$HOME/.bashrc' does not exist"
+          fi
+      # Setup on bash
+      - name: Setup on bash
+        shell: bash
+        run: |
+          [ -f "$HOME/.bashrc" ] && rm -f "$HOME/.bashrc"
+          touch "$HOME/.mac_shell_env"
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            source "$HOME/.mac_shell_env"
+          fi
+          bash ./scripts/setup.sh -s
+      # Display ~/.bashrc
+      - name: Display ~/.bashrc
+        run: cat "$HOME/.bashrc" | nl -ba
+      # Display ~/.zshrc
+      - name: Display ~/.zshrc
+        run: cat "$HOME/.zshrc" | nl -ba
       # Display ~/.gitconfig
       - name: Display ~/.gitconfig
-        run: cat $HOME/.gitconfig | nl -ba
+        run: cat "$HOME/.gitconfig" | nl -ba
+
+      # Check shell
+      - name: Check shell
+        shell: bash
+        run: |
+          source "$HOME/.mac_shell_env"
+          source "$HOME/.bashrc"
+          echo "  * Current shell: $(system_get_current_shell)"
+          echo "  * Installed shells:"
+          system_get_shells
+          echo "  * Current shell info:"
+          system_display_shell_info
+          echo "  * Display PATH with pathList"
+          pathList
+          echo "  * Check $HOME/bin"
+          ls -al ~/bin/
+          echo "  * Create python venv"
+          pythonvenv list
+          pythonvenv create
+          pythonvenv list
       # Quick git check
       # Runs on the system default shell
       - name: Quick git check
         env:
           # Ensure to source this for MAC to have exported PATH in bash (default shell)
-          BASH_ENV: "$HOME/.bashrc.env"
+          BASH_ENV: "$HOME/.mac_shell_env"
         run: |
           git debugo
           git st
@@ -68,7 +118,55 @@ jobs:
       - name: Check Git
         shell: bash
         env:
-          BASH_ENV: "$HOME/.bashrc.env"
+          BASH_ENV: "$HOME/.mac_shell_env"
         run: |
           git debugo
           bash ./tools/git/test_git.sh
+
+      # Install zsh on Linux
+      - name: Install zsh on Linux
+        if: runner.os == 'Linux'
+        shell: bash
+        run: sudo apt-get install zsh
+      # Install zsh on Mac
+      - name: Install zsh on Mac
+        if: runner.os == 'macOs'
+        shell: bash
+        run: brew install zsh
+      # Check zsh shell
+      - name: Check zsh shell
+        if: runner.os == 'Linux' || runner.os == 'macOs'
+        shell: zsh -e -o pipefail {0}
+        env:
+          SHELL: zsh
+        run: |
+          source tools/bash/source/system.sh
+          echo "  * Current shell: $(system_get_current_shell)"
+          echo "  * Installed shells:"
+          system_get_shells
+          echo "  * Current shell info:"
+          system_display_shell_info
+      # Setup on zsh
+      - name: Setup on zsh
+        if: runner.os == 'Linux' || runner.os == 'macOs'
+        shell: zsh -e -o pipefail {0}
+        env:
+          SHELL: zsh
+        run: |
+          source "$HOME/.mac_shell_env"
+          source "$HOME/.zshrc"
+          echo "  * Display PATH with pathList"
+          pathList
+          echo "  * Check $HOME/bin"
+          ls -al ~/bin/
+          echo "  * List python venv"
+          pythonvenv list
+      # Quick git check on zsh
+      - name: Quick git check on zsh
+        if: runner.os == 'Linux' || runner.os == 'macOs'
+        shell: zsh -e -o pipefail {0}
+        run: |
+          source "$HOME/.mac_shell_env"
+          git debugo
+          git st
+          git lga20

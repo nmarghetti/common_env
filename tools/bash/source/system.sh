@@ -34,11 +34,11 @@ system_get_default_shell(){
 }
 
 system_display_shell_info(){
-  case "$(basename $SHELL)" in
+  case "$(basename "$SHELL")" in
     bash|zsh)
       if [ "$1" = "eval" ]; then
-        for val in $(set | grep -aE "^$(basename $SHELL | tr '[:lower:]' '[:upper:]')" | cut -d= -f1); do
-          echo "$val=${!val}"
+        for val in "$(set | grep -aE "^$(basename $SHELL | tr '[:lower:]' '[:upper:]')" | cut -d= -f1)"; do
+          [ -n "$val" ] && echo "$val=${!val}"
         done
       else
         set | grep -aE "^$(basename $SHELL | tr '[:lower:]' '[:upper:]')"
@@ -51,6 +51,10 @@ system_display_shell_info(){
 }
 
 system_get_shells(){
-  cat /etc/shells | grep -E '^/'
+  if [ -f /etc/shells ]; then
+    cat /etc/shells | grep -E '^/'
+  else
+    echo "Unable to find shells installed"
+  fi
 }
 
