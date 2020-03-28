@@ -74,6 +74,8 @@ else
   return 1
 fi
 
+# Function to update git repo
+source "${MAIN_BASHRC_ROOT}/check_update.sh"
 
 # Ensure terminal output are UTF8 https://www.debian.org/doc/manuals/fr/debian-fr-howto/ch3.html
 export LC_ALL=C.UTF-8
@@ -98,7 +100,7 @@ alias pyset='source pythonvenv set'
 alias pyunset='deactivate 2>/dev/null'
 
 # Do some checks only if not done since at least 24h
-COMMON_ENV_LAST_CHECK="$HOME/.common_env.check"
+COMMON_ENV_LAST_CHECK="$HOME/.common_env_check"
 if [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMON_ENV_LAST_CHECK" +%s)) -ge 86400 ]; then
   touch "$COMMON_ENV_LAST_CHECK"
 
@@ -110,7 +112,7 @@ if [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMO
   if [ "$OSTYPE" = "msys" ]; then
     pingopt="-n"
   fi
-  ping $pingopt 1 -w 1 github.com &>/dev/null && source "${MAIN_BASHRC_ROOT}/check_update.sh"
+  ping $pingopt 1 -w 1 github.com &>/dev/null && common_env_check_update
 
   # Update git config
   type rgit &>/dev/null && rgit
