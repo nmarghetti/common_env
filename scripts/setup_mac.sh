@@ -1,5 +1,18 @@
 #! /bin/bash
 
+# Check it is ran with bash
+if [ ! "$(basename "$SHELL")" = "bash" ]; then
+  echo "Please run with: bash $0" >&2
+  exit 1
+fi
+
+# exit when any command fails
+set -e
+# keep track of the last executed command
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+# echo an error message before exiting
+trap 'set +e && echo "\"${last_command}\" command failed with exit code $?."' EXIT
+
 SETUP_SILENT=$(echo "$@" | tr '[:space:]' '\n' | grep -cE '^(-s|--silent)$')
 
 if [ ! "$(uname -s )" = "Darwin" ]; then
@@ -7,34 +20,28 @@ if [ ! "$(uname -s )" = "Darwin" ]; then
   exit 1
 fi
 
-# Exit if greadlink, gsed, gawk and gecho are there
-type greadlink gsed gawk gecho &>/dev/null && exit 0
+NEED_INSTALL=0
+# Install if greadlink, gsed, gawk and gecho are not all there
+type greadlink gsed gawk gecho &>/dev/null || NEED_INSTALL=1
+if [ $NEED_INSTALL -eq 1 ]; then
+  answer='y'
+  if [ $SETUP_SILENT -eq 0 ]; then
+    echo "Gnu readlink, sed, awk or echo are not available, some components will be installed:"
+    echo "  * brew install coreutils"
+    echo "  * brew install gnu-sed"
+    echo "  * brew install gawk"
+    echo "Do you want to proceed ? (Y/n) "
+    read answer
+  else
+    echo "Using silent mode" >&2
+  fi
+  [[ ! "$answer" =~ ^[yY]$ ]] && echo "Exit setup." && trap - EXIT && exit 1
 
-# exit when any command fails
-set -e
-# keep track of the last executed command
-trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
-# echo an error message before exiting
-# trap '[[ "${last_command}" =~ ^exit [0-9]+$ ]] || echo "\"${last_command}\" command failed with exit code $?."' EXIT
-trap 'echo "\"${last_command}\" command failed with exit code $?."' EXIT
-
-
-answer='y'
-if [ $SETUP_SILENT -eq 0 ]; then
-  echo "Gnu readlink, sed, awk or echo are not available, some components will be installed:"
-  echo "  * brew install coreutils"
-  echo "  * brew install gnu-sed"
-  echo "  * brew install gawk"
-  echo "Your shell profile will be update to export PATH to have those new tool in your environment."
-  echo "Do you want to proceed ? (Y/n) "
-  read answer
+  # Install modules
+  brew install coreutils >&2
+  brew install gnu-sed >&2
+  brew install gawk >&2
 fi
-[[ ! "$answer" =~ ^[yY]$ ]] && echo "Exit setup." && trap - EXIT && exit 1
-
-# Install modules
-brew install coreutils >&2
-brew install gnu-sed >&2
-brew install gawk >&2
 
 # Check path to add
 path_to_add="/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/coreutils/libexec/gnubin"
@@ -44,17 +51,12 @@ for prog in gawk; do
   done
 done
 
-# Update the shells profile
-for shell_profile in .bashrc .zshenv; do
-  echo 'export PATH="'$path_to_add':$PATH"' >> "$HOME/$shell_profile"
-done
+export PATH="$path_to_add:$PATH"
+export COMMON_ENV_SETUP_MAC_PATH="export PATH=\"$path_to_add:\$PATH\""
 
-if [ $SETUP_SILENT -eq 0 ]; then
-  echo "You please run one of the following command to have your PATH up to date:"
-  echo " - export PATH='$path_to_add:\$PATH'"
-  echo " - source '$shell'"
-else
-  echo "export PATH=\"$path_to_add:\$PATH\""
-fi
+type readlink sed awk echo >/dev/null && echo "MAC setup completed"
 
+
+# undo in case this file is sourced
+set +e
 trap - EXIT
