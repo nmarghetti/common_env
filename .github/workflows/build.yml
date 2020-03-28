@@ -48,32 +48,30 @@ jobs:
           system_get_shells
           echo "  * Current shell info:"
           system_display_shell_info
-      # Setup Mac
-      - name: Setup Mac
-        if: runner.os == 'macOS'
-        run: bash ./scripts/setup_mac.sh -s | tee "$HOME/.mac_shell_env"
-      # Display Mac ~/.mac_shell_env
-      - name: Display Mac ~/.mac_shell_env
-        if: matrix.os == 'macos-latest'
-        run: cat "$HOME/.mac_shell_env"
-      # Display ~/.bashrc
-      - name: Display ~/.bashrc
+      # Display ~/.bashrc and remove
+      - name: Display ~/.bashrc and remove
         shell: bash
         run: |
           if [ -f "$HOME/.bashrc" ]; then
             cat "$HOME/.bashrc" | nl -ba
+            rm -f "$HOME/.bashrc"
           else
             echo "'$HOME/.bashrc' does not exist"
           fi
+      # Setup Mac
+      - name: Setup Mac
+        if: runner.os == 'macOS'
+        run: |
+          echo "  * First setup:"
+          bash ./scripts/setup_mac.sh -s
+          echo ""
+          echo "  * Try to setup again:"
+          bash ./scripts/setup_mac.sh -s
       # Setup on bash
       - name: Setup on bash
         shell: bash
         run: |
-          [ -f "$HOME/.bashrc" ] && rm -f "$HOME/.bashrc"
-          touch "$HOME/.mac_shell_env"
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            source "$HOME/.mac_shell_env"
-          fi
+          echo "Setup everything"
           bash ./scripts/setup.sh -s
       # Display ~/.bashrc
       - name: Display ~/.bashrc
@@ -89,7 +87,6 @@ jobs:
       - name: Check shell
         shell: bash
         run: |
-          source "$HOME/.mac_shell_env"
           source "$HOME/.bashrc"
           echo "  * Current shell: $(system_get_current_shell)"
           echo "  * Installed shells:"
@@ -107,9 +104,6 @@ jobs:
       # Quick git check
       # Runs on the system default shell
       - name: Quick git check
-        env:
-          # Ensure to source this for MAC to have exported PATH in bash (default shell)
-          BASH_ENV: "$HOME/.mac_shell_env"
         run: |
           git debugo
           git st
@@ -117,8 +111,6 @@ jobs:
       # Check Git
       - name: Check Git
         shell: bash
-        env:
-          BASH_ENV: "$HOME/.mac_shell_env"
         run: |
           git debugo
           bash ./tools/git/test_git.sh
@@ -140,21 +132,12 @@ jobs:
         env:
           SHELL: zsh
         run: |
-          source tools/bash/source/system.sh
+          source "$HOME/.zshrc"
           echo "  * Current shell: $(system_get_current_shell)"
           echo "  * Installed shells:"
           system_get_shells
           echo "  * Current shell info:"
           system_display_shell_info
-      # Setup on zsh
-      - name: Setup on zsh
-        if: runner.os == 'Linux' || runner.os == 'macOs'
-        shell: zsh -e -o pipefail {0}
-        env:
-          SHELL: zsh
-        run: |
-          source "$HOME/.mac_shell_env"
-          source "$HOME/.zshrc"
           echo "  * Display PATH with pathList"
           pathList
           echo "  * Check $HOME/bin"
@@ -166,7 +149,6 @@ jobs:
         if: runner.os == 'Linux' || runner.os == 'macOs'
         shell: zsh -e -o pipefail {0}
         run: |
-          source "$HOME/.mac_shell_env"
           git debugo
           git st
           git lga20

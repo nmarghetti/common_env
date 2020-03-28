@@ -1,20 +1,26 @@
 #! /bin/bash
 
-SCRIPT_NAME=$(basename "$0")
-SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
-SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
-
+# Check it is ran with bash
 if [ ! "$(basename "$SHELL")" = "bash" ]; then
-  echo "You should run $0 with bash"
+  echo "Please run with: bash $0" >&2
   exit 1
 fi
 
+# Check 'readlink -f' is available
 readlink -f "$0" &>/dev/null
 if [ $? -ne 0 ]; then
+  [ ! "$(uname -s )" = "Darwin" ] && echo "Unable to use 'readlink -f', exiting." && exit 1
+  echo "Setup for MAC"
   # Try to run the Mac setup if readlink -f is not available
-  bash "$SETUP_SCRIPT_ROOT/setup_mac.sh" "$@"
-  [ $? -ne 0 ] && exit 1
+  source "$(dirname "$0")/setup_mac.sh"
+  [ $? -ne 0 ] && echo "Unable to run setup for mac" && exit 1
+  readlink -f "$0" &>/dev/null
+  [ $? -ne 0 ] && echo "Unable to use 'readlink -f', exiting." && exit 1
 fi
+
+SCRIPT_NAME=$(basename "$0")
+SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
+SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
 
 DEFAULT_APPS="bash git"
 APPS=$DEFAULT_APPS
