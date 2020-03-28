@@ -58,6 +58,9 @@ jobs:
           else
             echo "'$HOME/.bashrc' does not exist"
           fi
+      # Display .git/config
+      - name: Display .git/config
+        run: cat ".git/config" | nl -ba
       # Setup Mac
       - name: Setup Mac
         if: runner.os == 'macOS'

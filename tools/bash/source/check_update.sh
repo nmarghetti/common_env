@@ -5,10 +5,10 @@ function check_repo_update() {
     cd "$1" || return
   fi
   echo "Checking for update on $PWD..." >&2
-  git st &>/dev/null || return
-  git f 2>/dev/null
-  if [ $(echo "$(git lgr 2>/dev/null)" | wc -l) -gt 1 ]; then
-    GIT_PAGER=cat git lgr 2>/dev/null && echo
+  git status &>/dev/null || return
+  git fetch
+  if [ $(git log --format=oneline HEAD..origin/$(git symbolic-ref --short HEAD) -1 | wc -l) -gt 0 ]; then
+    git --no-pager lgr && echo
     echo "Do you want to update $PWD ? (y/N) "
     read answer
     if [[ "$answer" =~ ^[yY]$ ]]; then
@@ -37,8 +37,6 @@ function check_repo_update() {
   fi
 }
 
-function check_update() {
+function common_env_check_update() {
   (check_repo_update "$MAIN_BASHRC_ROOT/../../..")
 }
-
-check_update
