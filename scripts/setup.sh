@@ -12,7 +12,7 @@ if [ $? -ne 0 ]; then
   [ ! "$(uname -s )" = "Darwin" ] && echo "Unable to use 'readlink -f', exiting." && exit 1
   echo "Setup for MAC"
   # Try to run the Mac setup if readlink -f is not available
-  source "$(dirname "$0")/setup_mac.sh"
+  source "$(dirname "$0")/../tools/mac/setup_mac.sh"
   [ $? -ne 0 ] && echo "Unable to run setup for mac" && exit 1
   readlink -f "$0" &>/dev/null
   [ $? -ne 0 ] && echo "Unable to use 'readlink -f', exiting." && exit 1

@@ -6,14 +6,14 @@ if [ ! "$(basename "$SHELL")" = "bash" ]; then
   exit 1
 fi
 
+SETUP_SILENT=$(echo "$@" | tr '[:space:]' '\n' | grep -cE '^(-s|--silent)$')
+
 # exit when any command fails
 set -e
 # keep track of the last executed command
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 # echo an error message before exiting
 trap 'set +e && echo "\"${last_command}\" command failed with exit code $?."' EXIT
-
-SETUP_SILENT=$(echo "$@" | tr '[:space:]' '\n' | grep -cE '^(-s|--silent)$')
 
 if [ ! "$(uname -s )" = "Darwin" ]; then
   echo "You are not running on Mac, nothing to do."

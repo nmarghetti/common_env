@@ -66,10 +66,10 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           echo "  * First setup:"
-          bash ./scripts/setup_mac.sh -s
+          bash ./tools/mac/setup_mac.sh -s
           echo ""
           echo "  * Try to setup again:"
-          bash ./scripts/setup_mac.sh -s
+          bash ./tools/mac/setup_mac.sh -s
       # Setup on bash
       - name: Setup on bash
         shell: bash
