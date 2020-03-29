@@ -10,6 +10,21 @@ MAIN_BASHRC_ROOT=$(dirname $(readlink -f "${MAIN_BASHRC}"))
 source "${MAIN_BASHRC_ROOT}/system.sh"
 current_shell="$(system_get_current_shell)"
 
+# Check the shell used
+if [ "$current_shell" = "bash" ] || [ "$current_shell" = "zsh" ]; then
+  :
+else
+  echo "Unsupported shell '$current_shell', exiting." >&2
+  return 1
+fi
+
+# If host system is Windows
+if [ "$(system_get_os_host)" = "Windows" ]; then
+  # Get some function to convert Windows path
+  source "${MAIN_BASHRC_ROOT}/path_windows.sh"
+  alias rrsource='COMMON_ENV_FORCE_CHECK=1 rsource'
+fi
+
 # If current shell is BASH
 if [ "$current_shell" = "bash" ]; then
   source "${MAIN_BASHRC_ROOT}/path.sh"
@@ -21,6 +36,8 @@ if [ "$current_shell" = "bash" ]; then
       echo "ERROR !!! You are are not sourcing with bash, you might encounter problem !!!" >&2
     fi
 
+    export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
+    export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
     export MSYS_SHELL=$APPS_ROOT/PortableApps/CommonFiles/msys64/msys2_shell.cmd
 
     pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/mingw64/bin" 2>/dev/null
@@ -54,7 +71,7 @@ if [ "$current_shell" = "bash" ]; then
     alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
     alias cddev="cd ${APPS_ROOT}/Documents/dev"
 
-    # source pythonvenv set 3.8.1
+    pythonvenv list | grep -cE '^3.8.1$' &>/dev/null && source pythonvenv set 3.8.1
   else
     unset APPS_ROOT
   fi
@@ -69,9 +86,6 @@ if [ "$current_shell" = "bash" ]; then
 # If current shell is ZSH
 elif [ "$current_shell" = "zsh" ]; then
   source "${MAIN_BASHRC_ROOT}/path_zsh.sh"
-else
-  echo "Unsupported shell '$current_shell', exiting." >&2
-  return 1
 fi
 
 # Function to update git repo
@@ -101,7 +115,7 @@ alias pyunset='deactivate 2>/dev/null'
 
 # Do some checks only if not done since at least 24h
 COMMON_ENV_LAST_CHECK="$HOME/.common_env_check"
-if [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMON_ENV_LAST_CHECK" +%s)) -ge 86400 ]; then
+if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMON_ENV_LAST_CHECK" +%s)) -ge 86400 ]; then
   touch "$COMMON_ENV_LAST_CHECK"
 
   # Refresh tool links

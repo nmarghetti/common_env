@@ -4,15 +4,15 @@
 
 Either you are on **Windows**, **Linux** or **macOs** and using **bash** or **zsh**, you would get:
 
-- **Python** virtual environment easy to handle with few simple shell simple functions:
-  - **pylist**: list the your available python venv
+- **Python** virtual environment easy to handle with few simple shell functions:
+  - **pylist**: list your available python venv
   - **pycreate** [python_path][version]: create a venv name _version_ with python from _python_path_
   - **pyset** version: activate the venv _version_ (it has to exist from list given by "pylist")
   - **pyunset**: deactivate current venv
 - **Git** configured with some core settings and many useful aliases
   - core settings about whitespace, EOL, filemode, symlinks, long path, etc.
   - main coloration
-  - many aliases that display the real git command when invoked for several case
+  - many aliases to handle several usecases and for each it displays the full real git command invoked
 
 If you are on **Windows**, you can get a portable development environment (it is not hardly installed in the system, all the applications are portable) with the following tools:
 
