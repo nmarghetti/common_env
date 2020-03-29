@@ -21,6 +21,13 @@ jobs:
       # Check OS
       - name: Check OS
         run: |
+          uname -a
+          echo "  * uname -m: $(uname -m)"
+          echo "  * uname -n: $(uname -n)"
+          echo "  * uname -p: $(uname -p)"
+          echo "  * uname -r: $(uname -r)"
+          echo "  * uname -s: $(uname -s)"
+          echo "  * uname -v: $(uname -v)"
           echo "  * Check git version: $(git --version)"
           echo "  * Check shell: $SHELL"
           echo "  * Check bash: $(which bash)"
@@ -43,6 +50,19 @@ jobs:
         run: |
           source tools/bash/source/system.sh
           echo "  * Current system: $(system_get_os)"
+          echo "  * Current host system: $(system_get_os_host)"
+          echo "  * Current shell: $(system_get_current_shell)"
+          echo "  * Installed shells:"
+          system_get_shells
+          echo "  * Current shell info:"
+          system_display_shell_info
+      # Check system with bash
+      - name: Check system with bash
+        shell: bash
+        run: |
+          source tools/bash/source/system.sh
+          echo "  * Current system: $(system_get_os)"
+          echo "  * Current host system: $(system_get_os_host)"
           echo "  * Current shell: $(system_get_current_shell)"
           echo "  * Installed shells:"
           system_get_shells
@@ -100,10 +120,22 @@ jobs:
           pathList
           echo "  * Check $HOME/bin"
           ls -al ~/bin/
+      # Check python
+      - name: Check python
+        shell: bash
+        run: |
+          source "$HOME/.bashrc"
+          echo "  * Check current python"
+          type python
+          python -c "import sys; print(f'Python version: {sys.version}\\nPython path:\\n{sys.path}')"
           echo "  * Create python venv"
           pythonvenv list
           pythonvenv create
           pythonvenv list
+          source pythonvenv set $(pythonvenv list | head -1)
+          echo "  * Check current python"
+          type python
+          python -c "import sys; print(f'Python version: {sys.version}\\nPython path:\\n{sys.path}')"
       # Quick git check
       # Runs on the system default shell
       - name: Quick git check

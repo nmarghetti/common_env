@@ -41,6 +41,15 @@ function set_env() {
     echo "Error: Unable to active this python env !"
     return 1
   fi
+  # Ensure path to python is posix
+  if [ "$(system_get_os_host)" = "Windows" ]; then
+    local python_env_path="$(grep -E '^VIRTUAL_ENV="' "$pythonactivate" | head -1 | sed -re 's/VIRTUAL_ENV="([^"]+)"/\1/')"
+    if [ "$(echo "$python_env_path" | grep -c ':')" -ne 0 ]; then
+      local python_env_path_posix="$(get_path_to_posix "$python_env_path")"
+      sed -re "s#$(echo "$python_env_path" | sed -re "s#\\\\#\\\\\\\\#g")#$python_env_path_posix#g" "$pythonactivate" >| "${pythonactivate}.csh"
+      pythonactivate="${pythonactivate}.csh"
+    fi
+  fi
   source "$pythonactivate"
   type python
 }

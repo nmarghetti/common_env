@@ -114,8 +114,10 @@ if [ $? -ne 0 ]; then
   APPS=$DEFAULT_APPS
   echo "Only apps that dont need \$APPS_ROOT will be installed: $APPS" >&2
 else
-  export WIN_APPS_ROOT="$(echo "$APPS_ROOT" | cut -b 2 | tr '[:lower:]' '[:upper:]'):$(echo "$APPS_ROOT" | cut -b 3-)"
-  export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
+  source "$SETUP_TOOLS_ROOT/bash/source/system.sh"
+  source "$SETUP_TOOLS_ROOT/bash/source/path_windows.sh"
+  export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
+  export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
   # check wget is installed
   if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/wget.exe" ]; then
     if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/mingw64/bin/wget.exe" ]; then

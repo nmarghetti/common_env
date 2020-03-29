@@ -20,6 +20,14 @@ system_get_os(){
   echo $os
 }
 
+system_get_os_host() {
+  local os=$(system_get_os)
+  # For Bash on Unbuntu on Windows
+  [ "$os" = "Linux" ] && [ "$(uname -a | grep -ci 'Microsoft')" -ne 0 ] && os="Windows"
+  echo "$os"
+  [ "$os" = "Unknown" ] && return 1
+}
+
 system_get_current_shell(){
   # sh -c 'ps -p $$ -o ppid=' | xargs -I'{}' readlink -f '/proc/{}/exe'
   echo "$(basename "$SHELL")"
