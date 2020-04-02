@@ -44,6 +44,9 @@
   v = ! git --version
   mg = ! git cmd merge --no-edit
 
+  # DISPLAY ALIAS
+  dry = ! GIT_DRY_CMD=1 git # Only display the command for the given alias, do not run it (eg. type "git dry mg" --> it displays "git merge --no-edit")
+
   # CONFIG
   gconf = ! vi $HOME/.gitconfig # edit global git config
   conf = ! vi .git/config # edit repo git config
@@ -121,7 +124,9 @@
   # PUSH
   p      = ! git cmd push
   pt     = ! git p --tags # push tags
+  ptf    = ! git pt --force # force push tags
   ptu    = ! git pt upstream # push tags to upstream
+  ptfu   = ! git ptf upstream # force push tags to upstream
   pushf  = ! git p --force # force push (useful when using git ca)
   pf     = ! git pushf
   pushu  = ! git p upstream $(git brcurrent) # push to upstream
@@ -129,6 +134,10 @@
   pushuf = ! git p --force upstream $(git brcurrent) # force push to upstream
   puf    = ! git pushuf
   pfu    = ! git puf
+  pa     = ! "f(){ git p \"$@\" && git pt \"$@\"; }; f" # push changes and tags
+  paf    = ! "f(){ git p \"$@\" && git pt \"$@\"; }; f --force" # force push changes and tags
+  pau    = ! "f(){ git pu \"$@\" && git ptu \"$@\"; }; f" # push changes and tags to upstream
+  pafu   = ! "f(){ git pu \"$@\" && git ptu \"$@\"; }; f --force" # force push changes and tags to upstream
 
   # TAG
   t   = ! git cmd tag
@@ -169,12 +178,16 @@
   rbi     = ! git rebasei
 
   # RESET BRANCH
-  resetb  = ! git rst --hard # git resetb <branch_name> -> hardly reset to branch_name
-  rsb     = ! git resetb
-  resetbo = ! git rst --hard origin/$(git brcurrent)
-  rsbo    = ! git resetbo
-  resetbu = ! git rst --hard upstream/$(git brcurrent)
-  rsbu    = ! git resetbu
+  resetb   = ! git rst --hard # git resetb <branch_name> -> hardly reset to branch_name
+  resetbo  = ! git rst --hard origin/$(git brcurrent) # hardly reset to origin
+  resetbu  = ! git rst --hard upstream/$(git brcurrent) # hardly reset to upstream
+  resetbdo = ! git rst --hard origin/$(git defbro) # hardly reset to origin default branch
+  resetbdu = ! git rst --hard upstream/$(git defbru) # hardly reset to upstream default branch
+  rsb      = ! git resetb
+  rsbo     = ! git resetbo
+  rsbu     = ! git resetbu
+  rsbdo    = ! git resetbdo
+  rsbdu    = ! git resetbdu
 
   # DIFF
   df     = ! git cmd diff
@@ -256,12 +269,14 @@
 
   # Tools to display full git command, more complex then expected !!!
   # TODO: to optimize, each display takes too much time !!!
+
+
   cmd = ! "f(){ \
       git echocolor 32 \"git $@\"; \
       if [ ! \"$(git echocmd)\" = \"echo\" ]; then \
         color='-c color.ui=always'; \
       fi; \
-      git $color \"$@\"; \
+      [ ! \"$GIT_DRY_CMD\" = \"1\" ] && git $color \"$@\"; \
     } ; f" # echo with cmd color (green) and run cmd
   echoi = ! "f(){ \
       git echocolor 39 \"$@\"; \
