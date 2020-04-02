@@ -8,7 +8,8 @@ function setup_bash() {
   fi
 
   # Create template .bashrc and .zshrc if not there yet
-  for shellrc in .bashrc and .zshrc; do
+  local shellrc
+  for shellrc in .bashrc .zshrc; do
     if [ ! -f "$HOME/$shellrc" ]; then
       echo "Create $HOME/$shellrc"
       cat > "$HOME/$shellrc" << EOM
@@ -27,9 +28,9 @@ EOM
 if [ ! "\$(basename "\${BASH_SOURCE[0]}")" = ".bashrc" ]; then
   echo "ERROR !!! It does not seem that you are sourcing .bashrc with bash, not sourcing common_env, many things will probably not work !!!" >&2
 else
-  $([ -n "$COMMON_ENV_SETUP_MAC_PATH" ] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[ "\$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing \$(readlink -f "\${BASH_SOURCE[0]}") ..." >&2
+  $([ -n "$COMMON_ENV_SETUP_MAC_PATH" ] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[ "\$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing '\$(readlink -f "\${BASH_SOURCE[0]}")' ..." >&2
   # Ensure that \$HOME points to where is located the current file being sourced
-  export HOME=\$(cd \$(dirname "\${BASH_SOURCE[0]}") && pwd)
+  export HOME=\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)
   source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
 fi
 EOM
@@ -40,7 +41,7 @@ EOM
 
   # Add content to .zshrc
   content=$(cat <<-EOM
-  $([ -n "$COMMON_ENV_SETUP_MAC_PATH" ] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[ "\$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing \$0 ..." >&2
+  $([ -n "$COMMON_ENV_SETUP_MAC_PATH" ] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[ "\$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing '\$0' ..." >&2
   source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
 EOM
 )

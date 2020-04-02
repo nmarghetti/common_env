@@ -1,5 +1,7 @@
 #! /bin/bash
 
+[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
+
 # create_env [python_bin] [version]
 function create_env() {
   local pythonbin="python"
@@ -11,18 +13,18 @@ function create_env() {
   fi
   local version=$1
   if [ -z "$version" ]; then
-    version=$($pythonbin --version | cut -d' ' -f2 | tr -d '[[:space:]]')
+    version=$($pythonbin --version 2>&1 | cut -d' ' -f2 | tr -d '[[:space:]]')
   fi
-  echo "python bin path: $pythonbin"
-  echo "python version: $version"
+  echo "python bin path: '$pythonbin'"
+  echo "python version: '$version'"
   if [[ ! "$version" =~ ^[-.a-zA-Z0-9]+$ ]]; then
     echo "Version '$version' is not valid"
     return 1
   fi
   cd && mkdir -p .venv && cd ".venv"
   test $? -ne 0 && echo "Unable to go to .venv in home directory" && return 1
-  test -d "$version" && echo "Version $version already exist" && return 1
-  echo "Create python env $PWD/$version"
+  test -d "$version" && echo "Version '$version' already exist" && return 1
+  echo "Create python env '$PWD/$version'"
   $pythonbin -m venv "$version"
 }
 

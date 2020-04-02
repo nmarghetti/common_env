@@ -1,10 +1,20 @@
 #! /bin/bash
 
+# Crazy stuff to check about bash there:
+# https://github.com/niieani/bash-oo-framework
+# https://github.com/reduardo7/bashx
+# https://github.com/mnorin/bash-scripts
+# https://github.com/mnorin/bash-scripts/tree/master/objects
+
 # Check it is ran with bash
 if [ ! "$(basename "$SHELL")" = "bash" ]; then
   echo "Please run with: bash $0" >&2
   exit 1
 fi
+
+export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
+[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
+
 
 # Check 'readlink -f' is available
 readlink -f "$0" &>/dev/null
@@ -19,9 +29,12 @@ if [ $? -ne 0 ]; then
 fi
 
 SCRIPT_NAME=$(basename "$0")
-SETUP_SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
+SETUP_SCRIPT_PATH=$(readlink -f "$0")
+SETUP_SCRIPT_ROOT=$(dirname "$SETUP_SCRIPT_PATH")
 SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
 
+
+SETUP_SILENT=0
 DEFAULT_APPS="bash git"
 APPS=$DEFAULT_APPS
 
@@ -105,16 +118,44 @@ function echoSectionError() {
   echoColor 31 "Setup for $@ failed !!!\n"
 }
 
+# Check there is no space character in the paths used, otherwise warn the user
+path_with_space=
+for path in SETUP_SCRIPT_PATH HOME APPS_ROOT; do
+  if [ "$(echo "${!path}" | grep -c '[[:space:]]')" -ne 0 ]; then
+    path_with_space="$path_with_space $path"
+  fi
+done
+if [ -n "$path_with_space" ]; then
+  echo "Warning !!! Even though it should be working, it is really a bad idea to have space in filenames:"
+  for path in $path_with_space; do
+    echo "$path: '${!path}'"
+  done
+  answer='y'
+  if [ $SETUP_SILENT -eq 0 ]; then
+    answer='n'
+    echo "Are you sure you want to proceed ? (y/N) "
+    read answer
+  fi
+  [[ ! "$answer" =~ ^[yY]$ ]] && echo "Exit setup." && trap - EXIT && exit 1
+fi
+
 # check $HOME
 check_dir_var HOME || exit $?
 # check $APPS_ROOT
-check_dir_var APPS_ROOT Info
+check_dir_var APPS_ROOT &>/dev/null
 if [ $? -ne 0 ]; then
   unset APPS_ROOT
-  APPS=$DEFAULT_APPS
-  echo "Only apps that dont need \$APPS_ROOT will be installed: $APPS" >&2
-else
-  source "$SETUP_TOOLS_ROOT/bash/source/system.sh"
+  if [ ! "$APPS" = "$DEFAULT_APPS" ]; then
+    APPS=$DEFAULT_APPS
+    check_dir_var APPS_ROOT Info
+    echo "Only apps that dont need \$APPS_ROOT will be installed: $APPS" >&2
+  fi
+fi
+
+# get functions to check the system
+source "$SETUP_TOOLS_ROOT/bash/source/system.sh"
+
+if [ -n "$APPS_ROOT" ]; then
   source "$SETUP_TOOLS_ROOT/bash/source/path_windows.sh"
   export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
   export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
@@ -131,6 +172,7 @@ else
 fi
 
 
+# Install the selected apps
 for tool in $APPS; do
   if [ -f "$SETUP_TOOLS_ROOT/$tool/setup.sh" ]; then
     echoSection $tool
@@ -151,4 +193,10 @@ for tool in $APPS; do
   fi
 done
 
-echo "Setup done"
+[ -f "$HOME/.common_env_check" ] && rm -f "$HOME/.common_env_check"
+echo -e "Setup done.\n"
+shellrc=.bashrc
+[ "$(basename "$(system_get_default_shell)")" = "zsh" ] && shellrc=.zshrc
+echoColor 33 "Please run the following command to complete:"
+echo "source '$HOME/$shellrc'"
+echo

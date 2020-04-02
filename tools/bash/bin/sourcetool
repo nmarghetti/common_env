@@ -1,10 +1,12 @@
 #! /bin/bash
 
+[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
+
 SOURCETOOL_SCRIPT=${BASH_SOURCE[0]}
 if [ -z "$SOURCETOOL_SCRIPT" ] || [ "$SOURCETOOL_SCRIPT" = "bash" ]; then
   SOURCETOOL_SCRIPT=$0
 fi
-SOURCETOOL_ROOT=$(dirname $(readlink -f "${SOURCETOOL_SCRIPT}"))
+SOURCETOOL_ROOT=$(dirname "$(readlink -f "${SOURCETOOL_SCRIPT}")")
 
 SOURCETOOL_BIN=${SOURCETOOL_ROOT}/bin
 if [ ! -z "$1" ]; then
@@ -18,4 +20,3 @@ mkdir -p "${SOURCETOOL_BIN}"
 if ! echo ${PATH} | grep -E -q "(^|:)${SOURCETOOL_BIN}(\$|:)"; then
   export PATH=${PATH}:${SOURCETOOL_BIN}
 fi
-
