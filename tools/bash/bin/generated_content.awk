@@ -4,7 +4,7 @@ BEGIN	{
   for (i = 0; i < ARGC; ++i) {
     if (ARGV[i] ~ /(-h|--help)/) {
       usage()
-      exit
+      exit 0
     }
   }
 
@@ -37,7 +37,7 @@ BEGIN	{
     if (match($0, begin)) {
       begin_found = 1
       if (content) print content
-      else if (content_file) system("cat "content_file)
+      else if (content_file) system("cat '"content_file"'")
     }
   }
 }
@@ -46,7 +46,7 @@ END	{
     if (replace_append && (!begin_found && !end_found)) {
       print "\n" replace_comment begin
       if (content) print content
-      else if (content_file) system("cat "content_file)
+      else if (content_file) system("cat '"content_file"'")
       print replace_comment end
       last_line = end
     }

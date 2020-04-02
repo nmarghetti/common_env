@@ -1,10 +1,12 @@
 #! /bin/bash
 
-SCRIPT_PATH=$(readlink -f $0)
-SCRIPT_NAME=$(basename ${SCRIPT_PATH})
-SCRIPT_DIR=$(dirname ${SCRIPT_PATH})
+[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
 
-SAVE_FILE=~/.$(basename ${SCRIPT_NAME} .sh)
+SCRIPT_PATH=$(readlink -f "$0")
+SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
+SCRIPT_DIR=$(dirname "${SCRIPT_PATH}")
+
+SAVE_FILE=~/.$(basename "${SCRIPT_NAME}" .sh)
 
 function usage() {
   echo -e "Usage: $(basename $0) [destination_folder]
@@ -25,7 +27,7 @@ fi
 
 LINK_PATH=${SCRIPT_DIR}
 if [ ! -z "$1" ]; then
-  DEST_DIR=$(cd $1 2>/dev/null && pwd)
+  DEST_DIR=$(cd "$1" 2>/dev/null && pwd)
   [[ ! -d "${DEST_DIR}" ]] && exitMsg "Destination directory '${1}' doest not exist"
   echo "last_dir=${DEST_DIR}" >| "${SAVE_FILE}"
   elif [ -f "${SAVE_FILE}" ]; then
@@ -47,7 +49,7 @@ find -L "${DEST_DIR}" -maxdepth 1 -type l -exec rm -vf {} \;
 
 for ext in awk sh pl py; do
   for i in $(ls *.${ext} 2>/dev/null); do
-    ln -vsf "${LINK_PATH}/$i" "${DEST_DIR}/$(basename $i .${ext})" 2>/dev/null
+    ln -vsf "${LINK_PATH}/$i" "${DEST_DIR}/$(basename "$i" .${ext})" 2>/dev/null
   done
 done
 

@@ -2,9 +2,11 @@ MAIN_BASHRC=${BASH_SOURCE[0]}
 if [ -z "$MAIN_BASHRC" ] || [ "$MAIN_BASHRC" = "bash" ]; then
   MAIN_BASHRC=$0
 fi
-MAIN_BASHRC_ROOT=$(dirname $(readlink -f "${MAIN_BASHRC}"))
+MAIN_BASHRC_ROOT=$(dirname "$(readlink -f "${MAIN_BASHRC}")")
 
-[ "$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing $MAIN_BASHRC ..." >&2
+[ "$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing '$MAIN_BASHRC' ..." >&2
+export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
+[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
 
 # Get some function to get some shell system information
 source "${MAIN_BASHRC_ROOT}/system.sh"
@@ -27,6 +29,9 @@ fi
 
 # If current shell is BASH
 if [ "$current_shell" = "bash" ]; then
+  # Some shell configuration
+  shopt -s expand_aliases
+
   source "${MAIN_BASHRC_ROOT}/path.sh"
 
   # ********** BEGIN - Specific for Windows platform with PortableApps **********
@@ -69,7 +74,7 @@ if [ "$current_shell" = "bash" ]; then
     fi
 
     alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
-    alias cddev="cd ${APPS_ROOT}/Documents/dev"
+    alias cddev="cd '${APPS_ROOT}/Documents/dev'"
 
     pythonvenv list | grep -cE '^3.8.1$' &>/dev/null && source pythonvenv set 3.8.1
   else
@@ -85,6 +90,9 @@ if [ "$current_shell" = "bash" ]; then
 
 # If current shell is ZSH
 elif [ "$current_shell" = "zsh" ]; then
+  # Some shell configuration
+  setopt aliases
+
   source "${MAIN_BASHRC_ROOT}/path_zsh.sh"
 fi
 
@@ -116,22 +124,24 @@ alias pyunset='deactivate 2>/dev/null'
 # Do some checks only if not done since at least 24h
 COMMON_ENV_LAST_CHECK="$HOME/.common_env_check"
 if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMON_ENV_LAST_CHECK" +%s)) -ge 86400 ]; then
+  # Thing not needed to be checked just after a setup
+  if [ ! -f "$COMMON_ENV_LAST_CHECK" ]; then
+    # Check for update if access to github
+    pingopt="-c"
+    if [ "$OSTYPE" = "msys" ]; then
+      pingopt="-n"
+    fi
+    ping $pingopt 1 -w 1 github.com &>/dev/null && common_env_check_update
+
+    # Update git config
+    type rgit &>/dev/null && rgit
+  fi
   touch "$COMMON_ENV_LAST_CHECK"
 
   # Refresh tool links
   source "${MAIN_BASHRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
-
-  # Check for update if access to github
-  pingopt="-c"
-  if [ "$OSTYPE" = "msys" ]; then
-    pingopt="-n"
-  fi
-  ping $pingopt 1 -w 1 github.com &>/dev/null && common_env_check_update
-
-  # Update git config
-  type rgit &>/dev/null && rgit
 else
   export PATH=$PATH:$HOME/bin
 fi
 
-[ "$COMMON_ENV_DEBUG" = "1" ] && echo "$MAIN_BASHRC sourced"
+[ "$COMMON_ENV_DEBUG" = "1" ] && echo "'$MAIN_BASHRC' sourced"

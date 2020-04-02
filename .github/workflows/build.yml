@@ -9,6 +9,7 @@ on:
       - '*'
 env:
   COMMON_ENV_DEBUG: '1'
+  # COMMON_ENV_FULL_DEBUG: '1'
 
 jobs:
   build:
@@ -90,6 +91,33 @@ jobs:
           echo ""
           echo "  * Try to setup again:"
           bash ./tools/mac/setup_mac.sh -s
+      # Check setup with space character in paths
+      - name: Check setup with space character in paths
+        shell: bash
+        run: |
+          echo "  * Setup"
+          tmpdir=$(mktemp -d)
+
+          dir_with_space="$tmpdir/path with space"
+          mkdir -p "$dir_with_space"
+          cp -r scripts tools "$dir_with_space/"
+
+          export HOME="$tmpdir/bad home"
+          mkdir -p "$HOME"
+
+          bash "$dir_with_space/scripts/setup.sh" -s
+
+          echo "  * Source .bashrc"
+          source "$HOME/.bashrc"
+
+          echo "  * Check path"
+          pathList
+          echo "  * Check python"
+          pythonvenv list
+          pycreate
+          pylist
+          echo "  * Check git"
+          git st
       # Setup on bash
       - name: Setup on bash
         shell: bash
@@ -130,8 +158,8 @@ jobs:
           python -c "import sys; print(f'Python version: {sys.version}\\nPython path:\\n{sys.path}')"
           echo "  * Create python venv"
           pythonvenv list
-          pythonvenv create
-          pythonvenv list
+          pycreate
+          pylist
           source pythonvenv set $(pythonvenv list | head -1)
           echo "  * Check current python"
           type python
@@ -178,7 +206,7 @@ jobs:
           echo "  * Check $HOME/bin"
           ls -al ~/bin/
           echo "  * List python venv"
-          pythonvenv list
+          pylist
       # Quick git check on zsh
       - name: Quick git check on zsh
         if: runner.os == 'Linux' || runner.os == 'macOs'

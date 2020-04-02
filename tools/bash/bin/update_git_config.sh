@@ -1,5 +1,7 @@
 #! /bin/bash
 
+[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
+
 SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 
 ORG_CONFIG_FILE="${SCRIPT_ROOT}/../../git/.gitconfig"

@@ -1,17 +1,18 @@
 {
   "recommendations": [
-    "lfurzewaddock.vscode-wsl-workspacefolder", // WSL extensions
-    "esbenp.prettier-vscode", // Prettier
+    "esbenp.prettier-vscode", // Many language formatter
+    "foxundermoon.shell-format", // Shell formatter
+    "dbaeumer.vscode-eslint", // Javascript linter
     "davidanson.vscode-markdownlint", // Markdown linter
-    "ms-vscode.notepadplusplus-keybindings", // Notepad++ keymap binding
-    "shakram02.bash-beautify", // Bash prettifier
-    "dbaeumer.vscode-eslint",
-    "MS-vsliveshare.vsliveshare",
-    "bierner.markdown-preview-github-styles", // Markdown Github view style
+    "bierner.markdown-preview-github-styles", // Markdown preview with Github style
+    "dzannotti.vscode-babel-coloring", // Javascript Babel syntax coloring
     "waderyan.gitblame", // Git blame
-    "msjsdiag.debugger-for-chrome",
-    "firefox-devtools.vscode-firefox-debug",
-    "dzannotti.vscode-babel-coloring",
+    "josee9988.changelog-and-markdown-snippets", // Changelog/Mardown snippets
+    "ms-vscode.notepadplusplus-keybindings", // Notepad++ keymap binding
+    "msjsdiag.debugger-for-chrome", // Javascript debugger for Chrome
+    "firefox-devtools.vscode-firefox-debug", // Javascript debugger for Firefox
+    "lfurzewaddock.vscode-wsl-workspacefolder", // WSL extensions
+    "MS-vsliveshare.vsliveshare", // Live sharing
     "ms-vscode.powershell", // PowerShell
     "tyriar.shell-launcher", // Multi shell
     "ms-python.python", // Python
