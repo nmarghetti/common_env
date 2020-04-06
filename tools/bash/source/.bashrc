@@ -45,30 +45,32 @@ if [ "$current_shell" = "bash" ]; then
     export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
     export MSYS_SHELL=$APPS_ROOT/PortableApps/CommonFiles/msys64/msys2_shell.cmd
 
+    mkdir -p "${HOME}/bin"
+
     pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/mingw64/bin" 2>/dev/null
     # pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/usr/bin" 2>/dev/null
     pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/cmake/bin" 2>/dev/null
     pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/make/bin" 2>/dev/null
     pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/node" 2>/dev/null
-    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python/Scripts"
-    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python"
+    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python/Scripts" 2>/dev/null
+    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python" 2>/dev/null
     pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
     pathPrepend "${HOME}/bin"
 
     if [ ! "$COMMON_ENV_GIT_PROMPT" = "0" ]; then
       # If shell is in interactive mode
       case $- in
-        *i*)
-          # Git Prompt
-          # For more information; check thoses files:
-          # ${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh
-          # ${APPS_ROOT}/PortableApps/PortableGit/mingw64/share/git/completion/git-prompt.sh
-          export GIT_PS1_SHOWDIRTYSTATE=1
-          export GIT_PS1_SHOWSTASHSTATE=1
-          export GIT_PS1_SHOWUPSTREAM="auto"
-          if [ ! "$(type -t __git_ps1)" = "function" ]; then
-            source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
-          fi
+      *i*)
+        # Git Prompt
+        # For more information; check thoses files:
+        # ${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh
+        # ${APPS_ROOT}/PortableApps/PortableGit/mingw64/share/git/completion/git-prompt.sh
+        export GIT_PS1_SHOWDIRTYSTATE=1
+        export GIT_PS1_SHOWSTASHSTATE=1
+        export GIT_PS1_SHOWUPSTREAM="auto"
+        if [ ! "$(type -t __git_ps1)" = "function" ]; then
+          source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
+        fi
         ;;
       esac
     fi
@@ -87,6 +89,10 @@ if [ "$current_shell" = "bash" ]; then
   alias rsource='source "$HOME/.bashrc"'
   alias csource='cat "$HOME/.bashrc"'
   alias setup_common_env="'${MAIN_BASHRC_ROOT}/../../../scripts/setup.sh'"
+  alias common_env_debug='export COMMON_ENV_DEBUG=1'
+  alias common_env_nodebug='export COMMON_ENV_DEBUG=0'
+  alias common_env_debug_full='export COMMON_ENV_FULL_DEBUG=1'
+  alias common_env_nodebug_full='export COMMON_ENV_FULL_DEBUG=0'
 
 # If current shell is ZSH
 elif [ "$current_shell" = "zsh" ]; then

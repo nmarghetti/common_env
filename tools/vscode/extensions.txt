@@ -1,6 +1,6 @@
 ms-python.python                          : Python
 esbenp.prettier-vscode                    : Prettier
-shakram02.bash-beautify                   : Bash prettier
+foxundermoon.shell-format                 : Shell prettier
 davidanson.vscode-markdownlint            : Markdown linter
 lfurzewaddock.vscode-wsl-workspacefolder  : WSL
 ms-vscode.notepadplusplus-keybindings     : Notepad++ keymap binding

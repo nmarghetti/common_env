@@ -207,12 +207,12 @@
   dfsru  = ! git dfru --stat
   dfdl   = ! git echoi "Diff from local to origin default branch $(git defbro)" && git df origin/$(git defbro)..HEAD
   dfdr   = ! git echoi "Diff from origin default branch $(git defbro) to local" && git df HEAD..origin/$(git defbro)
-  dfdsl  = ! git dfl --stat
-  dfdsr  = ! git dfr --stat
+  dfdsl  = ! git dfdl --stat
+  dfdsr  = ! git dfdr --stat
   dfdlu  = ! git hasupstream && git echoi "Diff from local to upstream default branch $(git defbru)" && git df upstream/$(git defbru)..HEAD
   dfdru  = ! git hasupstream && git echoi "Diff from upstream default branch $(git defbru) to local" && git df HEAD upstream/$(git defbru)
-  dfdslu = ! git dflu --stat
-  dfdsru = ! git dfru --stat
+  dfdslu = ! git dfdlu --stat
+  dfdsru = ! git dfdru --stat
 
   # LAST COMMITER
   lc     = ! git cmd log -1 --pretty=format:'%an' # Last commiter
@@ -311,16 +311,20 @@
       color=$1; \
       shift; \
       ECHO=$(git decho); \
+      SED=sed; \
+      [ "$(echo $ECHO | cut -b 1)" = "g" ] && SED=gsed; \
       param=\"$@\"; `# Worst trick even to allow to display ' around format for git log commands`; \
-      param=\"$(echo \"$@\" | sed -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
+      param=\"$(echo \"$@\" | $SED -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
       $ECHO -e "\\\\e[${color}m$param\\\\e[0m" >&2; \
     }; f" # echo given arguments with given color for tty terminal
   echobash = ! "f() { \
       color=$1; \
       shift; \
       ECHO=$(git decho); \
+      SED=sed; \
+      [ "$(echo $ECHO | cut -b 1)" = "g" ] && SED=gsed; \
       param=\"$@\"; `# Worst trick even to allow to display ' around format for git log commands`; \
-      param=\"$(echo \"$@\" | sed -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
+      param=\"$(echo \"$@\" | $SED -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
       bash -c \"$ECHO -e \\\"\\e[${color}m$param\\e[0m\\\" >&2\"; \
     }; f" # echo given arguments with given color using bash
   echocmd = ! "f() { \
