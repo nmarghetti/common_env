@@ -1,14 +1,10 @@
 #! /bin/bash
 
 function setup_git() {
-  for file in bash.cmd mintty.cmd; do
-    test -f "$HOME/$file" || cp -vf "$SETUP_TOOLS_ROOT/git/$file" "$HOME/"
-  done
-
   # Create template .gitconfig if not there yet
   if [ ! -f "$HOME/.gitconfig" ]; then
     echo "Create $HOME/.gitconfig"
-    cat > "$HOME/.gitconfig" << EOM
+    cat >"$HOME/.gitconfig" <<EOM
 [user]
   name = "user" # put your username
   email = "mail" # put yor email
@@ -43,5 +39,5 @@ EOM
 
   # Add content into .gitconfig
   local gitconfig="$(cat "$HOME/.gitconfig")"
-  echo "$gitconfig" | awk -f "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 -v content_file="$SETUP_TOOLS_ROOT/git/.gitconfig" >| "$HOME/.gitconfig"
+  echo "$gitconfig" | awk -f "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 -v content_file="$SETUP_TOOLS_ROOT/git/.gitconfig" >|"$HOME/.gitconfig"
 }

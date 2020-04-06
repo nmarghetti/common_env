@@ -15,11 +15,10 @@ fi
 export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
 [ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
 
-
 # Check 'readlink -f' is available
 readlink -f "$0" &>/dev/null
 if [ $? -ne 0 ]; then
-  [ ! "$(uname -s )" = "Darwin" ] && echo "Unable to use 'readlink -f', exiting." && exit 1
+  [ ! "$(uname -s)" = "Darwin" ] && echo "Unable to use 'readlink -f', exiting." && exit 1
   echo "Setup for MAC"
   # Try to run the Mac setup if readlink -f is not available
   source "$(dirname "$0")/../tools/mac/setup_mac.sh"
@@ -29,10 +28,13 @@ if [ $? -ne 0 ]; then
 fi
 
 SCRIPT_NAME=$(basename "$0")
-SETUP_SCRIPT_PATH=$(readlink -f "$0")
-SETUP_SCRIPT_ROOT=$(dirname "$SETUP_SCRIPT_PATH")
-SETUP_TOOLS_ROOT=$(readlink -f "$SETUP_SCRIPT_ROOT/../tools")
+SETUP_SCRIPT_ROOT=$(cd "$(dirname "$(readlink -f "$0")")" && pwd)
+SETUP_SCRIPT_PATH="$SETUP_SCRIPT_ROOT/$SCRIPT_NAME"
+SETUP_ROOT="$(dirname "$SETUP_SCRIPT_ROOT")"
+SETUP_TOOLS_ROOT="$SETUP_ROOT/tools"
 
+cd "$SETUP_ROOT"
+[ $? -ne 0 ] && echo "Unable to go to the parent directory of $SCRIPT_NAME ($SETUP_ROOT)" && exit 1
 
 SETUP_SILENT=0
 DEFAULT_APPS="bash git"
@@ -43,12 +45,13 @@ usage() {
   echo "  Options:" 1>&2
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "  Possible apps:" 1>&2
+  echo "    python: install python 3.8.1 and sets a virtual env" 1>&2
   echo "    vscode: install Visual Studio Code" 1>&2
   echo "    node: install NodeJs" 1>&2
   echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
   echo "    all: install all the apps above" 1>&2
-  echo "In any case it will setup some bash and git config and python" 1>&2
+  echo "In any case it will setup some bash and git config" 1>&2
 }
 
 check_dir_var() {
@@ -64,34 +67,34 @@ check_dir_var() {
 
 while [ $# -gt 0 ]; do
   case $1 in
-    python)
-      APPS="$APPS python"
+  python)
+    APPS="$APPS python"
     ;;
-    vscode)
-      APPS="$APPS vscode windows_path"
+  vscode)
+    APPS="$APPS vscode windows_path"
     ;;
-    cpp)
-      APPS="$APPS make cmake msys2"
+  cpp)
+    APPS="$APPS make cmake msys2"
     ;;
-    node)
-      APPS="$APPS node"
+  node)
+    APPS="$APPS node"
     ;;
-    xampp)
-      APPS="$APPS xampp"
+  xampp)
+    APPS="$APPS xampp"
     ;;
-    all)
-      APPS="bash git python vscode windows_path node make cmake msys2 xampp"
+  all)
+    APPS="bash git python vscode windows_path node make cmake msys2 xampp"
     ;;
-    -s|--silent)
-      SETUP_SILENT=1
+  -s | --silent)
+    SETUP_SILENT=1
     ;;
-    -h|--help)
-      usage
-      exit 0
+  -h | --help)
+    usage
+    exit 0
     ;;
-    *)
-      usage
-      exit 1
+  *)
+    usage
+    exit 1
     ;;
   esac
   shift
@@ -157,20 +160,19 @@ source "$SETUP_TOOLS_ROOT/bash/source/system.sh"
 
 if [ -n "$APPS_ROOT" ]; then
   source "$SETUP_TOOLS_ROOT/bash/source/path_windows.sh"
+
+  # Ensure to get APPS_ROOT as posix path if not
+  if [ "$(echo "$APPS_ROOT" | grep -c ':')" -ne 0 ]; then
+    APPS_ROOT="$(get_path_to_posix "$APPS_ROOT")"
+    [ $? -ne 0 ] || [ ! -d "$APPS_ROOT" ] && echo "APPS_ROOT='$APPS_ROOT' does not exist" && exit 1
+  fi
+
   export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
   export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
-  # check wget is installed
-  if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/wget.exe" ]; then
-    if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/mingw64/bin/wget.exe" ]; then
-      APPS=$DEFAULT_APPS
-      echo "Please read the README, download wget and put it there: $APPS_ROOT/PortableApps/PortableGit/mingw64/bin/wget.exe" >&2
-      echo "Only apps that dont need wget will be installed: $APPS" >&2
-    else
-      cp -vf "$APPS_ROOT/PortableApps/PortableGit/mingw64/bin/wget.exe" "$APPS_ROOT/PortableApps/PortableGit/usr/bin/"
-    fi
-  fi
-fi
 
+  # Ensure to also setup gitbash
+  APPS="gitbash portableapps $APPS"
+fi
 
 # Install the selected apps
 for tool in $APPS; do
@@ -184,10 +186,11 @@ for tool in $APPS; do
     else
       echoSectionError "$tool (code $ret)"
       case $ret in
-        $SETUP_ERROR_CONTINUE)
+      $SETUP_ERROR_CONTINUE) ;;
+
+      *)
+        exit $ret
         ;;
-        *)
-          exit $ret
       esac
     fi
   fi
