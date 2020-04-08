@@ -100,6 +100,12 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+# If no apps given, take the ones from config file
+if [ "$APPS" = "$DEFAULT_APPS" ]; then
+  common_env_app=$(git config -f "$HOME/.common_env.ini" --get-all install.app | tr '\n' ' ')
+  [ -n "$common_env_app" ] && APPS=$common_env_app
+fi
+
 SETUP_ERROR_CONTINUE=100
 SETUP_ERROR_STOP=101
 
@@ -194,6 +200,14 @@ for tool in $APPS; do
       esac
     fi
   fi
+done
+
+# Update the apps installed in $HOME/.common_env.ini
+common_env_app="$(git config -f "$HOME/.common_env.ini" --get-all install.app | tr '\n' ' ') $APPS"
+common_env_app="$(echo "$common_env_app" | tr ' ' '\n' | sort | uniq | tr '\n' ' ')"
+git config -f "$HOME/.common_env.ini" --unset-all install.app
+for app in $common_env_app; do
+  git config -f "$HOME/.common_env.ini" --add install.app $app
 done
 
 [ -f "$HOME/.common_env_check" ] && rm -f "$HOME/.common_env_check"
