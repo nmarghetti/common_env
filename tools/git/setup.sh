@@ -1,5 +1,6 @@
 #! /bin/bash
 
+# https://code.visualstudio.com/docs/remote/troubleshooting#_resolving-git-line-ending-issues-in-wsl-resulting-in-many-modified-files
 function setup_git() {
   # Create template .gitconfig if not there yet
   if [ ! -f "$HOME/.gitconfig" ]; then
@@ -9,14 +10,13 @@ function setup_git() {
   name = "user" # put your username
   email = "mail" # put yor email
 
-# Custom settings
-
-
 
 # BEGIN - GENERATED CONTENT, DO NOT EDIT !!!
 # END - GENERATED CONTENT, DO NOT EDIT !!!
 
 # Custom settings
+[core]
+  autocrlf = input
 EOM
     if [ "$SETUP_SILENT" -eq 0 ]; then
       local current_user=$USER

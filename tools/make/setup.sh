@@ -1,7 +1,7 @@
 #! /bin/bash
 
 function setup_make() {
-  make_path="$APPS_ROOT/PortableApps/CommonFiles/make"
+  make_path="$APPS_COMMON/make"
   mkdir -p "$make_path"
   # Install make
   if [ ! -f "$make_path/bin/make.exe" ]; then
@@ -10,7 +10,7 @@ function setup_make() {
       wget --progress=bar:force -O $tarball http://gnuwin32.sourceforge.net/downlinks/make-bin-zip.php
       test $? -ne 0 && echo "Error, unable to retrieve the zip." && return 1
     fi
-    unzip $tarball -d "$APPS_ROOT/PortableApps/CommonFiles/make" | awk 'BEGIN {ORS="."} {print "."}'
+    unzip $tarball -d "$APPS_COMMON/make" | awk 'BEGIN {ORS="."} {print "."}'
     test $? -ne 0 && echo -e "\nError, unable unzip the archive." && return 1
     echo
     rm -f $tarball
@@ -22,7 +22,7 @@ function setup_make() {
       wget --progress=bar:force -O $tarball http://gnuwin32.sourceforge.net/downlinks/make-dep-zip.php
       test $? -ne 0 && echo "Error, unable to retrieve the zip." && return 1
     fi
-    unzip $tarball -d "$APPS_ROOT/PortableApps/CommonFiles/make" | awk 'BEGIN {ORS="."} {print "."}'
+    unzip $tarball -d "$APPS_COMMON/make" | awk 'BEGIN {ORS="."} {print "."}'
     test $? -ne 0 && echo -e "\nError, unable unzip the archive." && return 1
     echo
     rm -f $tarball

@@ -41,19 +41,20 @@ if [ "$current_shell" = "bash" ]; then
       echo "ERROR !!! You are are not sourcing with bash, you might encounter problem !!!" >&2
     fi
 
+    export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
     export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
     export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
-    export MSYS_SHELL=$APPS_ROOT/PortableApps/CommonFiles/msys64/msys2_shell.cmd
+    export MSYS_SHELL=$APPS_COMMON/msys64/msys2_shell.cmd
 
     mkdir -p "${HOME}/bin"
 
-    pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/mingw64/bin" 2>/dev/null
-    # pathAppend "${APPS_ROOT}/PortableApps/CommonFiles/msys64/usr/bin" 2>/dev/null
-    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/cmake/bin" 2>/dev/null
-    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/make/bin" 2>/dev/null
-    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/node" 2>/dev/null
-    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python/Scripts" 2>/dev/null
-    pathPrepend "${APPS_ROOT}/PortableApps/CommonFiles/python" 2>/dev/null
+    pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
+    # pathAppend "$APPS_COMMON/msys64/usr/bin" 2>/dev/null
+    pathPrepend "$APPS_COMMON/cmake/bin" 2>/dev/null
+    pathPrepend "$APPS_COMMON/make/bin" 2>/dev/null
+    pathPrepend "$APPS_COMMON/node" 2>/dev/null
+    pathPrepend "$APPS_COMMON/python/Scripts" 2>/dev/null
+    pathPrepend "$APPS_COMMON/python" 2>/dev/null
     pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
     pathPrepend "${HOME}/bin"
 
@@ -130,8 +131,8 @@ alias pyunset='deactivate 2>/dev/null'
 # Do some checks only if not done since at least 24h
 COMMON_ENV_LAST_CHECK="$HOME/.common_env_check"
 if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMON_ENV_LAST_CHECK" +%s)) -ge 86400 ]; then
-  # Thing not needed to be checked just after a setup
-  if [ ! -f "$COMMON_ENV_LAST_CHECK" ]; then
+  # Things not needed to be checked just after a setup
+  if [ -f "$COMMON_ENV_LAST_CHECK" ]; then
     # Check for update if access to github
     pingopt="-c"
     if [ "$OSTYPE" = "msys" ]; then

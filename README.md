@@ -6,7 +6,7 @@ This project aim to facilitate the setup of a common environment for people with
 
 1. **Common core**
 
-   - **Git**: common configuration and aliases to simplify GIT usage
+   - **Git**: common configuration and aliases to simplify Git usage
    - **Python**: brings a simple way to create, list and switch between several python environments (eg. between python 2.x 3.x)
 
 1. **Windows**
@@ -93,14 +93,34 @@ If you are looking for an easy way to start with Git, you can follow [this guide
 
 1. **Git**
 
-   - Git for Windows: [https://git-scm.com](https://git-scm.com/)
-   - Documentation: [https://git-scm.com/book/en/v2](https://git-scm.com/book/en/v2)
+   - [Git for Windows](https://git-scm.com/)
+   - [Reference Manual](https://git-scm.com/docs), [Pro Git online book](https://git-scm.com/book/en/v2), [Tutorials](https://git-scm.com/doc/ext)
 
 1. **Python**
 
-   - Python: [https://www.python.org](https://www.python.org/)
+   - [Homepage](https://www.python.org/)
    - Documentation: [Python2.7](https://docs.python.org/2.7/) / [Python 3.x](https://docs.python.org/3/)
+   - Portable Python packaging
+     - PortablePython (not developped anymore): [homepage](https://portablepython.com/), [download](https://portablepython.com/wiki/Download/)
+     - [WinPython](http://winpython.github.io/)
+     - [PythonAnywhere](https://www.pythonanywhere.com/)
+   - Other Python packaging
+     - [Anaconda](https://www.anaconda.com/distribution/)
+     - [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
+     - [Python(x-y)](http://python-xy.github.io/)
 
-1. **Others**
-   - Visual Studio Code Portable mode: [https://code.visualstudio.com/docs/editor/portable](https://code.visualstudio.com/docs/editor/portable)
-   - PortableApps: [https://portableapps.com](https://portableapps.com/)
+1. **Visual Studio Code**
+
+   - [Portable mode](https://code.visualstudio.com/docs/editor/portable)
+   - [Setup network](https://code.visualstudio.com/docs/setup/network)
+   - [Command Line Interface](https://code.visualstudio.com/docs/editor/command-line)
+
+1. **PortableApps**
+
+   - [Homepage](https://portableapps.com/)
+   - [App setting](https://portableapps.com/development/portableapps.com_format#appinfo)
+
+1. **Other**
+
+   - [Bash/Unix/Linux tutorial](https://www.tutorialspoint.com/unix_commands/bash.htm)
+   - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm)

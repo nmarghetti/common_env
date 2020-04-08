@@ -21,9 +21,9 @@ function setup_vscode() {
   fi
 
   # Setup VSCode user settings
-  local setting_path="$VSCode/data/user-data/User/settings.json"
+  local setting_path="$APPS_COMMON/VSCode_data/user-data/User/settings.json"
   if [ ! -f "$setting_path" ]; then
-    mkdir -vp "$VSCode/data/user-data/User"
+    mkdir -vp "$APPS_COMMON/VSCode_data/user-data/User" "$APPS_COMMON/VSCode_data/extensions"
     echo "Create $setting_path"
     cat >"$setting_path" <<EOM
 // To have some extension working, do not forget to update your system PATH:
@@ -42,19 +42,26 @@ EOM
 
   # Better add VSCode in PortableApps menu
   if [ -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/rsync.exe" ]; then
-    rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCode" "$APPS_ROOT/PortableApps/"
+    rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeLauncher" "$APPS_ROOT/PortableApps/"
   fi
-
   # Install extensions
   local installed_extensions=$(mktemp)
   "$APPS_ROOT/PortableApps/VSCode/bin/code" --list-extensions >"$installed_extensions"
-  while IFS=: read -r extension extra; do
-    extension=$(echo "$extension" | tr -d '[:space:]')
-    if [ "$(grep -ciE "^$extension$" "$installed_extensions")" -eq 0 ]; then
-      "$APPS_ROOT/PortableApps/VSCode/bin/code" --install-extension $extension
-    fi
-  done <"$SETUP_TOOLS_ROOT/vscode/extensions.txt"
-  #done <<< $(cat "$SCRIPT_ROOT/data/crypted_files.txt")
-  #done < <(cat "$SCRIPT_ROOT/data/crypted_files.txt")
+  local ini_extensions=
+  [ -f "$HOME/.common_env.ini" ] && ini_extensions="$(git config -f "$HOME/.common_env.ini" --get-all vscode.extension | tr '\n' ' ' | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")"
+  if [ -n "$ini_extensions" ]; then
+    for extension in $ini_extensions; do
+      [ "$(grep -ciE "^$extension$" "$installed_extensions")" -eq 0 ] && "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WIN_APPS_COMMON/VSCode_data/extensions" --user-data-dir "$WIN_APPS_COMMON/VSCode_data/user-data" --install-extension $extension
+    done
+  else
+    while IFS=: read -r extension extra; do
+      extension=$(echo "$extension" | tr -d '[:space:]')
+      [ -z "$extension" ] && continue
+      [ "$(echo $extension | cut -b 1)" = "#" ] && continue
+      [ "$(grep -ciE "^$extension$" "$installed_extensions")" -eq 0 ] && "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WIN_APPS_COMMON/VSCode_data/extensions" --user-data-dir "$WIN_APPS_COMMON/VSCode_data/user-data" --install-extension $extension
+    done <"$SETUP_TOOLS_ROOT/vscode/extensions.txt"
+    #done <<< $(cat "$SETUP_TOOLS_ROOT/vscode/extensions.txt")
+    #done < <(cat "$SETUP_TOOLS_ROOT/vscode/extensions.txt")
+  fi
   rm -f "$installed_extensions"
 }

@@ -1,9 +1,22 @@
-ms-python.python                          : Python
-esbenp.prettier-vscode                    : Prettier
-foxundermoon.shell-format                 : Shell prettier
-davidanson.vscode-markdownlint            : Markdown linter
-lfurzewaddock.vscode-wsl-workspacefolder  : WSL
-ms-vscode.notepadplusplus-keybindings     : Notepad++ keymap binding
-waderyan.gitblame                         : Git blame
-ms-vscode.cpptools                        : C++
-ms-vscode.cmake-tools                     : CMake Tools
+# To update setup.ini
+# git config -f tools/setup.ini --unset-all vscode.extension && while read extension; do git config -f tools/setup.ini --add vscode.extension "$extension"; done < <(cat tools/vscode/extensions.txt | grep -vE '^#') && sed -i -re 's/^([[:space:]]*extension[[:space:]]=[^:]+):(.*)$/\1#\2/' tools/setup.ini
+esbenp.prettier-vscode                     : Many language formatter
+foxundermoon.shell-format                  : Shell formatter
+tyriar.shell-launcher                      : Multi shell terminal
+dbaeumer.vscode-eslint                     : Javascript linter
+davidanson.vscode-markdownlint             : Markdown linter
+bierner.markdown-preview-github-styles     : Markdown preview with Github style
+dzannotti.vscode-babel-coloring            : Javascript Babel syntax coloring
+waderyan.gitblame                          : Git blame
+josee9988.changelog-and-markdown-snippets  : Changelog/Mardown snippets
+ms-vscode.notepadplusplus-keybindings      : Notepad++ keymap binding
+msjsdiag.debugger-for-chrome               : Javascript debugger for Chrome
+firefox-devtools.vscode-firefox-debug      : Javascript debugger for Firefox
+lfurzewaddock.vscode-wsl-workspacefolder   : WSL extensions
+MS-vsliveshare.vsliveshare                 : Live sharing
+ms-vscode.powershell                       : PowerShell
+tyriar.shell-launcher                      : Multi shell
+ms-python.python                           : Python
+ms-vscode.cpptools                         : C++
+twxs.cmake                                 : CMake
+ms-vscode.cmake-tools                      : CMake Tools
