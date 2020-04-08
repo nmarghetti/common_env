@@ -5,7 +5,8 @@
 1. **Download**
 
    - **Create** a folder where you want to install it, eg. "**D:/Apps**".
-   - **Download** this [**setup.cmd**](https://raw.githubusercontent.com/nmarghetti/common_env/develop/tools/setup.cmd) inside (Right click -> "Save Link As...", save into "D:/Apps/setup.cmd").
+   - **Download** this [**setup.cmd**](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.cmd) inside (Right click -> "Save Link As...", save into "D:/Apps/setup.cmd").
+   - Optionnally download this [setup.ini](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.ini) inside also (Right click -> "Save Link As...", save into "D:/Apps/setup.ini"). You can edit it to set the list of apps you want.
    - **Execute setup.cmd** and follow the instructions.
 
    It will try to download [PortableApps 16.1.1](https://portableapps.com/downloading/?a=PortableApps.comPlatform&s=s&d=pa&n=The%20PortableApps.com%20Platform&f=PortableApps.com_Platform_Setup_16.1.1.paf.exe) and [64-bit Git for Windows Portable 2.2.26](https://github.com/git-for-windows/git/releases/download/v2.26.0.windows.1/PortableGit-2.26.0-64-bit.7z.exe), with curl or wget.\
@@ -24,7 +25,8 @@
     D:/Apps
     ├── PortableApps.exe
     ├── PortableGit.exe
-    └── setup.cmd
+    ├── setup.cmd
+    └── setup.ini
    ```
 
 1. **Installation**

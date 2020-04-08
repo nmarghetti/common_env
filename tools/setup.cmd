@@ -118,6 +118,12 @@ if not exist "%HOME%" (
   mkdir "%HOME%"
 )
 
+REM Copy setup.ini if present
+cd "%APPS_ROOT%"
+if exist setup.ini (
+  copy setup.ini "%HOME%\.common_env.ini"
+)
+
 REM Clone common_env
 if not exist "%APPS_ROOT%\Documents\dev" (
   mkdir "%APPS_ROOT%\Documents\dev"
