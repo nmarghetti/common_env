@@ -66,9 +66,12 @@
 
   # ADD
   a    = ! git cmd add --verbose # add files
-  addu = ! git a --update # add all modified files
-  au   = ! git addu # add all modified files
+  au   = ! git a --update # add all modified files
   aa   = ! git a --all # add all files
+
+  addu = ! git au
+  add-update = ! git au
+  add-all = ! git aa
 
   # CHECKOUT
   co    = ! git cmd checkout
@@ -77,8 +80,11 @@
 
   # SUBMODULES
   clones = ! git cmd clone --recursive # git clones <repo_url> --> clone the repo and its submodules
-  subm = ! git cmd submodule update --init --recursive # init the submodules
-  submu = ! "f() { git cmd submodule update --remote \"$@\"; git cmd submodule foreach git subm ; }; f" # update the submodules to their latest version
+  subm = ! "f() { git cmd submodule update --init --recursive; git cmd submodule foreach git cmd reset --hard HEAD; }; f" # update the submodules
+  submu = ! "f() { git cmd submodule update --remote \"$@\"; git cmd submodule foreach git subm ; }; f" # upgrade the submodules to their latest version
+
+  submodule-update = ! git subm
+  submodule-upgrade = ! git submu
 
   # CHERRY-PICK
   cp  = ! git cmd cherry-pick
@@ -105,6 +111,13 @@
   fru    = ! git fu && git rbu # fetch and rebase from upstream (similar to pull --rebase upstream)
   frdu   = ! git fu && git rbdu # fetch and rebase from upstream default branch
 
+  fetch-origin   = ! git f
+  fetch-upstream = ! git fu
+  fetch-rebase-origin = ! git fro
+  fetch-rebase-origin-default = ! git frdo
+  fetch-rebase-upstream = ! git fru
+  fetch-rebase-upstream-default = ! git frdu
+
   # PULL
   pullr  = ! git cmd pull --rebase # pull and rebase your change on top
   pullu  = ! git cmd pull upstream $(git brcurrent) # pull from upstream (really apply the commits retrieved from upstream)
@@ -122,6 +135,13 @@
   rba     = ! git rebasea # abort rebase
   rebasec = ! git rb --continue # continue rebase
   rbc     = ! git rebasec # continue rebase
+
+  rebase-origin = ! git rbo
+  rebase-origin-default = ! git rbdo
+  rebase-upstream = ! git rbu
+  rebase-upstream-default = ! git rbdu
+  rebase-abort = ! git rba
+  rebase-continue = ! git rbc
 
   # PUSH
   p      = ! git cmd push
@@ -160,12 +180,18 @@
   bro   = ! git remotebr origin # list origin branches
   bru   = ! git remotebr upstream # list upstream branches
 
+  branch-local = ! git br
+  branch-all = ! git bra
+
   # COMMIT
   ci   = ! git cmd commit -m # git ci 'commit message'
   ca   = ! "f() { local user=$(git guser); local lc=$(git lc); [ ! \"$user\" = \"$lc\" ] && echo \"The last commit was made by $lc, not you ($user) !!! Please create a new commit, do not amend:\" && echo \"git ci '<your commit message>'\" && return 1; echo "$@"; git cmd commit --amend --no-edit "$@"; }; f" # append to the previous commit
   cav  = ! git cmd commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
   acf  = ! git au && git ca && git pf # amend all modified files to the last commit and push force to origin
   acfu = ! git au && git ca && git pfu # amend all modified files to the last commit and push force to upstream
+
+  commit-amend = ! git ca
+  add-commit-push = ! git acf
 
   # RESET COMMITS
   rstc    = ! git cmd reset . # reset current changes ready to commit
@@ -216,6 +242,8 @@
   dfdslu = ! git dfdlu --stat
   dfdsru = ! git dfdru --stat
 
+  diff-staged = ! git dc
+
   # LAST COMMITER
   lc     = ! git cmd log -1 --pretty=format:'%an' # Last commiter
   lcr    = ! git lc origin/$(git brcurrent) # Last commiter from origin
@@ -254,6 +282,9 @@
   lgdru  = ! git echoi "Changes in upstream default branch $(git defbru) not in HEAD" && git lg HEAD..upstream/$(git defbru) # Changes from default upstream branch to HEAD
   lgdlr  = ! git lgdl && echo && git lgdr # Show local and default origin changes
   lgdlru = ! git lgdlu && echo && git lgdru # Show local and default upstream changes
+
+  log-all = ! git lga
+  log-local-upstream = ! git lglru
 
   # TOOLS
   brcurrent = symbolic-ref --short HEAD # gives current branch
