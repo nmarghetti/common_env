@@ -1,6 +1,5 @@
 #! /bin/bash
 
-# https://portableapps.com/development/portableapps.com_format#appinfo
 # https://github.com/git/git/blob/v2.26.0/Documentation/gittutorial.txt
 function setup_gitbash() {
   for file in bash.cmd mintty.cmd; do

@@ -175,6 +175,8 @@ if [ -n "$APPS_ROOT" ]; then
 
   export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
   export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
+  export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
+  export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
 
   # Ensure to also setup gitbash
   APPS="gitbash portableapps $APPS"

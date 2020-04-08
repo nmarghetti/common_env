@@ -1,8 +1,15 @@
 @echo off
 
+REM https://www.tutorialspoint.com/batch_script/index.htm
+REM http://www.trytoprogram.com/batch-file/
+
 set APPS_ROOT=%CD%
 set HOME=%APPS_ROOT%\home
 set COMMON_ENV_FULL_DEBUG=0
+set COMMON_ENV_BRANCH=master
+if "%COMMON_ENV_INSTALL_DEVELOP%" == "1" (
+  set COMMON_ENV_BRANCH=develop
+)
 set APPS_EXE=PortableApps.exe
 set APP_GIT_EXE=PortableGit.exe
 
@@ -42,6 +49,11 @@ if %CHECK_FOR_DOWNLOAD%==1 (
       exit 1
     )
   )
+)
+
+REM Try to download setup.ini if not present
+if not exist setup.ini (
+  "%DOWNLOAD%" setup.ini "https://raw.githubusercontent.com/nmarghetti/common_env/%COMMON_ENV_BRANCH%/tools/setup.ini"
 )
 
 REM Install PortableApps
@@ -129,17 +141,24 @@ if not exist "%APPS_ROOT%\Documents\dev" (
   mkdir "%APPS_ROOT%\Documents\dev"
 )
 if not exist "%APPS_ROOT%\Documents\dev\common_env" (
-  "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" clone https://github.com/nmarghetti/common_env.git "%APPS_ROOT%\Documents\dev\common_env"
+  "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" clone -b %COMMON_ENV_BRANCH% https://github.com/nmarghetti/common_env.git "%APPS_ROOT%\Documents\dev\common_env"
+  if errorlevel 1 (
+    echo "An error occured durring installation, please retry..."
+    pause
+    exit 1
+  )
 )
 
 REM Setup
 echo "---------------- Start setup with bash ------------------"
 "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%APPS_ROOT%\Documents\dev\common_env\scripts\setup.sh"
 
-echo
-echo "Installation completed"
-echo "You can now execute Start.exe"
-echo "From there you can run 'Git bash termninal' and check for more custom app to install with the command setup_common_env (add -h for to see the usage)"
-echo "You can also install many application from PortableApps: Apps -> Get More Apps... -> By Category"
-echo "Enjoy ;)"
+if not errorlevel 1 (
+  echo "Installation completed"
+  echo "You can now execute Start.exe"
+  echo "From there you can run 'Git bash termninal' and check for more custom app to install with the command setup_common_env (add -h for to see the usage)"
+  echo "You can also install many application from PortableApps: Apps -> Get More Apps... -> By Category"
+  echo "Enjoy ;)"
+)
+
 pause

@@ -1,3 +1,5 @@
+# If you want to override anything set in this generated content, you can set it at the end of the file.
+
 # Check config here https://git-scm.com/docs/git-config to know how to configure all the sections
 # eg. look for core.pager if you want to know about pager option of [core] section
 # eg. look for color.ui if you want to know about ui option of [color] section
@@ -185,7 +187,7 @@
 
   # COMMIT
   ci   = ! git cmd commit -m # git ci 'commit message'
-  ca   = ! "f() { local user=$(git guser); local lc=$(git lc); [ ! \"$user\" = \"$lc\" ] && echo \"The last commit was made by $lc, not you ($user) !!! Please create a new commit, do not amend:\" && echo \"git ci '<your commit message>'\" && return 1; echo "$@"; git cmd commit --amend --no-edit "$@"; }; f" # append to the previous commit
+  ca   = ! "f() { local user=$(git config --global --get user.name); local lc=$(git log -1 --pretty=format:'%an'); [ ! \"$user\" = \"$lc\" ] && echo \"The last commit was made by $lc, not you ($user) !!! Please create a new commit, do not amend:\" && echo \"git ci '<your commit message>'\" && return 1; git cmd commit --amend --no-edit "$@"; }; f" # append to the previous commit
   cav  = ! git cmd commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
   acf  = ! git au && git ca && git pf # amend all modified files to the last commit and push force to origin
   acfu = ! git au && git ca && git pfu # amend all modified files to the last commit and push force to upstream

@@ -1,8 +1,6 @@
 #! /bin/bash
 
-# https://portableapps.com/manuals/PortableApps.comLauncher/ref/launcher.ini/launch.html
 # https://portableapps.com/manuals/PortableApps.comLauncher/ref/paf/appinfo.html
-# https://portableapps.com/development/portableapps.com_format#appinfo
 function setup_portableapps() {
   app_path="$APPS_ROOT/PortableApps/PortableApps.com"
   # Setup PortableApps
