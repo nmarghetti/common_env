@@ -85,6 +85,10 @@ Visual Studio Code and the other tools are configured to work together. It bring
 Each developper can contribute to the tools and everyone would benefit from it.\
 Any developper could join and install quickly everything like the others with only few simple steps.
 
+## Git guide
+
+If you are looking for an easy way to start with Git, you can follow [this guide](readme/README_git_guide.md).
+
 ## Usefull links
 
 1. **Git**
