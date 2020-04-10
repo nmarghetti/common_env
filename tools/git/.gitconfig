@@ -35,6 +35,13 @@
 [i18n]
   logOutputEncoding = utf-8
 
+[pull]
+  ff = only
+  rebase = true
+
+[merge]
+  ff = only
+
 [rebase]
   autosquash = true
 
@@ -47,7 +54,7 @@
   mg = ! git cmd merge --no-edit
 
   # DISPLAY ALIAS
-  dry = ! GIT_DRY_CMD=1 git # Only display the command for the given alias, do not run it (eg. type "git dry mg" --> it displays "git merge --no-edit")
+  dry = ! GIT_CMD_DRY=1 git # Only display the command for the given alias, do not run it (eg. type "git dry mg" --> it displays "git merge --no-edit")
 
   # CONFIG
   gconf = ! vi $HOME/.gitconfig # edit global git config
@@ -80,12 +87,36 @@
   codb  = ! git co $(git defbro) # checkout default branch from origin
   codbu = ! git co $(git defbru) # checkout default branch from upstream
 
+  checkout-default-branch = ! git codb
+  checkout-default-branch-upstream = ! git codbu
+
   # SUBMODULES
   clones = ! git cmd clone --recursive # git clones <repo_url> --> clone the repo and its submodules
-  subm = ! "f() { git cmd submodule update --init --recursive; git cmd submodule foreach git cmd reset --hard HEAD; }; f" # update the submodules
-  submu = ! "f() { git cmd submodule update --remote \"$@\"; git cmd submodule foreach git subm ; }; f" # upgrade the submodules to their latest version
+  subm   = ! "f() { git cmd submodule update --init --recursive \"$@\"; }; f" # update all submodules or the given one
+  submr  = ! git moduleAction reset # update all submodules or the given one and discard any change
+  submu  = ! git moduleAction upgrade # upgrade the submodules to their latest version
+  moduleAction = ! "f() { \
+    local action=$1; \
+    shift; \
+    [ $# -gt 1 ] && git echoe \"Only one path of submodule (or none for all) is accepted\" && return 1; \
+    local path=$1; \
+    [ -n \"$path\" ] && [ ! -e \"$path\" ] && git echoe \"'$path' does not exist\" && return 1; \
+    if [ -n \"$path\" ]; then \
+      case $action in \
+      reset) git subm \"$path\" && git echoi \"cd $path\" && cd \"$path\" && git cmd reset --hard HEAD;; \
+      upgrade) git cmd submodule update --remote \"$path\"  && git echoi \"cd $path\" && cd \"$path\" && git cmd submodule foreach git subm;; \
+      *) git echoe \"Unknown action '$action'\" && return 1;; \
+      esac; \
+    else \
+      case $action in \
+      reset) git subm && git cmd submodule foreach git cmd reset --hard HEAD;; \
+      upgrade) git cmd submodule update --remote && git cmd submodule foreach git subm;; \
+      *) git echoe \"Unknown action '$action'\" && return 1;; \
+      esac; \
+    fi; }; f"
 
   submodule-update = ! git subm
+  submodule-reset = ! git submr
   submodule-upgrade = ! git submu
 
   # CHERRY-PICK
@@ -104,20 +135,19 @@
 
   # FETCH
   f      = ! "f(){ git cmd fetch --prune \"$@\"; git cmd fetch --force --tags \"$@\"; } ; f" # fetch HEAD and tags from origin
-  fetchu = ! git f upstream # fetch from upstream
-  fu     = ! git fetchu # fetch from upstream
-  fetcha = ! git f --all # fetch all remotes
-  fa     = ! git fetcha # fetch all remotes
-  fro    = ! git f && git rbo # fetch and rebase from origin (similar to pull --rebase)
-  frdo   = ! git f && git rbdo # fetch and rebase from origin default branch
-  fru    = ! git fu && git rbu # fetch and rebase from upstream (similar to pull --rebase upstream)
-  frdu   = ! git fu && git rbdu # fetch and rebase from upstream default branch
+  fu     = ! git f upstream # fetch from upstream
+  fa     = ! git f --all # fetch all remotes
+  fro    = ! git f && git rbo && git subm # fetch and rebase from origin and update submodules
+  frdo   = ! git f && git rbdo && git subm # fetch and rebase from origin default branch and update submodules
+  fru    = ! git fu && git rbu && git subm # fetch and rebase from upstream and update submodules
+  frdu   = ! git fu && git rbdu && git subm # fetch and rebase from upstream default branch and update submodules
 
-  fetch-origin   = ! git f
-  fetch-upstream = ! git fu
-  fetch-rebase-origin = ! git fro
-  fetch-rebase-origin-default = ! git frdo
-  fetch-rebase-upstream = ! git fru
+  fetch-origin                  = ! git f
+  fetch-upstream                = ! git fu
+  fetch-all                     = ! git fa
+  fetch-rebase-origin           = ! git fro
+  fetch-rebase-origin-default   = ! git frdo
+  fetch-rebase-upstream         = ! git fru
   fetch-rebase-upstream-default = ! git frdu
 
   # PULL
@@ -127,23 +157,25 @@
 
   # REBASE
   rb      = ! git cmd rebase
-  rebaseo = ! git rb origin/$(git brcurrent) $(git brcurrent) # rebase from origin
-  rbo     = ! git rebaseo # rebase from origin
+  rbo     = ! git rb origin/$(git brcurrent) $(git brcurrent) # rebase from origin
   rbdo    = ! git rb origin/$(git defbro) $(git brcurrent) # rebase from origin default branch
-  rebaseu = ! git rb upstream/$(git brcurrent) $(git brcurrent) # rebase from upstream
-  rbu     = ! git rebaseu # rebase from upstream
+  rbu     = ! git rb upstream/$(git brcurrent) $(git brcurrent) # rebase from upstream
   rbdu    = ! git rb upstream/$(git defbru) $(git brcurrent) # rebase from upstream default branch
-  rebasea = ! git rb --abort # abort rebase
-  rba     = ! git rebasea # abort rebase
-  rebasec = ! git rb --continue # continue rebase
+  rbcol   = ! git co --theirs # during rebase conflict, select local changes
+  rbcor   = ! git co --ours # during rebase conflict, select changes from remote
+  rba     = ! git rb --abort # abort rebase
   rbc     = ! git rebasec # continue rebase
+  rbi     = ! nb=$1 && shift && git rb -i HEAD~$nb # git rebasei x --> interactively manage x last commits
 
-  rebase-origin = ! git rbo
-  rebase-origin-default = ! git rbdo
-  rebase-upstream = ! git rbu
+  rebase-origin           = ! git rbo
+  rebase-origin-default   = ! git rbdo
+  rebase-upstream         = ! git rbu
   rebase-upstream-default = ! git rbdu
-  rebase-abort = ! git rba
-  rebase-continue = ! git rbc
+  rebase-checkout-remote  = ! git rbcor
+  rebase-checkout-local   = ! git rbcol
+  rebase-abort            = ! git rba
+  rebase-continue         = ! git rbc
+  rebase-interactif       = ! git rebasei
 
   # PUSH
   p      = ! git cmd push
@@ -173,17 +205,23 @@
   brcur = ! git cmd symbolic-ref --short HEAD # gives current branch
   br    = ! git cmd branch -vv # verbose display of local branches
   bra   = ! git br -a # verbose display of all branches
-  brn   = "! (test $# -eq 1 && git co -b $1 && git p -u origin $1) || echo -e 'Please specify the name of the branch to create.\nUsage: git brn <branch_name>\nDescription: create <branch_name> locally and push it to origin/<branch_name>\neg.: git brn feature'" # git brn <branch_name> --> create branch locally and push it to origin
+  brn   = "! f(){ \
+    [ $# -ne 1 ] && git echoe \"You must provide one and only one agrument: the branch name to create\" && return 1; \
+    git co -b $1 && git p -u origin $1; \
+  }; f" # git brn <branch_name> --> create branch locally and push it to origin
   brc   = ! git co --track # git brc origin/<branch_name> --> checkout remote branch and track it
-  brcd  = ! git brc origin/$(git defbro) # checkout default origin branch
+  brcd  = ! git brc origin/$(git defbro) # checkout default origin branch and track it
   brd   = ! git cmd branch -D # git brd <branch_name> [<branch_name> ...] --> delete given branches from local
   brdo  = ! git cmd push --delete origin # git brdo <branch_name> [<branch_name> ...] --> delete given remote branches from origin
   brdu  = ! git cmd push --delete upstream # git brdu <branch_name> [<branch_name> ...] --> delete given remote branches from upstream
   bro   = ! git remotebr origin # list origin branches
   bru   = ! git remotebr upstream # list upstream branches
 
-  branch-local = ! git br
-  branch-all = ! git bra
+  branch-local            = ! git br
+  branch-all              = ! git bra
+  branch-checkout         = ! git brc
+  branch-checkout-default = ! git brcd
+  branch-new              = ! git brn
 
   # COMMIT
   ci   = ! git cmd commit -m # git ci 'commit message'
@@ -192,8 +230,9 @@
   acf  = ! git au && git ca && git pf # amend all modified files to the last commit and push force to origin
   acfu = ! git au && git ca && git pfu # amend all modified files to the last commit and push force to upstream
 
-  commit-amend = ! git ca
-  add-commit-push = ! git acf
+  commit-amend             = ! git ca
+  add-commit-push          = ! git acf
+  add-commit-push-upstream = ! git acfu
 
   # RESET COMMITS
   rstc    = ! git cmd reset . # reset current changes ready to commit
@@ -204,20 +243,24 @@
   rsh     = ! git reseth
   rmc     = ! commit=$1 && shift && git rb --onto $commit^ $commit # git rmc c96d2c8 --> remove commit c96d2c8
   #git rebase --onto HEAD~1^ HEAD~1 --> remove second commit
-  rebasei = ! nb=$1 && shift && git rb -i HEAD~$nb # git rebasei x --> interactively manage x last commits
-  rbi     = ! git rebasei
+
+  reset-repo = ! git rstc
+  reset-commit-last  = ! git rs
+  remove-commit-last = ! git rsh
+  remove-commit      = ! git rmc
 
   # RESET BRANCH
-  resetb   = ! git rst --hard # git resetb <branch_name> -> hardly reset to branch_name
-  resetbo  = ! git rst --hard origin/$(git brcurrent) # hardly reset to origin
-  resetbu  = ! git rst --hard upstream/$(git brcurrent) # hardly reset to upstream
-  resetbdo = ! git rst --hard origin/$(git defbro) # hardly reset to origin default branch
-  resetbdu = ! git rst --hard upstream/$(git defbru) # hardly reset to upstream default branch
-  rsb      = ! git resetb
-  rsbo     = ! git resetbo
-  rsbu     = ! git resetbu
-  rsbdo    = ! git resetbdo
-  rsbdu    = ! git resetbdu
+  rsb   = ! git rst --hard # git resetb <branch_name> -> hardly reset to branch_name
+  rsbo  = ! git rst --hard origin/$(git brcurrent) # hardly reset to origin
+  rsbu  = ! git rst --hard upstream/$(git brcurrent) # hardly reset to upstream
+  rsbdo = ! git rst --hard origin/$(git defbro) # hardly reset to origin default branch
+  rsbdu = ! git rst --hard upstream/$(git defbru) # hardly reset to upstream default branch
+
+  reset-hard-branch           = ! git rsb
+  reset-hard-origin           = ! git rsbo
+  reset-hard-origin-default   = ! git rsbdo
+  reset-hard-upstream         = ! git rsbu
+  reset-hard-upstream-default = ! git rsbdu
 
   # DIFF
   df     = ! git cmd diff
@@ -237,14 +280,22 @@
   dfsru  = ! git dfru --stat
   dfdl   = ! git echoi "Diff from local to origin default branch $(git defbro)" && git df origin/$(git defbro)..HEAD
   dfdr   = ! git echoi "Diff from origin default branch $(git defbro) to local" && git df HEAD..origin/$(git defbro)
-  dfdsl  = ! git dfdl --stat
-  dfdsr  = ! git dfdr --stat
+  dfsdl  = ! git dfdl --stat
+  dfsdr  = ! git dfdr --stat
   dfdlu  = ! git hasupstream && git echoi "Diff from local to upstream default branch $(git defbru)" && git df upstream/$(git defbru)..HEAD
   dfdru  = ! git hasupstream && git echoi "Diff from upstream default branch $(git defbru) to local" && git df HEAD upstream/$(git defbru)
-  dfdslu = ! git dfdlu --stat
-  dfdsru = ! git dfdru --stat
+  dfsdlu = ! git dfdlu --stat
+  dfsdru = ! git dfdru --stat
 
   diff-staged = ! git dc
+  diff-stat-upstream = ! git dfslu
+  diff-stat-upstream-default = ! git dfsdlu
+  diff-upstream = ! git dflu
+  diff-upstream-default = ! git dfdlu
+  diff-stat-origin = ! git dfsl
+  diff-stat-origin-default = ! git dfsdl
+  diff-origin = ! git dfl
+  diff-origin-default = ! git dfdl
 
   # LAST COMMITER
   lc     = ! git cmd log -1 --pretty=format:'%an' # Last commiter
@@ -256,37 +307,53 @@
   lcbu   = ! branch=$1 && shift && git lc upstream/$branch # Last commiter from given branch from upstream
 
   # LOG
-  lg     = ! git cmd log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
-  lg5    = ! git --no-pager lg -5 && echo # limit to 5 commits
-  lg10   = ! git --no-pager lg -10 && echo # limit to 10 commits
-  lg20   = ! git --no-pager lg -20 && echo # limit to 20 commits
-  lg40   = ! git --no-pager lg -40 && echo # limit to 40 commits
-  lga    = ! git lg --all  # full all branches log
-  lga5   = ! git --no-pager lga -5 && echo # limit to 5 commits
-  lga10  = ! git --no-pager lga -10 && echo # limit to 10 commits
-  lga20  = ! git --no-pager lga -20 && echo  # limit to 20 commits
-  lga40  = ! git --no-pager lga -40 && echo  # limit to 40 commits
-  lgl    = ! git echoi "Local changes not in origin/$(git brcurrent)" && git lg origin/$(git brcurrent)..HEAD # Local changes compared to origin
-  lglu   = ! git hasupstream && git echoi "Local changes not in upstream/$(git brcurrent)" && git lg upstream/$(git brcurrent)..HEAD # Local changes compared to upstream
-  lgr    = ! git echoi "Remote changes from origin/$(git brcurrent)" && git lg HEAD..origin/$(git brcurrent) # Changes from origin
-  lgru   = ! git hasupstream && git echoi "Remote changes from upstream/$(git brcurrent)" && git lg HEAD..upstream/$(git brcurrent)  # Changes from upstream
-  lglr   = ! git lgl && echo && git lgr # Show local and origin changes
-  lglru  = ! git lglu && echo && git lgru # Show local and upstream changes
-  lgb    = ! branch=$1 && shift && git hasbranch $branch && git echoi "Changes in $branch not in HEAD" && git lg HEAD..$branch # Changes from given local branch to HEAD
-  lgbh   = ! branch=$1 && shift && git hasbranch $branch && git echoi "Changes in HEAD not in $branch" && git lg $branch..HEAD # Changes from HEAD to given local branch
-  lgbl   = ! branch=$1 && shift && git hasbrancho $branch && git echoi "Changes in origin/$branch not in HEAD" && git lg HEAD..origin/$branch # Changes from given origin branch to HEAD
-  lgbr   = ! branch=$1 && shift && git hasbrancho $branch && git echoi "Changes in HEAD not in origin/$branch" && git lg origin/$branch..HEAD # Changes from HEAD to given origin branch
-  lgblu  = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && git echoi "Changes in HEAD not in upstream/$branch" && git lg upstream/$branch..HEAD # Changes from HEAD to given upstream branch
-  lgbru  = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && git echoi "Changes in upstream/$branch not in HEAD" && git lg HEAD..upstream/$branch # Changes from given upstream branch to HEAD
-  lgdl   = ! git echoi "Changes in HEAD not in default origin branch $(git defbro)" && git lg origin/$(git defbro)..HEAD # Changes from HEAD to default origin branch
-  lgdr   = ! git echoi "Changes in origin default branch $(git defbro) not in HEAD" && git lg HEAD..origin/$(git defbro) # Changes from default origin branch to HEAD
-  lgdlu  = ! git echoi "Changes in HEAD not in default upstream branch $(git defbru)" && git lg upstream/$(git defbru)..HEAD # Changes from HEAD to default upstream branch
-  lgdru  = ! git echoi "Changes in upstream default branch $(git defbru) not in HEAD" && git lg HEAD..upstream/$(git defbru) # Changes from default upstream branch to HEAD
-  lgdlr  = ! git lgdl && echo && git lgdr # Show local and default origin changes
-  lgdlru = ! git lgdlu && echo && git lgdru # Show local and default upstream changes
+  lg      = ! git cmd log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
+  lg5     = ! git --no-pager lg -5 && echo # limit to 5 commits
+  lg10    = ! git --no-pager lg -10 && echo # limit to 10 commits
+  lg20    = ! git --no-pager lg -20 && echo # limit to 20 commits
+  lg40    = ! git --no-pager lg -40 && echo # limit to 40 commits
+  lga     = ! git lg --all  # full all branches log
+  lga5    = ! git --no-pager lga -5 && echo # limit to 5 commits
+  lga10   = ! git --no-pager lga -10 && echo # limit to 10 commits
+  lga20   = ! git --no-pager lga -20 && echo  # limit to 20 commits
+  lga40   = ! git --no-pager lga -40 && echo  # limit to 40 commits
+  lgl     = ! git echoi "Local changes not in origin/$(git brcurrent)" && git lg origin/$(git brcurrent)..HEAD # Local changes compared to origin
+  lglu    = ! git hasupstream && git echoi "Local changes not in upstream/$(git brcurrent)" && git lg upstream/$(git brcurrent)..HEAD # Local changes compared to upstream
+  lgr     = ! git echoi "Remote changes from origin/$(git brcurrent)" && git lg HEAD..origin/$(git brcurrent) # Changes from origin
+  lgru    = ! git hasupstream && git echoi "Remote changes from upstream/$(git brcurrent)" && git lg HEAD..upstream/$(git brcurrent)  # Changes from upstream
+  lglr    = ! git lgl && echo && git lgr # Show local and origin changes
+  lglru   = ! git lglu && echo && git lgru # Show local and upstream changes
+  lgb     = ! branch=$1 && shift && git hasbranch $branch && git echoi "Changes in $branch not in HEAD" && git lg HEAD..$branch # Changes from given local branch to HEAD
+  lgbh    = ! branch=$1 && shift && git hasbranch $branch && git echoi "Changes in HEAD not in $branch" && git lg $branch..HEAD # Changes from HEAD to given local branch
+  lgbl    = ! branch=$1 && shift && git hasbrancho $branch && git echoi "Changes in origin/$branch not in HEAD" && git lg HEAD..origin/$branch # Changes from given origin branch to HEAD
+  lgbr    = ! branch=$1 && shift && git hasbrancho $branch && git echoi "Changes in HEAD not in origin/$branch" && git lg origin/$branch..HEAD # Changes from HEAD to given origin branch
+  lgblu   = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && git echoi "Changes in HEAD not in upstream/$branch" && git lg upstream/$branch..HEAD # Changes from HEAD to given upstream branch
+  lgbru   = ! git hasupstream && branch=$1 && shift && git hasbranchu $branch && git echoi "Changes in upstream/$branch not in HEAD" && git lg HEAD..upstream/$branch # Changes from given upstream branch to HEAD
+  lgdl    = ! git echoi "Changes in HEAD not in default origin branch $(git defbro)" && git lg origin/$(git defbro)..HEAD # Changes from HEAD to default origin branch
+  lgdr    = ! git echoi "Changes in origin default branch $(git defbro) not in HEAD" && git lg HEAD..origin/$(git defbro) # Changes from default origin branch to HEAD
+  lgdlu   = ! git echoi "Changes in HEAD not in default upstream branch $(git defbru)" && git lg upstream/$(git defbru)..HEAD # Changes from HEAD to default upstream branch
+  lgdru   = ! git echoi "Changes in upstream default branch $(git defbru) not in HEAD" && git lg HEAD..upstream/$(git defbru) # Changes from default upstream branch to HEAD
+  lgdlr   = ! git lgdl && echo && git lgdr # Show local and default origin changes
+  lgdlru  = ! git lgdlu && echo && git lgdru # Show local and default upstream changes
+  lguil   = ! gitk origin/$(git brcurrent)..HEAD
+  lguir   = ! gitk HEAD..origin/$(git brcurrent)
+  lguidl  = ! gitk origin/$(git defbro)..HEAD
+  lguidr  = ! gitk HEAD..origin/$(git defbro)
+  lguilu  = ! gitk upstream/$(git brcurrent)..HEAD
+  lguiru  = ! gitk HEAD..upstream/$(git brcurrent)
+  lguidlu = ! gitk upstrem/$(git defbru)..HEAD
+  lguidru = ! gitk HEAD..upstream/$(git defbru)
 
-  log-all = ! git lga
-  log-local-upstream = ! git lglru
+  log-current                   = ! git lg
+  log-all                       = ! git lga
+  log-local-upstream            = ! git lglru
+  log-local-origin              = ! git lglr
+  log-local-default-upstream    = ! git lgdlru
+  log-local-default-origin      = ! git lgdlr
+  log-ui-local-upstream         = ! git lguil
+  log-ui-upstream-local         = ! git lguir
+  log-ui-local-default-upstream = ! git lguidl
+  log-ui-default-upstream-local = ! git lguidr
 
   # TOOLS
   brcurrent = symbolic-ref --short HEAD # gives current branch
@@ -302,20 +369,28 @@
   versionmajor = ! git --version | cut -d' ' -f3 | cut -d'.' -f1
   versionmajor2 = ! test $(git versionmajor) -ge 2
 
-  # Tools to display full git command, more complex then expected !!!
+  # Tools to display full git command, more complex than expected !!!
+  # It is too colorize the output on Linux, macOS, Windows, on different terminal (tty or not)
   # TODO: to optimize, each display takes too much time !!!
-
-
   cmd = ! "f(){ \
-      git echocolor 32 \"git $@\"; \
-      if [ ! \"$(git echocmd)\" = \"echo\" ]; then \
-        color='-c color.ui=always'; \
+      if [ \"$GIT_CMD_NOECHO\" = \"1\" ]; then \
+        :; \
+      elif [ \"$GIT_CMD_NOCOLOR\" = \"1\" ]; then \
+        echo \"------~~~=<[ git $@ ]>=~~~------\"; \
+      else \
+        git echocolor 32 \"git $@\"; \
+        if [ ! \"$(git echocmd)\" = \"echo\" ]; then \
+          color='-c color.ui=always'; \
+        fi; \
       fi; \
-      [ ! \"$GIT_DRY_CMD\" = \"1\" ] && git $color \"$@\"; \
+      [ ! \"$GIT_CMD_DRY\" = \"1\" ] && git $color \"$@\"; \
     } ; f" # echo with cmd color (green) and run cmd
   echoi = ! "f(){ \
       git echocolor 39 \"$@\"; \
     } ; f" # echo with info color (default)
+  echoe = ! "f(){ \
+      git echocolor 31 \"$@\"; \
+    } ; f" # echo with error color (red)
   debugo = ! git cmd cecho && echo && git cmd echocmd && echo # echo debug info about the echo used
   cecho = ! "f(){ \
       val=$(echo -en 'x' 2>&1); \

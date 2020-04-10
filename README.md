@@ -6,7 +6,7 @@ This project aim to facilitate the setup of a common environment for people with
 
 1. **Common core**
 
-   - **Git**: common configuration and aliases to simplify Git usage
+   - **Git**: common configuration and aliases to simplify Git usage, check [this guide](readme/README_git_guide.md).
    - **Python**: brings a simple way to create, list and switch between several python environments (eg. between python 2.x 3.x)
 
 1. **Windows**
