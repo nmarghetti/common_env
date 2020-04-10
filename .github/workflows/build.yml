@@ -176,6 +176,7 @@ jobs:
         shell: bash
         run: |
           git debugo
+          git config --global user.name runner
           bash ./tools/git/test_git.sh
 
       # Install zsh on Linux

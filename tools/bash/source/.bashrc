@@ -55,6 +55,7 @@ if [ "$current_shell" = "bash" ]; then
     pathPrepend "$APPS_COMMON/node" 2>/dev/null
     pathPrepend "$APPS_COMMON/python/Scripts" 2>/dev/null
     pathPrepend "$APPS_COMMON/python" 2>/dev/null
+    pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/cmd"
     pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
     pathPrepend "${HOME}/bin"
 
