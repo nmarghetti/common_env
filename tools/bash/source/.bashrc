@@ -27,12 +27,29 @@ if [ "$(system_get_os_host)" = "Windows" ]; then
   alias rrsource='COMMON_ENV_FORCE_CHECK=1 rsource'
 fi
 
-# If current shell is BASH
+# Add some tools in ~/bin if not there yet
+if [ ! -e "${HOME}/bin/toolupdatelink" ]; then
+  mkdir -p "${HOME}/bin"
+  source "${MAIN_BASHRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
+fi
+
+# Setup basic config based on the shell
 if [ "$current_shell" = "bash" ]; then
-  # Some shell configuration
   shopt -s expand_aliases
 
   source "${MAIN_BASHRC_ROOT}/path.sh"
+elif [ "$current_shell" = "zsh" ]; then
+  setopt aliases
+
+  source "${MAIN_BASHRC_ROOT}/path_zsh.sh"
+fi
+
+# In case of bash is not recent enough
+# pathPrepend "${HOME}/bin"
+export PATH="${HOME}/bin:$PATH"
+
+# If current shell is BASH
+if [ "$current_shell" = "bash" ]; then
 
   # ********** BEGIN - Specific for Windows platform with PortableApps **********
   export APPS_ROOT=$(cd && cd .. && pwd)
@@ -45,8 +62,6 @@ if [ "$current_shell" = "bash" ]; then
     export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
     export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
     export MSYS_SHELL=$APPS_COMMON/msys64/msys2_shell.cmd
-
-    mkdir -p "${HOME}/bin"
 
     pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
     # pathAppend "$APPS_COMMON/msys64/usr/bin" 2>/dev/null
@@ -98,10 +113,7 @@ if [ "$current_shell" = "bash" ]; then
 
 # If current shell is ZSH
 elif [ "$current_shell" = "zsh" ]; then
-  # Some shell configuration
-  setopt aliases
-
-  source "${MAIN_BASHRC_ROOT}/path_zsh.sh"
+  :
 fi
 
 # Function to update git repo
@@ -148,8 +160,6 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
 
   # Refresh tool links
   source "${MAIN_BASHRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
-else
-  export PATH=$PATH:$HOME/bin
 fi
 
 [ "$COMMON_ENV_DEBUG" = "1" ] && echo "'$MAIN_BASHRC' sourced"
