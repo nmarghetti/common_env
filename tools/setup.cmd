@@ -10,6 +10,11 @@ set COMMON_ENV_BRANCH=master
 if "%COMMON_ENV_INSTALL_DEVELOP%" == "1" (
   set COMMON_ENV_BRANCH=develop
 )
+if "%COMMON_ENV_INSTALL_APPS_ROOT%" == "" (
+  set SETUP_PATH=%APPS_ROOT%
+) else (
+  set SETUP_PATH=%COMMON_ENV_INSTALL_APPS_ROOT%
+)
 set APPS_EXE=PortableApps.exe
 set APP_GIT_EXE=PortableGit.exe
 
@@ -59,10 +64,20 @@ if not exist setup.ini (
 REM Install PortableApps
 if not exist PortableApps (
 	if exist %APPS_EXE% (
+    echo Installing PortableApps...
+    echo During the installation please follow those steps:
+    echo     * Leave the selected language, you can change it later
+    echo     * Select 'Select a custom location...' and leave the selected one
+    echo     * At the end untick 'Run PortableApps.com Platform'
 	  %APPS_EXE%
 	) else (
 
     ::curl --progress-bar -kLo %APPS_EXE% "https://portableapps.com/downloading/?a=PortableApps.comPlatform&s=s&d=pa&n=The%20PortableApps.com%20Platform&f=PortableApps.com_Platform_Setup_16.1.1.paf.exe"
+    echo Downloading PortableApps...
+    echo During the installation please follow those steps:
+    echo     * Leave the selected language, you can change it later
+    echo     * Select 'Select a custom location...' and leave the selected one
+    echo     * At the end untick 'Run PortableApps.com Platform'
 	  "%DOWNLOAD%" %APPS_EXE% "https://download3.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_16.1.1.paf.exe?20190321"
     if errorlevel 1 (
       echo "Error while trying to download PortableApps... Try to manually download and save as %APPS_EXE% from https://portableapps.com/download"
@@ -96,10 +111,15 @@ if not exist PortableGit (
     )
   )
   if exist %APP_GIT_EXE% (
+    echo Installing Git for Windows...
+    echo During the installation please follow those steps:
+    echo     * Leave the selected path
     %APP_GIT_EXE%
     move %APP_GIT_EXE% ..\%APP_GIT_EXE%
   ) else (
-    echo "%DOWNLOAD%"
+    echo Downloading Git for Windows...
+    echo During the installation please follow those steps:
+    echo     * Leave the selected path
     "%DOWNLOAD%" %APP_GIT_EXE% "https://github.com/git-for-windows/git/releases/download/v2.26.0.windows.1/PortableGit-2.26.0-64-bit.7z.exe"
     if errorlevel 1 (
       echo "Error while trying to download Git for Windows... Try to manually download the 64-bit Git for Windows PORTABLE and save as %APP_GIT_EXE% from https://github.com/git-for-windows/git/releases/download/v2.26.0.windows.1/PortableGit-2.26.0-64-bit.7z.exe or https://git-scm.com/download/win"
@@ -148,17 +168,33 @@ if not exist "%APPS_ROOT%\Documents\dev\common_env" (
     exit 1
   )
 )
+REM Ensure to have the repo on the right branch and up to date
+cd "%APPS_ROOT%\Documents\dev\common_env"
+"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout origin/%COMMON_ENV_BRANCH% --track 2>nul
+"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout %COMMON_ENV_BRANCH%
+for /f %%i in ('%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe symbolic-ref --short HEAD') do set branch=%%i
+if "%branch%" NEQ "%COMMON_ENV_BRANCH%" (
+  echo "Unable to checkout branch %branch% (current branch is %COMMON_ENV_BRANCH%). Exiting..."
+  pause
+  exit 1
+)
+"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" pull --rebase
 
 REM Setup
+cd "%APPS_ROOT%"
 echo "---------------- Start setup with bash ------------------"
-"%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%APPS_ROOT%\Documents\dev\common_env\scripts\setup.sh"
+"%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh"
 
 if not errorlevel 1 (
-  echo "Installation completed"
-  echo "You can now execute Start.exe"
-  echo "From there you can run 'Git bash termninal' and check for more custom app to install with the command setup_common_env (add -h for to see the usage)"
-  echo "You can also install many application from PortableApps: Apps -> Get More Apps... -> By Category"
-  echo "Enjoy ;)"
+  echo Installation completed
+  echo You can now execute Start.exe
+  echo From there you can :
+  echo     * launch 'Git bash termninal'
+  echo     * run setup_common_env -h
+  echo     * check the usage to get more custom application
+  echo You can also install many application from PortableApps:
+  echo     * Apps -^> Get More Apps... -^> By Category
+  echo Enjoy ;^)
 )
 
 pause

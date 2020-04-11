@@ -3,7 +3,6 @@
 
   // VSCode
   "extensions.autoUpdate": false,
-
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
@@ -93,10 +92,10 @@
   "gitblame.statusBarMessageFormat": "${commit.hash_short,6} ${author.name} (${time.ago}): ${commit.summary}",
 
   // Terminal
-  "terminal.integrated.shell.windows": "%APPS_ROOT%/PortableApps/PortableGit/bin/bash.exe",
+  "terminal.integrated.shell.windows": "bash.exe",
   "terminal.integrated.shellArgs.windows": [
     "--init-file",
-    "%APPS_ROOT%/home/.bashrc",
+    "${env:HOME}/.bashrc",
   ],
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.scrollback": 10000,
@@ -104,43 +103,47 @@
   // Shell launcher for several terminal configuration
   "shellLauncher.shells.windows": [
     {
-      "shell": "C:\\windows\\System32\\cmd.exe",
+      "shell": "cmd.exe",
       "label": "cmd",
     },
     {
-      "shell": "C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "shell": "wsl.exe",
+      "label": "WSL",
+    },
+    {
+      "shell": "powershell.exe",
       "label": "PowerShell",
     },
     {
-      "shell": "%APPS_ROOT%/PortableApps/PortableGit/bin/bash.exe",
-      "args": ["--init-file", "%APPS_ROOT%/home/.bashrc"],
+      "shell": "bash.exe",
+      "args": ["--init-file", "${env:HOME}/.bashrc"],
       "label": "Git_bash",
     },
     {
-      "shell": "%APPS_ROOT%/PortableApps/PuTTYPortable/App/putty/PUTTY.EXE",
+      "shell": "${env:APPS_ROOT}/PortableApps/PuTTYPortable/App/putty/PUTTY.EXE",
       "args": ["-load", "config_name", "-t"],
       "label": "putty",
     },
   ],
 
   // CMake
-  "cmake.cmakePath": "%APPS_ROOT%/PortableApps/CommonFiles/cmake/bin/cmake.exe",
+  "cmake.cmakePath": "${env:APPS_ROOT}/PortableApps/CommonFiles/cmake/bin/cmake.exe",
   /*"cmake.mingwSearchDirs": [
-        "%APPS_ROOT%/PortableApps/CommonFiles/gcc/x64/x86_64-w64-mingw32",
-        "%APPS_ROOT%/PortableApps/CommonFiles/gcc/x64/bin",
-        "%APPS_ROOT%/PortableApps/PortableGit/mingw64"
+        "${env:APPS_ROOT}/PortableApps/CommonFiles/gcc/x64/x86_64-w64-mingw32",
+        "${env:APPS_ROOT}/PortableApps/CommonFiles/gcc/x64/bin",
+        "${env:APPS_ROOT}/PortableApps/PortableGit/mingw64"
     ],*/
   /*"cmake.preferredGenerators": [
         "Unix Makefiles"
     ],*/
   "cmake.configureSettings": {
-    "CMAKE_MAKE_PROGRAM": "%APPS_ROOT%/PortableApps/CommonFiles/gcc/x64/bin/make.exe",
+    "CMAKE_MAKE_PROGRAM": "${env:APPS_ROOT}/PortableApps/CommonFiles/gcc/x64/bin/make.exe",
     "CMAKE_GENERATOR": "Unix Makefiles",
   },
   //"cmake.generator": "Unix Makefiles",
   "cmake.buildDirectory": "${workspaceRoot}/build",
   "cmake.useCMakeServer": false,
-  //"cmake-tools-helper.cmake_download_path": "%APPS_ROOT%/PortableApps/CommonFiles/cmake-3.10.1-win64-x64",
+  //"cmake-tools-helper.cmake_download_path": "${env:APPS_ROOT}/PortableApps/CommonFiles/cmake-3.10.1-win64-x64",
 
   // C/C++
   "C_Cpp.intelliSenseEngine": "Default",
