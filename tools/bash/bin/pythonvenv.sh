@@ -13,7 +13,7 @@ function create_env() {
   fi
   local version=$1
   if [ -z "$version" ]; then
-    version=$($pythonbin --version 2>&1 | cut -d' ' -f2 | tr -d '[[:space:]]')
+    version=$("$pythonbin" --version 2>&1 | cut -d' ' -f2 | tr -d '[[:space:]]')
   fi
   echo "python bin path: '$pythonbin'"
   echo "python version: '$version'"
@@ -21,11 +21,24 @@ function create_env() {
     echo "Version '$version' is not valid"
     return 1
   fi
+  local major_version=$(echo $version | cut -b 1)
   cd && mkdir -p .venv && cd ".venv"
   test $? -ne 0 && echo "Unable to go to .venv in home directory" && return 1
   test -d "$version" && echo "Version '$version' already exist" && return 1
   echo "Create python env '$PWD/$version'"
-  $pythonbin -m venv "$version"
+  if [ "$major_version" = "2" ]; then
+    # for python 2
+    "$pythonbin" -m virtualenv -h &>/dev/null
+    if [ $? -ne 0 ]; then
+      "$pythonbin" -m pip install virtualenv && "$pythonbin" -m virtualenv -h &>/dev/null
+      [ $? -ne 0 ] && echo "Unable to install virtualenv" && return 1
+    fi
+    "$pythonbin" -m virtualenv "$version"
+  else
+    # for python 3
+    "$pythonbin" -m venv "$version"
+  fi
+  ln -sf "$version" "$major_version"
 }
 
 function set_env() {
@@ -45,7 +58,7 @@ function set_env() {
   fi
   # Ensure path to python is posix
   if [ "$(system_get_os_host)" = "Windows" ]; then
-    local python_env_path="$(grep -E '^VIRTUAL_ENV="' "$pythonactivate" | head -1 | sed -re 's/VIRTUAL_ENV="([^"]+)"/\1/')"
+    local python_env_path="$(grep -E '^VIRTUAL_ENV=' "$pythonactivate" | head -1 | sed -re "s/VIRTUAL_ENV=(['\"])([^'\"]+)['\"]/\2/")"
     if [ "$(echo "$python_env_path" | grep -c ':')" -ne 0 ]; then
       local python_env_path_posix="$(get_path_to_posix "$python_env_path")"
       sed -re "s#$(echo "$python_env_path" | sed -re "s#\\\\#\\\\\\\\#g")#$python_env_path_posix#g" "$pythonactivate" >| "${pythonactivate}.csh"
@@ -64,7 +77,10 @@ case $1 in
   ;;
   list)
     shift
-    test -d "$HOME/.venv" && ls -1 "$HOME/.venv"
+    if [ -d "$HOME/.venv" ]; then
+      ls -1 "$HOME/.venv" | xargs -I X bash -ec 'link=$(readlink "$HOME/X") | link=; test -n "$link" && link=" -> $link"; echo "X$link"' 2>/dev/null
+      [ $? -ne 0 ] && ls -1 "$HOME/.venv"
+    fi
   ;;
   set)
     shift
@@ -74,4 +90,4 @@ case $1 in
     echo "Unknown command '$@', must be create|list|set"
     exit 1
 esac
-cd $SAVE_PWD
+cd "$SAVE_PWD"

@@ -95,7 +95,7 @@ if [ "$current_shell" = "bash" ]; then
     alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
     alias cddev="cd '${APPS_ROOT}/Documents/dev'"
 
-    pythonvenv list | grep -cE '^3.8.1$' &>/dev/null && source pythonvenv set 3.8.1
+    test -d "$HOME/.venv/3.8.2" && source pythonvenv set 3.8.2
   else
     unset APPS_ROOT
   fi

@@ -45,13 +45,13 @@ usage() {
   echo "  Options:" 1>&2
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "  Possible apps:" 1>&2
-  echo "    python: install python 3.8.1 and sets a virtual env" 1>&2
-  echo "    vscode: install Visual Studio Code" 1>&2
+  echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
+  echo "    python: install python 3.8.2 and sets a virtual env" 1>&2
+  echo "    vscode: install Visual Studio Code 1.43.2" 1>&2
   echo "    node: install NodeJs" 1>&2
   echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
-  echo "    all: install all the apps above" 1>&2
-  echo "In any case it will setup some bash and git config" 1>&2
+  echo "In any case it will setup some bash and git config, and install python" 1>&2
 }
 
 check_dir_var() {
@@ -67,11 +67,14 @@ check_dir_var() {
 
 while [ $# -gt 0 ]; do
   case $1 in
+  python2)
+    APPS="$APPS python2"
+    ;;
   python)
     APPS="$APPS python"
     ;;
   vscode)
-    APPS="$APPS vscode windows_path"
+    APPS="$APPS vscode"
     ;;
   cpp)
     APPS="$APPS make cmake msys2"
@@ -81,9 +84,6 @@ while [ $# -gt 0 ]; do
     ;;
   xampp)
     APPS="$APPS xampp"
-    ;;
-  all)
-    APPS="bash git python vscode windows_path node make cmake msys2 xampp"
     ;;
   -s | --silent)
     SETUP_SILENT=1
@@ -135,7 +135,7 @@ for path in SETUP_SCRIPT_PATH HOME APPS_ROOT; do
   fi
 done
 if [ -n "$path_with_space" ]; then
-  echo "Warning !!! Even though it should be working, it is really a bad idea to have space in filenames:"
+  echo "Warning !!! Even though it should be working, it is really a bad idea to have space in the path for your HOME:"
   for path in $path_with_space; do
     echo "$path: '${!path}'"
   done
@@ -177,6 +177,9 @@ if [ -n "$APPS_ROOT" ]; then
   export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
   export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
   export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
+
+  # Ensure that git will be in the path is not yet the case
+  type git &>/dev/null || export PATH=$APPS_ROOT/PortableApps/PortableGit/bin:$PATH
 
   # Ensure to also setup gitbash
   APPS="gitbash portableapps $APPS"
