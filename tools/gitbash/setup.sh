@@ -2,6 +2,8 @@
 
 # https://github.com/git/git/blob/v2.26.0/Documentation/gittutorial.txt
 function setup_gitbash() {
+  local ERROR=$SETUP_ERROR_STOP
+
   for file in bash.cmd mintty.cmd; do
     test -f "$HOME/$file" || cp -vf "$SETUP_TOOLS_ROOT/gitbash/$file" "$HOME/"
   done
@@ -12,7 +14,7 @@ function setup_gitbash() {
   # Install wget
   if [ ! -f "$git_path/usr/bin/wget.exe" ]; then
     curl -k --progress-bar -o "$git_path/usr/bin/wget.exe" "https://eternallybored.org/misc/wget/1.20.3/64/wget.exe"
-    [ $? -ne 0 ] && echo "Unable to retrieve wget" && return 1
+    [ $? -ne 0 ] && echo "Unable to retrieve wget" && return $ERROR
   fi
 
   # Install Git for Windows
@@ -21,7 +23,7 @@ function setup_gitbash() {
     tarball_path="$APPS_ROOT/PortableApps/$tarball"
     if [ ! -f $tarball_path ]; then
       wget --progress=bar:force -O "$tarball_path" https://github.com/git-for-windows/git/releases/download/v2.26.0.windows.1/$tarball
-      test $? -ne 0 && echo "Error, unable to retrieve the archive." && return 1
+      test $? -ne 0 && echo "Error, unable to retrieve the archive." && return $ERROR
     fi
     "$tarball_path"
     ret=$?
@@ -29,7 +31,7 @@ function setup_gitbash() {
     rm -f "$tarball_path"
   fi
 
-  [ ! -f "$git_path/bin/git.exe" ] && echo "Failed to install git bash" && return 1
+  [ ! -f "$git_path/bin/git.exe" ] && echo "Failed to install git bash" && return $ERROR
 
   # Install rsync, tree
   local extra_tools=('rsync:rsync-3.1.3-1-x86_64.pkg.tar.xz' 'tree:tree-1.8.0-1-x86_64.pkg.tar.xz')
@@ -43,13 +45,13 @@ function setup_gitbash() {
       output_tar="$APPS_ROOT/PortableApps/PortableGit/"
       if [ ! -f "$output_tar/$tarball" ]; then
         wget --progress=bar:force -O "$output_tar/$tarball" http://repo.msys2.org/msys/x86_64/$tarball
-        test $? -ne 0 && echo "Error, unable to retrieve the archive." && return 1
+        test $? -ne 0 && echo "Error, unable to retrieve the archive." && return $ERROR
       fi
       exec 3>&1
       (cd "$output_tar" && tar -vxJf "$tarball" | awk 'BEGIN {ORS="."} {print "."}' >&3)
       echo
       rm -f "$output_tar/$tarball"
-      [ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${tool}.exe" ] && echo "Error while installing ${tool}..." && return 1
+      [ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${tool}.exe" ] && echo "Error while installing ${tool}..." && return $ERROR
     fi
   done
 
