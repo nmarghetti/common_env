@@ -257,7 +257,7 @@ Here are the few commands to remember and that you should do often.
 
   ```bash
   git status # repository status
-  git fetch-rebase-upstream # update from main repository
+  git fetch-rebase-upstream # update from main repository (upstream)
   git commit-amend # amend current change to your previous commit instead of creating a new commit
   git push -f # force push on your fork, might be needed after rebase or commit amend
   git log-all # display full history
@@ -268,11 +268,66 @@ Here are the few commands to remember and that you should do often.
 
   ```bash
   git st # repository status
-  git fru # update from main repository
+  git fru # update from main repository (upstream)
   git ca # amend current change to your previous commit instead of creating a new commit
   git pf # force push on your fork, might be needed after rebase or commit amend
   git lga # display full history
   git lglru # display only history diff between your local and the upstream
+  ```
+
+## To discover and remember from next section "More advanced"
+
+```bash
+git-gui # open UI to graphically handle the repo
+gitk # open UI to graphically visualize all branches history
+```
+
+- Long aliases
+
+  ```bash
+  git branch-checkout origin/feature_001 # checkout and track another branch
+  git checkout-default-branch # checkout default branch from origin
+  git checkout-default-branch-upstream # checkout default branch from upstream
+  git branch-new feature_010 # create new branch and push to origin
+  git reset-commit-last 3 # softly reset the last 3 commits
+  git remove-commit-last 3 # remove the last 3 commits (cannot be undone easily, check git reflog)
+  git remove-commit fc4a6fe # remove commit fc4a6fe (cannot be undone easily, check git reflog)
+  git fetch-rebase-upstream-default # update from default branch main repository (upstream)
+  git rebase-checkout-remote [<filename>] # during rebase conflict, choose remote changes
+  git rebase-checkout-local [<filename>] # during rebase conflict, choose local changes
+  git log-local-default-upstream # log commits difference between local and upstream default branch
+  git log-ui-local-upstream # see in the UI the commits in local not in upstream
+  git log-ui-upstream-local # see in the UI the commits in upstream not in local
+  git log-ui-local-default-upstream # see in the UI the commits in local not in upstream default branch
+  git log-ui-default-upstream-local # see in the UI the commits in upstream default branch not in local
+  git diff-stat-upstream # see stat diff between local and upstream
+  git diff-stat-upstream-default # see stat diff between local and upstream default branch
+  git diff-upstream # see diff between local and upstream
+  git diff-upstream-default # see diff between local and upstream default branch
+  ```
+
+- Short aliases
+
+  ```bash
+  git brc origin/feature_001 # checkout and track another branch
+  git codb # checkout default branch from origin
+  git codbu # checkout default branch from upstream
+  git brn feature_010 # create new branch and push to origin
+  git rs 3 # softly reset the last 3 commits
+  git rsh 3 # remove the last 3 commits (cannot be undone easily, check git reflog)
+  git rmc fc4a6fe # remove commit fc4a6fe (cannot be undone easily, check git reflog)
+  git frdu # update from default branch main repository (upstream)
+  git rbcor [<filename>] # during rebase conflict, choose remote changes
+  git rbcol [<filename>] # during rebase conflict, choose local changes
+  git lgdlru # log commits difference between local and upstream default branch
+  git lguilu # see in the UI the commits in local not in upstream
+  git lguiru # see in the UI the commits in upstream not in local
+  git lguidlu # see in the UI the commits in upstream default branch not in local
+  git lguidru # see in the UI the commits in upstream default branch not in local
+  git dfslu # see stat diff between local and upstream
+  git dfsdlu # see stat diff between local and upstream default branch
+  git dflu # see diff between local and upstream
+  git dfdlu # see diff between local and upstream default branch
   ```
 
 ## More advanced
