@@ -47,7 +47,7 @@ usage() {
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
   echo "    python: install python 3.8.2 and sets a virtual env" 1>&2
-  echo "    vscode: install Visual Studio Code 1.43.2" 1>&2
+  echo "    vscode: install Visual Studio Code 1.44.0" 1>&2
   echo "    node: install NodeJs" 1>&2
   echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2

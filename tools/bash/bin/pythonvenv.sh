@@ -50,7 +50,7 @@ function set_env() {
   local pythonactivate=
   if [ -f "$version/Scripts/activate" ]; then
     pythonactivate="$version/Scripts/activate"
-    elif [ -f "$version/bin/activate" ]; then
+  elif [ -f "$version/bin/activate" ]; then
     pythonactivate="$version/bin/activate"
   else
     echo "Error: Unable to active this python env !"
@@ -61,7 +61,7 @@ function set_env() {
     local python_env_path="$(grep -E '^VIRTUAL_ENV=' "$pythonactivate" | head -1 | sed -re "s/VIRTUAL_ENV=(['\"])([^'\"]+)['\"]/\2/")"
     if [ "$(echo "$python_env_path" | grep -c ':')" -ne 0 ]; then
       local python_env_path_posix="$(get_path_to_posix "$python_env_path")"
-      sed -re "s#$(echo "$python_env_path" | sed -re "s#\\\\#\\\\\\\\#g")#$python_env_path_posix#g" "$pythonactivate" >| "${pythonactivate}.csh"
+      sed -re "s#$(echo "$python_env_path" | sed -re "s#\\\\#\\\\\\\\#g")#$python_env_path_posix#g" "$pythonactivate" >|"${pythonactivate}.csh"
       pythonactivate="${pythonactivate}.csh"
     fi
   fi
@@ -71,23 +71,24 @@ function set_env() {
 
 SAVE_PWD=$PWD
 case $1 in
-  create)
-    shift
-    create_env "$@"
+create)
+  shift
+  create_env "$@"
   ;;
-  list)
-    shift
-    if [ -d "$HOME/.venv" ]; then
-      ls -1 "$HOME/.venv" | xargs -I X bash -ec 'link=$(readlink "$HOME/X") | link=; test -n "$link" && link=" -> $link"; echo "X$link"' 2>/dev/null
-      [ $? -ne 0 ] && ls -1 "$HOME/.venv"
-    fi
+list)
+  shift
+  if [ -d "$HOME/.venv" ]; then
+    ls -1 "$HOME/.venv" | xargs -I X bash -ec 'link=$(readlink "$HOME/.venv/X") || link=; test -n "$link" && link=" -> $link"; echo "X$link"' 2>/dev/null
+    [ $? -ne 0 ] && ls -1 "$HOME/.venv"
+  fi
   ;;
-  set)
-    shift
-    set_env "$@"
+set)
+  shift
+  set_env "$@"
   ;;
-  *)
-    echo "Unknown command '$@', must be create|list|set"
-    exit 1
+*)
+  echo "Unknown command '$@', must be create|list|set"
+  exit 1
+  ;;
 esac
 cd "$SAVE_PWD"

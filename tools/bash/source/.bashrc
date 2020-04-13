@@ -60,7 +60,9 @@ if [ "$current_shell" = "bash" ]; then
 
     export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
     export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
+    export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
     export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
+    export WINDOWS_APPS_COMMON="$(echo "$WIN_APPS_COMMON" | tr '/' '\\')"
     export MSYS_SHELL=$APPS_COMMON/msys64/msys2_shell.cmd
 
     pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
@@ -68,6 +70,8 @@ if [ "$current_shell" = "bash" ]; then
     pathPrepend "$APPS_COMMON/cmake/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/make/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/node" 2>/dev/null
+    [ -f "$WIN_APPS_COMMON/python/python.exe" ] && export PYTHONUSERBASE="$WINDOWS_APPS_COMMON\\python"
+    pathPrepend "$APPS_COMMON/python/Python38/Scripts" 2>/dev/null
     pathPrepend "$APPS_COMMON/python/Scripts" 2>/dev/null
     pathPrepend "$APPS_COMMON/python" 2>/dev/null
     pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/cmd"
