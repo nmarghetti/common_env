@@ -7,7 +7,7 @@
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
+    "source.fixAll.eslint": true
   },
 
   "files.eol": "\n",
@@ -15,44 +15,44 @@
   "files.insertFinalNewline": true,
   "files.associations": {
     "*.snap": "log",
-    "*.md": "markdown",
+    "*.md": "markdown"
   },
   "files.exclude": {
     "build": true,
-    "**/*.pyc": true,
+    "**/*.pyc": true
   },
 
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[log]": {
     "files.trimTrailingWhitespace": false,
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": false
   },
   "[python]": {
     "editor.defaultFormatter": "ms-python.python",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "[shellscript]": {
-    "editor.defaultFormatter": "shakram02.bash-beautify",
-    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "foxundermoon.shell-format",
+    "editor.formatOnSave": true
   },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
 
   "workbench.colorTheme": "Visual Studio Dark",
@@ -95,7 +95,7 @@
   "terminal.integrated.shell.windows": "bash.exe",
   "terminal.integrated.shellArgs.windows": [
     "--init-file",
-    "${env:HOME}/.bashrc",
+    "${env:HOME}/.bashrc"
   ],
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.scrollback": 10000,
@@ -104,26 +104,26 @@
   "shellLauncher.shells.windows": [
     {
       "shell": "cmd.exe",
-      "label": "cmd",
+      "label": "cmd"
     },
     {
       "shell": "wsl.exe",
-      "label": "WSL",
+      "label": "WSL"
     },
     {
       "shell": "powershell.exe",
-      "label": "PowerShell",
+      "label": "PowerShell"
     },
     {
       "shell": "bash.exe",
       "args": ["--init-file", "${env:HOME}/.bashrc"],
-      "label": "Git_bash",
+      "label": "Git_bash"
     },
     {
       "shell": "${env:APPS_ROOT}/PortableApps/PuTTYPortable/App/putty/PUTTY.EXE",
       "args": ["-load", "config_name", "-t"],
-      "label": "putty",
-    },
+      "label": "putty"
+    }
   ],
 
   // CMake
@@ -138,7 +138,7 @@
     ],*/
   "cmake.configureSettings": {
     "CMAKE_MAKE_PROGRAM": "${env:APPS_ROOT}/PortableApps/CommonFiles/gcc/x64/bin/make.exe",
-    "CMAKE_GENERATOR": "Unix Makefiles",
+    "CMAKE_GENERATOR": "Unix Makefiles"
   },
   //"cmake.generator": "Unix Makefiles",
   "cmake.buildDirectory": "${workspaceRoot}/build",
@@ -149,4 +149,6 @@
   "C_Cpp.intelliSenseEngine": "Default",
 
   // END - GENERATED CONTENT, DO NOT EDIT !!!
+
+  "http.proxyStrictSSL": true
 }

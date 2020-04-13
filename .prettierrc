@@ -1,7 +1,7 @@
 {
   "overrides": [
     {
-      "files": "tools/vscode/settings.json",
+      "files": "tools/vscode/_settings.json",
       "options": {
         "parser": "json5",
         "quoteProps": "preserve",
