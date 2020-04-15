@@ -15,7 +15,7 @@ trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 # echo an error message before exiting
 trap 'set +e && echo "\"${last_command}\" command failed with exit code $?."' EXIT
 
-if [ ! "$(uname -s )" = "Darwin" ]; then
+if [ ! "$(uname -s)" = "Darwin" ]; then
   echo "You are not running on Mac, nothing to do."
   exit 1
 fi
@@ -31,7 +31,7 @@ if [ $NEED_INSTALL -eq 1 ]; then
     echo "  * brew install gnu-sed"
     echo "  * brew install gawk"
     echo "Do you want to proceed ? (Y/n) "
-    read answer
+    read -r answer
   else
     echo "Using silent mode" >&2
   fi
@@ -55,7 +55,6 @@ export PATH="$path_to_add:$PATH"
 export COMMON_ENV_SETUP_MAC_PATH="export PATH=\"$path_to_add:\$PATH\""
 
 type readlink sed awk echo >/dev/null && echo "MAC setup completed"
-
 
 # undo in case this file is sourced
 set +e
