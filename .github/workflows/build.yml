@@ -100,12 +100,12 @@ jobs:
 
           dir_with_space="$tmpdir/path with space"
           mkdir -p "$dir_with_space"
-          cp -r scripts tools "$dir_with_space/"
+          git clone . "$dir_with_space/common_env"
 
           export HOME="$tmpdir/bad home"
           mkdir -p "$HOME"
 
-          bash "$dir_with_space/scripts/setup.sh" -s
+          bash "$dir_with_space/common_env/scripts/setup.sh" -s
 
           echo "  * Source .bashrc"
           source "$HOME/.bashrc"

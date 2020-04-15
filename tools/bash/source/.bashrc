@@ -129,6 +129,7 @@ export LC_ALL=C.UTF-8
 export LESSCHARSET=UTF-8
 
 # Common alias
+alias common_env_outdate_check='touch -t "$(date --date="2 days ago" +%Y%m%d%H%M.%S)" "$HOME/.common_env_check"'
 alias vvsource="vi '$MAIN_BASHRC_ROOT/.bashrc'"
 alias vvgit="vi '$MAIN_BASHRC_ROOT/../../git/.gitconfig'"
 alias vgit='vi "$HOME/.gitconfig"'
@@ -148,7 +149,9 @@ alias pyunset='deactivate 2>/dev/null'
 
 # Do some checks only if not done since at least 24h
 COMMON_ENV_LAST_CHECK="$HOME/.common_env_check"
+COMMON_ENV_CHANGED=0
 if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMON_ENV_LAST_CHECK" +%s)) -ge 86400 ]; then
+  current_commit=$(cd "$MAIN_BASHRC_ROOT" && git log -1 --pretty=format:%H)
   # Things not needed to be checked just after a setup
   if [ -f "$COMMON_ENV_LAST_CHECK" ]; then
     # Check for update if access to github
@@ -156,7 +159,11 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
     if [ "$OSTYPE" = "msys" ]; then
       pingopt="-n"
     fi
-    ping $pingopt 1 -w 1 github.com &>/dev/null && common_env_check_update
+    ping $pingopt 1 -w 1 github.com &>/dev/null
+    if [ $? -eq 0 ]; then
+      common_env_check_update
+      [ ! "$current_commit" = "$(cd "$MAIN_BASHRC_ROOT" && git log -1 --pretty=format:%H)" ] && COMMON_ENV_CHANGED=1
+    fi
 
     # Update git config
     type rgit &>/dev/null && rgit
@@ -166,5 +173,8 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
   # Refresh tool links
   source "${MAIN_BASHRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
 fi
+
+# If an update occured, refresh the setup if on Windows with APPS_ROOT
+[ $COMMON_ENV_CHANGED -eq 1 ] && [ ! -z "$APPS_ROOT" ] && type setup_common_env &>/dev/null && setup_common_env
 
 [ "$COMMON_ENV_DEBUG" = "1" ] && echo "'$MAIN_BASHRC' sourced"
