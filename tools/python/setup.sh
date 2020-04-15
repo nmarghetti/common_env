@@ -4,7 +4,9 @@
 # pip install location https://pip.pypa.io/en/latest/user_guide/#user-installs
 
 function setup_python() {
-  local ERROR=$SETUP_ERROR_CONTINUE
+  local ERROR=$SETUP_ERROR_STOP
+  # if there is already python >= 3.7, error would not stop the process
+  type python &>/dev/null && python --version | cut -d' ' -f2 | cut -d'.' -f1,2 | grep -E '^3\.[7-9]' >/dev/null && ERROR=$SETUP_ERROR_CONTINUE
 
   local python_path="PortableApps/CommonFiles/python"
   local python_winpath="$(echo $WIN_APPS_ROOT/$python_path | tr '/' '\\')"
@@ -34,7 +36,7 @@ function setup_python() {
     local end=$(date +%s)
     # it the install took less than 3s, it probably has failed, ask for reinstall
     if [ $(expr $end - $start) -le 3 ]; then
-      read -p 'The python installation failed, maybe a previous installation needs to be removed first, do you want to try ? (Y/n)' answer
+      read -rp 'The python installation failed, maybe a previous installation needs to be removed first, do you want to try ? (Y/n)' answer
       if [ -z "$answer" ] || [[ "$answer" =~ ^[yY]$ ]]; then
         eval "./$tarball -uninstall InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"
         eval "./$tarball -quiet -passive InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"

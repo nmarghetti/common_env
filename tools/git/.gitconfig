@@ -46,6 +46,7 @@
   default = upstream
 
 [alias]
+  cv = ! echo 'gitconfig 2.0.0'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
