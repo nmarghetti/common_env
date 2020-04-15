@@ -182,7 +182,7 @@ if "%branch%" NEQ "%COMMON_ENV_BRANCH%" (
 
 REM Setup
 cd "%APPS_ROOT%"
-echo "---------------- Start setup with bash ------------------"
+echo ---------------- Start setup with bash ------------------
 "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh"
 
 if not errorlevel 1 (

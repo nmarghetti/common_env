@@ -25,13 +25,13 @@ EOM
       fi
       echo -n "Please enter your git user name ($current_user): "
       local user
-      read user
+      read -r user
       if [ -z "$user" ]; then
         user=$current_user
       fi
       echo -n "Please enter your git user email address: "
       local mail
-      read mail
+      read -r mail
       git config --global user.name "$user"
       git config --global user.email "$mail"
     fi

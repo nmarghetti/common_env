@@ -10,23 +10,23 @@ function check_repo_update() {
   if [ $(git log --format=oneline HEAD..origin/$(git symbolic-ref --short HEAD) -1 | wc -l) -gt 0 ]; then
     git --no-pager lgr && echo
     echo "Do you want to update $PWD ? (y/N) "
-    read answer
+    read -r answer
     if [[ "$answer" =~ ^[yY]$ ]]; then
       git pullr
       ret=$?
       case $ret in
-        128)
-          echo
+      128)
+        echo
         ;; # Unstaged changes
-        1)
-          echo
-          echo "Rebase failed, aborting it..."
-          git rba
+      1)
+        echo
+        echo "Rebase failed, aborting it..."
+        git rba
         ;;
       esac
       if [ $ret -ne 0 ]; then
         echo "Do you want to hardly set it to remote (you would lose all local changes) ? (y/N) "
-        read answer
+        read -r answer
         if [[ "$answer" =~ ^[yY]$ ]]; then
           git rsbo
         fi

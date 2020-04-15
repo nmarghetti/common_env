@@ -98,6 +98,7 @@ if [ "$current_shell" = "bash" ]; then
 
     alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
     alias cddev="cd '${APPS_ROOT}/Documents/dev'"
+    alias cdenv="cd '${APPS_ROOT}/Documents/dev/common_env'"
 
     test -d "$HOME/.venv/3.8.2" && source pythonvenv set 3.8.2
   else

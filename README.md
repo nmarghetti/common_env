@@ -67,6 +67,7 @@ If you are on Windows, you can get a portable development environment (it is not
 
 - **Visual Studio Code** with several extensions
 - **Git for Windows** (Git-bash)
+- **Python** (2.7)
 - **Python** (3.8)
 - **Node.js**
 - C/C++ tools: **CMake**, **GCC**
@@ -87,7 +88,14 @@ Any developper could join and install quickly everything like the others with on
 
 ## Git guide
 
-If you are looking for an easy way to start with Git, you can follow [this guide](readme/README_git_guide.md).
+If you are looking for an easy way to start with Git, you can follow [**this guide**](readme/README_git_guide.md).
+
+## Customization
+
+For git you can define those variables:
+
+- GIT_CMD_NOCOLOR=1 to not display real git command for aliases in color (as it can be a bit slow)
+- GIT_CMD_NOECHO=1 to not display real git command for aliases
 
 ## Usefull links
 
@@ -122,5 +130,6 @@ If you are looking for an easy way to start with Git, you can follow [this guide
 
 1. **Other**
 
+   - [Cmder](https://cmder.net/): [ConEmu](https://conemu.github.io/), [Clink](https://mridgers.github.io/clink/)
    - [Bash/Unix/Linux tutorial](https://www.tutorialspoint.com/unix_commands/bash.htm)
    - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm)

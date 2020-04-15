@@ -46,12 +46,12 @@ usage() {
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
-  echo "    python: install python 3.8.2 and sets a virtual env" 1>&2
   echo "    vscode: install Visual Studio Code 1.44.0" 1>&2
-  echo "    node: install NodeJs" 1>&2
+  echo "    cmder: install cmder 1.3.14" 1>&2
+  echo "    node: install NodeJs 2.14.1" 1>&2
   echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
-  echo "In any case it will setup some bash and git config, and install python" 1>&2
+  echo "In any case it will setup some bash and git config, and (only on Windows) install python 3.8.2" 1>&2
 }
 
 check_dir_var() {
@@ -70,11 +70,11 @@ while [ $# -gt 0 ]; do
   python2)
     APPS="$APPS python2"
     ;;
-  python)
-    APPS="$APPS python"
-    ;;
   vscode)
     APPS="$APPS vscode"
+    ;;
+  cmder)
+    APPS="$APPS cmder"
     ;;
   cpp)
     APPS="$APPS make cmake msys2"
@@ -102,7 +102,7 @@ done
 
 # If no apps given, take the ones from config file
 if [ "$APPS" = "$DEFAULT_APPS" ]; then
-  common_env_app=$(git config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE '^(bash|git|gitbash|portableapps)$' | tr '\n' ' ')
+  common_env_app=$(git config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE '^(bash|git|gitbash|portableapps|python)$' | tr '\n' ' ')
   [ -n "$common_env_app" ] && APPS="$APPS $common_env_app"
 fi
 
@@ -135,15 +135,15 @@ for path in SETUP_SCRIPT_PATH HOME APPS_ROOT; do
   fi
 done
 if [ -n "$path_with_space" ]; then
-  echo "Warning !!! Even though it should be working, it is really a bad idea to have space in the path for your HOME:"
+  echo "!!! Warning !!! Even though it should be working, it might cause problem to have space in some path:"
   for path in $path_with_space; do
-    echo "$path: '${!path}'"
+    echo "    $path: '${!path}'"
   done
   answer='y'
   if [ $SETUP_SILENT -eq 0 ]; then
     answer='n'
     echo "Are you sure you want to proceed ? (y/N) "
-    read answer
+    read -r answer
   fi
   [[ ! "$answer" =~ ^[yY]$ ]] && echo "Exit setup." && trap - EXIT && exit 1
 fi
@@ -181,8 +181,8 @@ if [ -n "$APPS_ROOT" ]; then
   # Ensure that git will be in the path is not yet the case
   type git &>/dev/null || export PATH=$APPS_ROOT/PortableApps/PortableGit/bin:$PATH
 
-  # Ensure to also setup gitbash
-  APPS="gitbash portableapps $APPS"
+  # Ensure to also setup gitbash, portableapps and python
+  APPS="gitbash portableapps python $APPS"
 fi
 
 # Install the selected apps
