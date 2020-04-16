@@ -76,16 +76,16 @@
   "prettier.vueIndentScriptAndStyle": false,
 
   // Python
+  "python.venvPath": "${env:HOME}/.venv",
+  "python.pythonPath": "${env:HOME}/.venv/3.8.2/Scripts/python.exe",
   "python.formatting.provider": "autopep8",
   "python.formatting.autopep8Args": ["--indent-size=2 --max-line-length=140"],
+  "python.linting.pylintEnabled": false,
   "python.linting.enabled": true,
   "python.linting.lintOnSave": true,
 
   // Javascript
   "javascript.preferences.quoteStyle": "single",
-
-  // Bash Beautify
-  "bashBeautify.tabSize": 2,
 
   // Git blame
   "gitblame.infoMessageFormat": "${author.name} (${time.ago}): ${commit.summary}",
@@ -107,12 +107,33 @@
       "label": "cmd"
     },
     {
+      "shell": "cmd.exe",
+      "args": [
+        "/k",
+        "${env:APPS_ROOT}/PortableApps/cmder/vendor/bin/vscode_init.cmd"
+      ],
+      "label": "Cmder"
+    },
+    {
       "shell": "wsl.exe",
       "label": "WSL"
     },
     {
       "shell": "powershell.exe",
       "label": "PowerShell"
+    },
+    {
+      "shell": "powershell.exe",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-NoLogo",
+        "-NoProfile",
+        "-NoExit",
+        "-Command",
+        ". '${env:APPS_ROOT}\\PortableApps\\cmder\\vendor\\conemu-maximus5\\\\..\\\\profile.ps1'"
+      ],
+      "label": "Cmder powershell"
     },
     {
       "shell": "bash.exe",

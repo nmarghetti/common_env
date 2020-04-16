@@ -15,7 +15,7 @@ function setup_python() {
   local python_bin="$python_path/python.exe"
 
   # if the current python version is present, but not installed in APPS_ROOT
-  if type python &>/dev/null && [ "$(python --version | cut -d' ' -f2 | tr -d '[:space:]')" = "$python_version" ] && [ ! "$(dirname "$python_bin")" = "$(dirname "$(which python)")" ]; then
+  if type python &>/dev/null && [ "$(python --version | cut -d' ' -f2 | tr -d '[:space:]')" = "$python_version" ] && [ "$(which python | grep -vE "$APPS_ROOT")" ]; then
     python_bin=$(which python)
   else
     export PYTHONUSERBASE="$python_winpath"
@@ -51,10 +51,17 @@ function setup_python() {
   if ! "$python_bin" -m pip --version &>/dev/null; then
     echo "No pip installed" >&2 && return $ERROR
   fi
-  if [ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | grep -E "^$python_version" | wc -l) -eq 0 ]; then
+  # to be checked why putting $python_version in grep does not work
+  if [ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | grep -cE "^3.8.2$") -eq 0 ]; then
     "$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" create "$python_bin" || (echo "Error, unable to set python virtual env." && return $ERROR)
   fi
-  "$python_bin" -m pip install --upgrade pip
-  "$python_bin" -m pip install -U pylint --user
-  "$python_bin" -m pip install -U autopep8 --user
+
+  for py in "$python_bin" "$APPS_ROOT/home/.venv/$python_version/Scripts/python.exe"; do
+    if [ -f "$py" ]; then
+      "$py" -m pip install --upgrade pip
+      # Keep in mind the --user that can be used, eg. Python extension in VSCode
+      "$py" -m pip install -U pylint   #--user
+      "$py" -m pip install -U autopep8 #--user
+    fi
+  done
 }
