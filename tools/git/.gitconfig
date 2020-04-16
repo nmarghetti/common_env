@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.0'
+  cv = ! echo 'gitconfig 2.0.1'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -75,10 +75,20 @@
   a    = ! git cmd add --verbose # add files
   au   = ! git a --update # add all modified files
   aa   = ! git a --all # add all files
+  ax   = ! git a --chmod=+x # add files with executable status (useful when using git on filesystem not supporting this filemode)
   aci  = ! git au && git ci # git aci 'commit message' -> add updated files and commit with 'commit message'
+  aca  = ! git au && git ca # add updated files and amend it to the previous commit
+  chmodx = ! "f() { \
+      local regexp=\"$1\"; \
+      if [ -z \"$regexp\" ]; then \
+        regexp='\\.(sh|py|awk)$'; \
+      fi; \
+      git ls-files | grep -E \"$regexp\" | xargs git ax; \
+    }; f" # add executable mode to all files in the repository matching the given regexp (default='\.(sh|py|awk)$')
 
   addu = ! git au
   add-update = ! git au
+  add-chmodx = ! gti ax
   add-all = ! git aa
 
   # COMMIT
@@ -136,8 +146,10 @@
   cpa = ! git cp --abort
 
   # LS
-  ls = ! git cmd ls-files
-  lsu = ! git ls -o # list untracked files
+  ls  = ! git cmd ls-tree HEAD --abbrev # list files from . or the given path
+  lsr = ! git ls -rt # recursively list files from . or the given path
+  lso = ! git cmd ls-files --directory --no-empty-directory -o # list untracked files
+  lsi = ! git cmd ls-files --directory --no-empty-directory --exclude-standard -i # List files in the repository that matche an ignore rule
 
   # REMOTE REPOSITORIES
   upstream = ! git cmd remote add upstream # git upstream <repo_url> --> add upstream repo

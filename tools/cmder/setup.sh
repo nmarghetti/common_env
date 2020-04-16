@@ -15,7 +15,7 @@ function setup_cmder() {
     unzip $tarball -d "$cmder_path" | awk 'BEGIN {ORS="."} {print "."}'
     test $? -ne 0 && echo -e "\nError, unable unzip the archive." && return $ERROR
     echo
-    #rm -f $tarball
+    rm -f $tarball
   fi
   if [ ! -f "$cmder_path/Cmder.exe" ]; then
     return $ERROR

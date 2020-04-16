@@ -36,6 +36,8 @@ fi
 # Setup basic config based on the shell
 if [ "$current_shell" = "bash" ]; then
   shopt -s expand_aliases
+  bind '"\e[5~"':history-search-backward # Page up to look backward in history
+  bind '"\e[6~"':history-search-forward  # Page up to look forward in history
 
   source "${MAIN_BASHRC_ROOT}/path.sh"
 elif [ "$current_shell" = "zsh" ]; then
