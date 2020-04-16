@@ -100,7 +100,7 @@ if [ "$current_shell" = "bash" ]; then
     alias cddev="cd '${APPS_ROOT}/Documents/dev'"
     alias cdenv="cd '${APPS_ROOT}/Documents/dev/common_env'"
 
-    test -d "$HOME/.venv/3.8.2" && source pythonvenv set 3.8.2
+    test -d "$HOME/.venv/3" && source pythonvenv set 3
   else
     unset APPS_ROOT
   fi
@@ -175,6 +175,6 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
 fi
 
 # If an update occured, refresh the setup if on Windows with APPS_ROOT
-[ $COMMON_ENV_CHANGED -eq 1 ] && [ ! -z "$APPS_ROOT" ] && type setup_common_env &>/dev/null && setup_common_env
+[ $COMMON_ENV_CHANGED -eq 1 ] && type setup_common_env &>/dev/null && setup_common_env
 
 [ "$COMMON_ENV_DEBUG" = "1" ] && echo "'$MAIN_BASHRC' sourced"

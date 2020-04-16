@@ -38,6 +38,7 @@ function create_env() {
     # for python 3
     "$pythonbin" -m venv "$version"
   fi
+  [ -d "$major_version" ] && rm -rf "$major_version" # Delete if it is a folder (no symlink on Windows)
   ln -sf "$version" "$major_version"
 }
 

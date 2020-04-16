@@ -22,7 +22,17 @@ function setup_python2() {
   if ! "$python_path/python.exe" -m pip --version &>/dev/null; then
     echo "No pip installed" >&2 && return $ERROR
   fi
-  if [ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | grep -E "^$python_version" | wc -l) -eq 0 ]; then
+  # to be checked why putting $python_version in grep does not work
+  if [ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | grep -cE "^2.7.17$") -eq 0 ]; then
     "$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" create "$python_path/python.exe" || (echo "Error, unable to set python virtual env." && return $ERROR)
   fi
+
+  for py in "$python_path/python.exe" "$APPS_ROOT/home/.venv/$python_version/Scripts/python.exe"; do
+    if [ -f "$py" ]; then
+      "$py" -m pip install --upgrade pip
+      # Keep in mind the --user that can be used, eg. Python extension in VSCode
+      "$py" -m pip install -U pylint   #--user
+      "$py" -m pip install -U autopep8 #--user
+    fi
+  done
 }
