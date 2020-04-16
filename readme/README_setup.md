@@ -60,15 +60,16 @@ You can now run Git bash through the PortableApps to get more custom apps.\
 Launch "Git bash terminal" and type the following:
 
 ```bash
-# Select the applications you want to install as parameter (python2, python, vscode, node, cpp, xampp or all if you want them all)
+# Select the applications you want to install as parameter (python2, vscode cmder, node, cpp, xampp or all if you want them all)
 # It will anyway configure your .bashrc and .gitconfig
-setup_common_env python vscode
+setup_common_env vscode cmder
 ```
 
 It can install and configure the following tools:
 
 - Visual Studio Code [portable](https://code.visualstudio.com/docs/editor/portable) 64-bit version [1.44.0](https://code.visualstudio.com/download) ~300Mo
   - Several extensions ~400Mo
+- Cmder [1.3.14](https://cmder.net/) ~30Mo
 - Python version [2.7.17](https://www.python.org/downloads/release/python-2717/) ~90Mo
 - Python 64-bit version [3.8.2](https://www.python.org/downloads/release/python-382/) ~50Mo
 - NodeJs version [v12.14.1](https://nodejs.org/dist/v12.14.1/) and the latest version of yarn ~60Mo

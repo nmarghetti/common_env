@@ -24,7 +24,7 @@ For Windows user it also brings a portable environment thanks to [PortableApps](
    git clone https://github.com/nmarghetti/common_env.git
 
    # Run the setup
-   bash ./common_env/scripts/setup.sh
+   /bin/bash ./common_env/scripts/setup.sh
    ```
 
 1. Windows
@@ -67,6 +67,7 @@ If you are on Windows, you can get a portable development environment (it is not
 
 - **Visual Studio Code** with several extensions
 - **Git for Windows** (Git-bash)
+- **Cmder**
 - **Python** (2.7)
 - **Python** (3.8)
 - **Node.js**
