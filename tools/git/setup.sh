@@ -18,8 +18,13 @@ function setup_git() {
 [core]
   autocrlf = input
 EOM
-    if [ "$SETUP_SILENT" -eq 0 ]; then
-      local current_user=$USER
+  fi
+
+  # setup git user/email if not set yet
+  if [ "$SETUP_SILENT" -eq 0 ]; then
+    local current_user=$(git config --global user.name)
+    if [ -z "$current_user" ] || [ "$current_user" = "user" ] || [ "$current_user" = "root" ]; then
+      current_user=$USER
       if [ -z "$current_user" ]; then
         current_user=$USERNAME
       fi

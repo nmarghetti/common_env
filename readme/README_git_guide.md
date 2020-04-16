@@ -258,6 +258,8 @@ Here are the few commands to remember and that you should do often.
   ```bash
   git status # repository status
   git fetch-rebase-upstream # update from main repository (upstream)
+  git submodule-update # ensure to have submodules up to date with the repository
+  git submodule-upgrade # upgrade submodules (only in case you need new feature from submodules)
   git commit-amend # amend current change to your previous commit instead of creating a new commit
   git push -f # force push on your fork, might be needed after rebase or commit amend
   git log-all # display full history
@@ -269,6 +271,8 @@ Here are the few commands to remember and that you should do often.
   ```bash
   git st # repository status
   git fru # update from main repository (upstream)
+  git subm # ensure to have submodules up to date with the repository
+  git submu # upgrade submodules (only in case you need new feature from submodules)
   git ca # amend current change to your previous commit instead of creating a new commit
   git pf # force push on your fork, might be needed after rebase or commit amend
   git lga # display full history
@@ -292,7 +296,7 @@ gitk # open UI to graphically visualize all branches history
   git reset-commit-last 3 # softly reset the last 3 commits
   git remove-commit-last 3 # remove the last 3 commits (cannot be undone easily, check git reflog)
   git remove-commit fc4a6fe # remove commit fc4a6fe (cannot be undone easily, check git reflog)
-  git fetch-rebase-upstream-default # update from default branch main repository (upstream)
+  git fetch-rebase-upstream-default # update from default branch of main repository (upstream)
   git rebase-checkout-remote [<filename>] # during rebase conflict, choose remote changes
   git rebase-checkout-local [<filename>] # during rebase conflict, choose local changes
   git log-local-default-upstream # log commits difference between local and upstream default branch
