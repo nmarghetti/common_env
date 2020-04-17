@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.1'
+  cv = ! echo 'gitconfig 2.0.2'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -160,6 +160,10 @@
   lsr = ! git ls -rt # recursively list files from . or the given path
   lso = ! git cmd ls-files --directory --no-empty-directory -o # list untracked files
   lsi = ! git cmd ls-files --directory --no-empty-directory --exclude-standard -i # List files in the repository that matche an ignore rule
+
+  ls-all = ! git lsr
+  ls-untracked = ! git lso
+  ls-ignored = ! git lsi
 
   # REMOTE REPOSITORIES
   upstream = ! git cmd remote add upstream # git upstream <repo_url> --> add upstream repo

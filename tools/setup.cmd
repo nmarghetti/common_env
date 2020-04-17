@@ -189,7 +189,7 @@ if not errorlevel 1 (
   echo Installation completed
   echo You can now execute Start.exe
   echo From there you can :
-  echo     * launch 'Git bash termninal'
+  echo     * launch 'Git bash'
   echo     * run setup_common_env -h
   echo     * check the usage to get more custom application
   echo You can also install many application from PortableApps:

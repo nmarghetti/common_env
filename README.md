@@ -1,40 +1,63 @@
 # Common env ![Build](https://github.com/nmarghetti/common_env/workflows/Build/badge.svg)
 
+---
+
+- [Description](#description)
+- [Setup](#setup)
+  - [Portable environment for Windows](#portable-environment-for-windows)
+  - [Common configuration only](#common-configuration-only)
+- [Features](#features)
+- [Git](#git)
+  - [Git guide](readme/README_git_guide.md)
+- [Cmder](#cmder)
+  - [Cmder shortcuts](#cmder-shortcuts)
+- [Customization](#customization)
+- [Usefull links](#usefull-links)
+
+---
+
 ## Description
 
 This project aim to facilitate the setup of a common environment for people with completely different computer skills (developper, tester, business analyst, etc.). It's first part facilitate a common usage of GIT and python for **Linux**, **macOS** and **Windows**. The second part, for Windows users, is focused on installing a portable tools environment.
 
 1. **Common core**
 
-   - **Git**: common configuration and aliases to simplify Git usage, check [this guide](readme/README_git_guide.md).
+   - **Git**: common configuration and aliases to simplify git usage, check this [**_GIT GUIDE_**](readme/README_git_guide.md).
    - **Python**: brings a simple way to create, list and switch between several python environments (eg. between python 2.x 3.x)
 
 1. **Windows**
 
-For Windows user it also brings a portable environment thanks to [PortableApps](https://portableapps.com/) with a huge catalog of applications. On top of it, it installs and configure **Git for Windows** (Git-bash), **Visual Studio Code** and more.
+For Windows user it brings a portable environment with several applications already configured and integrated in [PortableApps](https://portableapps.com/) which also offer a huge catalog of other portable applications. Check the Features section to know more.
 
 ## Setup
 
-1. Linux or macOS
+### Portable environment for Windows
 
-   The common setup is as easy as follow:
+Download [**setup.cmd**](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.cmd) and [setup.ini](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.ini) (Right click -> "Save Link As...") into a folder preferably with no space (eg. "C:\PortableEnv"), execute setup.cmd and follow the instruction written in the terminal.
 
-   ```bash
-   # Clone the repository
-   git clone https://github.com/nmarghetti/common_env.git
+```text
+C:/PortableEnv
+├── setup.cmd
+└── setup.ini
+```
 
-   # Run the setup
-   /bin/bash ./common_env/scripts/setup.sh
-   ```
+Check this [**installation guide**](readme/README_setup.md) for more details.
 
-1. Windows
+### Common configuration only
 
-   - If you only want what is above you can do the same as far as you have git and bash installed. For example open Bash on Ubuntu On windows, WSL or Git-bash and run the same 2 commands above for Linux or macOS.
-   - Otherwise, for a more advanced setup to get a more complete and portable development environment, follow this [**WINDOWS SETUP GUIDE**](readme/README_setup.md).
+The common setup is as easy as follow:
+
+```bash
+# Clone the repository
+git clone https://github.com/nmarghetti/common_env.git
+
+# Run the setup
+./common_env/scripts/setup.sh
+```
 
 ## Features
 
-1. **Common core**
+1. ### **Common core**
 
    The common part works for the following environment:
 
@@ -57,11 +80,11 @@ For Windows user it also brings a portable environment thanks to [PortableApps](
      - main coloration
      - many aliases to handle several usecases and for each it displays the full real git command invoked
 
-1. **macOS**
+1. ### **macOS**
 
    On macOs it will also install some extra package to have necessary GNU tools such as readlink, awk, sed, etc.
 
-1. **Windows**
+1. ### **Windows portable env**
 
 If you are on Windows, you can get a portable development environment (it is not hardly installed in the system, all the applications are portable) with the following tools especially configured:
 
@@ -87,22 +110,43 @@ Visual Studio Code and the other tools are configured to work together. It bring
 Each developper can contribute to the tools and everyone would benefit from it.\
 Any developper could join and install quickly everything like the others with only few simple steps.
 
-## Git guide
+## Git
 
 If you are looking for an easy way to start with Git, you can follow [**this guide**](readme/README_git_guide.md).
 
-## Customization
-
-For git you can define those variables:
+You can define those environment variables to customize git:
 
 - GIT_CMD_NOCOLOR=1 to not display real git command for aliases in color (as it can be a bit slow)
 - GIT_CMD_NOECHO=1 to not display real git command for aliases
+
+## Cmder
+
+### Cmder shortcuts
+
+1. Tasks
+
+   - alt+shift+1: open task 1 --> open Git-bash
+   - alt+shift+2: open task 2 --> ssh remote machine 1
+   - etc.
+
+1. Split screen
+
+   - ctrl+alt+right arrow: split vertically
+   - ctrl+alt+down arrow: split horizontally
+   - ctrl+shift+arrow (up, down, left, right): change the focus to the terminal of the arrow direction
+   - ctrl+alt+shift+arrow (up, down, left, right): increase the size of the current terminal in the arrow direction
+
+1. Tabs
+
+   - ctrl+tab: focus on next tab on the right
+   - ctrl+shift+tab: focus on next tab on the left
+   - win+alf+arrow (left, right): move the current tab to the arrow direction
 
 ## Usefull links
 
 1. **Git**
 
-   - [Git for Windows](https://git-scm.com/)
+   - [Git for Windows](https://git-scm.com/), [Git command description](https://git-scm.com/docs/git), [Git cheatsheet](https://ndpsoftware.com/git-cheatsheet.html)
    - [Reference Manual](https://git-scm.com/docs), [Pro Git online book](https://git-scm.com/book/en/v2), [Tutorials](https://git-scm.com/doc/ext)
 
 1. **Python**
