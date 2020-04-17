@@ -1,5 +1,35 @@
 # Git Guide
 
+---
+
+- [Introduction](#introduction)
+- [Git usage](#git-usage)
+- [Clone a repository](#clone-a-repository)
+- [Basic flow](#basic-flow)
+  - [Add newly added or modified file](#add-newly-added-or-modified-file)
+  - [Commit your changes](#commit-your-changes)
+  - [Get update from upstream](#get-update-from-upstream)
+  - [Check history](#check-history)
+  - [Push to your fork](#push-to-your-fork)
+  - [Make a pull request](#make-a-pull-request)
+  - [Make change related to the review of your pull request](#make-change-related-to-the-review-of-your-pull-request)
+- [Basic handling of submodules](#basic-handling-of-submodules)
+  - [Init/Update submodules](#init/update-submodules)
+  - [Upgrade submodules](#upgrade-submodules)
+- [To remember](#to-remember)
+- [More advanced](#more-advanced)
+  - [Branches](#branches)
+  - [Enforce executable filemode](#enforce-executable-filemode)
+  - [Commits](#commits)
+  - [Update the repository](#update-the-repository)
+  - [Branches history](#branches-history)
+  - [Diff](#diff)
+  - [List files](#list-files)
+  - [Using UI](#using-ui)
+- [More advanced to remember](#more-advanced-to-remember)
+
+---
+
 ## Introduction
 
 Git is a powerfull tool that can handle different kind of work flows, up to you to find what best suits you.\
@@ -16,7 +46,7 @@ Let's picture the different respositories and branches:
   - **develop**: your development branch
   - **feature_xxx**: some optional feature branches if needed
 
-You can find all the information you need in the [online documention](https://git-scm.com/doc): [Reference Manual](https://git-scm.com/docs), [Pro Git Book](https://git-scm.com/book), [Tutorial and more](https://git-scm.com/doc/ext).
+You can find all the information you need in the [online documention](https://git-scm.com/doc): [git command description](https://git-scm.com/docs/git), [Reference Manual](https://git-scm.com/docs), [Pro Git Book](https://git-scm.com/book), [Tutorial and more](https://git-scm.com/doc/ext).
 
 ## Git usage
 
@@ -24,7 +54,7 @@ Here you will find how to use the git with aliases prodived by this "common env"
 As a reminder, when you use the git alias, it will print the full git command used so you can still learn the real git command after time.\
 In a terminal you can most of the time start to type git and the beginning of an alias (eg. git add-) and press Tab to see the list of possible aliases.
 
-## Clone the repository
+## Clone a repository
 
 To work on a git repository, keep those 3 points in mind:
 
@@ -69,7 +99,9 @@ You can just follow those steps:
 
 ## Basic flow
 
-- Add newly added or modified file (please also have a look at this [documentation](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository))
+You can have a look at this official [documentation](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository)
+
+- ### Add newly added or modified file
 
   - Check status and diff to see your changes
 
@@ -112,7 +144,7 @@ You can just follow those steps:
     git diff-staged
     ```
 
-- Commit your changes
+- ### Commit your changes
 
   - Simple commit
 
@@ -128,7 +160,7 @@ You can just follow those steps:
     git commit-amend
     ```
 
-- Check to be up to date with upstream before pushing anything.
+- ### Get update from upstream
 
   Please do not pull to stay up to date, it creates useless merge commit and tend to bring an history really hard to read.\
   Please prefer to fetch the upstream and rebase.
@@ -161,7 +193,7 @@ You can just follow those steps:
     git fetch-rebase-upstream
     ```
 
-- Check history
+- ### Check history
 
   Before to push your work, it is always good to see what are your difference with the main repository
 
@@ -180,7 +212,7 @@ You can just follow those steps:
     git log-local-upstream
     ```
 
-- Push to your fork
+- ### Push to your fork
 
   - Simple push
 
@@ -196,11 +228,11 @@ You can just follow those steps:
     git push -f
     ```
 
-- Make a pull request
+- ### Make a pull request
 
   Go on your fork and do a pull request to the main repository.
 
-- Make change related to the review of your pull request
+- ### Make change related to the review of your pull request
 
   If you have some changes to do based on a code review, most of the time you do not need to create a new commit, you can just amend it to the previous one and force push. Here is a command that adds the updated files, amend it to the previous commit and push force:
 
@@ -213,33 +245,33 @@ You can just follow those steps:
 
 Please have a look at the [documentation](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
-1. Init/Update submodules
+- ### Init/Update submodules
 
-   - Ensure to have git submodules initialized and up to date
+  - Ensure to have git submodules initialized and up to date
 
-     ```bash
-     # git submodule update --init --recursive
-     # git subm
-     git submodule-update
-     ```
+    ```bash
+    # git submodule update --init --recursive
+    # git subm
+    git submodule-update
+    ```
 
-   - Update git submodules and discard any changes in them if any
+  - Update git submodules and discard any changes in them if any
 
-     ```bash
-     # git submodule update --init --recursive && git cmd submodule foreach git cmd reset --hard HEAD
-     # git submr
-     git submodule-reset
-     ```
+    ```bash
+    # git submodule update --init --recursive && git cmd submodule foreach git cmd reset --hard HEAD
+    # git submr
+    git submodule-reset
+    ```
 
-1. Upgrade submodules
+- ### Upgrade submodules
 
-   It will retrieve the latest version of all the submodules.
+  It will retrieve the latest version of all the submodules.
 
-   ```bash
-   # git cmd submodule update --remote && git cmd submodule foreach git submodule update --init --recursive
-   # git submu
-   git submodule-upgrade
-   ```
+  ```bash
+  # git cmd submodule update --remote && git cmd submodule foreach git submodule update --init --recursive
+  # git submu
+  git submodule-upgrade
+  ```
 
 It is possible to apply in only for a specific module by passing its path:
 
@@ -279,64 +311,11 @@ Here are the few commands to remember and that you should do often.
   git lglru # display only history diff between your local and the upstream
   ```
 
-## To discover and remember from next section "More advanced"
-
-```bash
-git-gui # open UI to graphically handle the repo
-gitk # open UI to graphically visualize all branches history
-```
-
-- Long aliases
-
-  ```bash
-  git branch-checkout origin/feature_001 # checkout and track another branch
-  git checkout-default-branch # checkout default branch from origin
-  git checkout-default-branch-upstream # checkout default branch from upstream
-  git branch-new feature_010 # create new branch and push to origin
-  git reset-commit-last 3 # softly reset the last 3 commits
-  git remove-commit-last 3 # remove the last 3 commits (cannot be undone easily, check git reflog)
-  git remove-commit fc4a6fe # remove commit fc4a6fe (cannot be undone easily, check git reflog)
-  git fetch-rebase-upstream-default # update from default branch of main repository (upstream)
-  git rebase-checkout-remote [<filename>] # during rebase conflict, choose remote changes
-  git rebase-checkout-local [<filename>] # during rebase conflict, choose local changes
-  git log-local-default-upstream # log commits difference between local and upstream default branch
-  git log-ui-local-upstream # see in the UI the commits in local not in upstream
-  git log-ui-upstream-local # see in the UI the commits in upstream not in local
-  git log-ui-local-default-upstream # see in the UI the commits in local not in upstream default branch
-  git log-ui-default-upstream-local # see in the UI the commits in upstream default branch not in local
-  git diff-stat-upstream # see stat diff between local and upstream
-  git diff-stat-upstream-default # see stat diff between local and upstream default branch
-  git diff-upstream # see diff between local and upstream
-  git diff-upstream-default # see diff between local and upstream default branch
-  ```
-
-- Short aliases
-
-  ```bash
-  git brc origin/feature_001 # checkout and track another branch
-  git codb # checkout default branch from origin
-  git codbu # checkout default branch from upstream
-  git brn feature_010 # create new branch and push to origin
-  git rs 3 # softly reset the last 3 commits
-  git rsh 3 # remove the last 3 commits (cannot be undone easily, check git reflog)
-  git rmc fc4a6fe # remove commit fc4a6fe (cannot be undone easily, check git reflog)
-  git frdu # update from default branch main repository (upstream)
-  git rbcor [<filename>] # during rebase conflict, choose remote changes
-  git rbcol [<filename>] # during rebase conflict, choose local changes
-  git lgdlru # log commits difference between local and upstream default branch
-  git lguilu # see in the UI the commits in local not in upstream
-  git lguiru # see in the UI the commits in upstream not in local
-  git lguidlu # see in the UI the commits in upstream default branch not in local
-  git lguidru # see in the UI the commits in upstream default branch not in local
-  git dfslu # see stat diff between local and upstream
-  git dfsdlu # see stat diff between local and upstream default branch
-  git dflu # see diff between local and upstream
-  git dfdlu # see diff between local and upstream default branch
-  ```
-
 ## More advanced
 
-- Branches
+You can check this [official reference guide](https://git-scm.com/docs).
+
+- ### Branches
 
   - Track more remote branches
 
@@ -378,7 +357,23 @@ gitk # open UI to graphically visualize all branches history
     git branch-new feature_010
     ```
 
-- Commits
+- ### Enforce executable filemode
+
+  If you work on Windows or a filesystem that does not support filemode but you still want to add this state in the repository.
+
+  ```bash
+  # Add executable filemode to the given filename
+  # git add --chmod=+x <filename>
+  # git ax <filename>
+  git add-chmodx <filename>
+
+  # Add executable filemode to all files in the repository matching the given regrexp
+  # If no regexp provided it uses '\\.(sh|py|awk)$' to do it for all shell, python and awk files
+  # git ls-files | grep -E "<regexp>" | xargs git add --chmod=+x
+  git chmodx [<regexp>]
+  ```
+
+- ### Commits
 
   - Remove one or several commits made by accident without losing their changes
 
@@ -421,7 +416,7 @@ gitk # open UI to graphically visualize all branches history
     git remove-commit fc4a6fe
     ```
 
-- Update the repository
+- ### Update the repository
 
   - Only fetch data
 
@@ -520,7 +515,7 @@ gitk # open UI to graphically visualize all branches history
       git submodule-reset
       ```
 
-- Branches history
+- ### Branches history
 
   1. In the terminal
 
@@ -572,7 +567,7 @@ gitk # open UI to graphically visualize all branches history
      git log-ui-default-upstream-local
      ```
 
-- Diff
+- ### Diff
 
   You can visualize statistic diff (only the files list), or full diff between your local and the upstream.
 
@@ -597,3 +592,85 @@ gitk # open UI to graphically visualize all branches history
      # git dfdlu
      git diff-upstream-default
      ```
+
+- ### List files
+
+  ```bash
+  # list files from . or the given path
+  # git ls-tree HEAD --abbrev [<path>]
+  git ls [<path>]
+
+  # recursively list files from . or the given path
+  # git ls-tree HEAD -rt [<path>]
+  # lsr [<path>]
+  git ls-all [<path>]
+
+  # list untracked files
+  # git ls-files --directory --no-empty-directory -o
+  # git lso
+  git ls-untracked
+
+  # List files in the repository that matche an ignore rule
+  # git ls-files --directory --no-empty-directory --exclude-standard -i
+  # git lsi
+  git ls-ignored
+  ```
+
+- ### Using UI
+
+  You can graphically view the state of your repository with those commands that open UI:
+
+  ```bash
+  git-gui # open UI to graphically handle the repo
+  gitk # open UI to graphically visualize all branches history
+  ```
+
+## More advanced to remember
+
+- Long aliases
+
+  ```bash
+  git branch-checkout origin/feature_001 # checkout and track another branch
+  git checkout-default-branch # checkout default branch from origin
+  git checkout-default-branch-upstream # checkout default branch from upstream
+  git branch-new feature_010 # create new branch and push to origin
+  git reset-commit-last 3 # softly reset the last 3 commits
+  git remove-commit-last 3 # remove the last 3 commits (cannot be undone easily, check git reflog)
+  git remove-commit fc4a6fe # remove commit fc4a6fe (cannot be undone easily, check git reflog)
+  git fetch-rebase-upstream-default # update from default branch of main repository (upstream)
+  git rebase-checkout-remote [<filename>] # during rebase conflict, choose remote changes
+  git rebase-checkout-local [<filename>] # during rebase conflict, choose local changes
+  git log-local-default-upstream # log commits difference between local and upstream default branch
+  git log-ui-local-upstream # see in the UI the commits in local not in upstream
+  git log-ui-upstream-local # see in the UI the commits in upstream not in local
+  git log-ui-local-default-upstream # see in the UI the commits in local not in upstream default branch
+  git log-ui-default-upstream-local # see in the UI the commits in upstream default branch not in local
+  git diff-stat-upstream # see stat diff between local and upstream
+  git diff-stat-upstream-default # see stat diff between local and upstream default branch
+  git diff-upstream # see diff between local and upstream
+  git diff-upstream-default # see diff between local and upstream default branch
+  ```
+
+- Short aliases
+
+  ```bash
+  git brc origin/feature_001 # checkout and track another branch
+  git codb # checkout default branch from origin
+  git codbu # checkout default branch from upstream
+  git brn feature_010 # create new branch and push to origin
+  git rs 3 # softly reset the last 3 commits
+  git rsh 3 # remove the last 3 commits (cannot be undone easily, check git reflog)
+  git rmc fc4a6fe # remove commit fc4a6fe (cannot be undone easily, check git reflog)
+  git frdu # update from default branch main repository (upstream)
+  git rbcor [<filename>] # during rebase conflict, choose remote changes
+  git rbcol [<filename>] # during rebase conflict, choose local changes
+  git lgdlru # log commits difference between local and upstream default branch
+  git lguilu # see in the UI the commits in local not in upstream
+  git lguiru # see in the UI the commits in upstream not in local
+  git lguidlu # see in the UI the commits in upstream default branch not in local
+  git lguidru # see in the UI the commits in upstream default branch not in local
+  git dfslu # see stat diff between local and upstream
+  git dfsdlu # see stat diff between local and upstream default branch
+  git dflu # see diff between local and upstream
+  git dfdlu # see diff between local and upstream default branch
+  ```

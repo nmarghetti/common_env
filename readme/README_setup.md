@@ -1,95 +1,106 @@
-# Install
+# Setup
 
-## Automatic setup
+---
 
-1. **Download**
+- [Steps](#steps)
+- [Installation](#installation)
+- [Known installation issues](#known-installation-issues)
 
-   - **Create** a folder where you want to install it, eg. "**D:/Apps**".
-   - **Download** this [**setup.cmd**](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.cmd) inside (Right click -> "Save Link As...", save into "D:/Apps/setup.cmd").
-   - Optionnally download this [setup.ini](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.ini) inside also (Right click -> "Save Link As...", save into "D:/Apps/setup.ini"). You can edit it to set the list of apps you want.
-   - **Execute setup.cmd** and follow the instructions.
+---
 
-   It will try to download [PortableApps 16.1.1](https://portableapps.com/downloading/?a=PortableApps.comPlatform&s=s&d=pa&n=The%20PortableApps.com%20Platform&f=PortableApps.com_Platform_Setup_16.1.1.paf.exe) and [64-bit Git for Windows Portable 2.2.26](https://github.com/git-for-windows/git/releases/download/v2.26.0.windows.1/PortableGit-2.26.0-64-bit.7z.exe), with curl or wget.\
-   You can manually download the versions you want as far as you named the files as follow:
+## **Steps**
 
-   - D:/Apps/PortableApps.exe
-   - D:/Apps/PortableGit.exe
+Here are the steps to follow during the installation.
 
-   If you dont have wget or curl on your machine, you can download the 2 above manually, or download [64-bit wget 1.20.3](https://eternallybored.org/misc/wget/1.20.3/64/wget.exe) as follow:
+1. PortableApps
+   - Press OK for language selection (you can change it later)
+   - Press Next and Agree
+   - Select radio button "Select a custom location..." and press Next
+   - Do not change "Destination Folder" and press Next and Install
+   - **_!!! Untick "Run PortableApps Platform" and press Finish !!!_**
+1. Git for Windows
+   - Do not change the destination and press OK
+   - It will ask you to generate rsa 4096 SSH keys if you want
+1. Git config
+   - Enter your user name and email address
 
-   - D:/Apps/wget.exe
+You should end up with a folder structure as follow:
 
-   Basically, this would ensure to have a good setup:
-
-   ```text
-    D:/Apps
-    ├── PortableApps.exe
-    ├── PortableGit.exe
-    ├── setup.cmd
-    └── setup.ini
-   ```
-
-1. **Installation**
-
-   1. PortableApps
-      - Press OK for language selection (you can change it later)
-      - Press Next and Agree
-      - Select radio button "Select a custom location..." and press Next
-      - Do not change "Destination Folder" and press Next and Install
-      - **_!!! Untick "Run PortableApps Platform" and press Finish !!!_**
-   1. Git for Windows
-      - Do not change the destination and press OK
-   1. Git config
-      - Enter your user name and email address
-
-   You should end up with a folder structure as follow:
-
-   ```text
-   D:/Apps
-   ├── Documents
-   ├── PortableApps
-   ├── Start.exe
-   └── home
-   ```
-
-   You can launch Start.exe to start PortableApps. From there you will be able to run Git bash terminal, the user's HOME would be the home folder above.
-
-## Git portable (version 2.26.0) ~370Mo
-
-You can now run Git bash through the PortableApps to get more custom apps.\
-Launch "Git bash terminal" and type the following:
-
-```bash
-# Select the applications you want to install as parameter (python2, vscode cmder, node, cpp, xampp or all if you want them all)
-# It will anyway configure your .bashrc and .gitconfig
-setup_common_env vscode cmder
+```text
+C:\PortableEnv
+├── Documents
+├── PortableApps
+├── Start.exe
+└── home
 ```
 
-It can install and configure the following tools:
+You can launch Start.exe to start PortableApps. From there you will be able to run Git bash terminal, the user's HOME would be the home folder above.
 
-- Visual Studio Code [portable](https://code.visualstudio.com/docs/editor/portable) 64-bit version [1.44.0](https://code.visualstudio.com/download) ~300Mo
-  - Several extensions ~400Mo
-- Cmder [1.3.14](https://cmder.net/) ~30Mo
-- Python version [2.7.17](https://www.python.org/downloads/release/python-2717/) ~90Mo
-- Python 64-bit version [3.8.2](https://www.python.org/downloads/release/python-382/) ~50Mo
-- NodeJs version [v12.14.1](https://nodejs.org/dist/v12.14.1/) and the latest version of yarn ~60Mo
-- CMake 64-bit version [3.16.3](https://github.com/Kitware/CMake/releases/download/v3.16.3/cmake-3.16.3-win64-x64.zip) ~80Mo
-- GCC [9.2](https://gcc.gnu.org/onlinedocs/) build with a [release](http://repo.msys2.org/distrib/x86_64/) of [msys2](https://www.msys2.org/) ~1.5Go
-- XAMPP [7.4.2](https://www.apachefriends.org/download.html) (XAMPP Launcher portable app required) ~600Mo
+## **Installation**
 
-## PortableApps Applications
+1. Download [**setup.cmd**](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.cmd) and [setup.ini](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.ini) (Right click -> "Save Link As...") into a folder preferably with no space (eg. "C:\PortableEnv") and execute setup.cmd
 
-Launch "D:/Apps/Start.exe" to start PortableApps platform.\
-On the right side click on the button Apps -> Get More Apps... -> By Category\
-You can then select many portable applications you want to have, eg:
+   ![Project properties](portable_env_setup_step_01.png)
 
-- Notepad++ ~8Mo
-- Google Chrome ~250Mo
-- Mozilla Firefox ~400Mo
-- PuTTY ~4Mo
-- 7-Zip ~8Mo
-- Explorer++ ~5Mo
-- jPortable (64-bit) ~180Mo
-- Process Explorer ~4Mo
-- YUMI-UEFI ~6Mo
-- XAMPP launcher ~200Ko
+1. Do not change language, press OK
+
+   ![Project properties](portable_env_setup_step_02.png)
+
+1. Select a custom location...
+
+   ![Project properties](portable_env_setup_step_03.png)
+
+1. Do not change the destination folder, press Next
+
+   ![Project properties](portable_env_setup_step_04.png)
+
+1. Untick "Run PortableApps.com Platform"
+
+   ![Project properties](portable_env_setup_step_05.png)
+
+1. For Git for Windows install, leave the path, just press OK
+
+   ![Project properties](portable_env_setup_step_06.png)
+
+1. When it asks you to generate SSH keys, just press Enter several times
+
+   ![Project properties](portable_env_setup_step_07.png)
+
+1. When asked, you can put your git user name and email
+
+   ![Project properties](portable_env_setup_step_08.png)
+
+1. Run Start.exe
+
+   ![Project properties](portable_env_setup_step_09.png)
+
+1. Run Start.exe
+
+   You get those configured applications and you can get more with the "Apps" button on the right.
+
+   ![Project properties](portable_env_setup_step_10.png)
+
+## **Known installation issues**
+
+1. Your computer does not have wget nor curl installed
+
+   In that case you can manually download [64-bit wget 1.20.3](https://eternallybored.org/misc/wget/1.20.3/64/wget.exe) and start again the installation. Your folder shoud look like that:
+
+   ```text
+     C:/PortableEnv
+     ├── setup.cmd
+     └── setup.ini
+     └── wget.exe
+   ```
+
+1. Error during download (eg. 'unable to get local issuer certificate')
+
+   In that case you can manually download [PortableApps 16.1.1](https://portableapps.com/downloading/?a=PortableApps.comPlatform&s=s&d=pa&n=The%20PortableApps.com%20Platform&f=PortableApps.com_Platform_Setup_16.1.1.paf.exe) and [64-bit Git for Windows Portable 2.2.26](https://github.com/git-for-windows/git/releases/download/v2.26.0.windows.1/PortableGit-2.26.0-64-bit.7z.exe) and start again the installation. Notice that you should save the files as follow:
+
+   ```text
+     C:/PortableEnv
+     ├── PortableApps.exe
+     ├── PortableGit.exe
+     ├── setup.cmd
+     └── setup.ini
+   ```
