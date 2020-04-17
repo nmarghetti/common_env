@@ -7,6 +7,9 @@ MAIN_BASHRC_ROOT=$(dirname "$(readlink -f "${MAIN_BASHRC}")")
 [ "$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing '$MAIN_BASHRC' ..." >&2
 export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
 [ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
+# keep those in mind for debugging:
+#   set -xeo pipefail
+#   set +xeo pipefail
 
 # Get some function to get some shell system information
 source "${MAIN_BASHRC_ROOT}/system.sh"
@@ -36,8 +39,11 @@ fi
 # Setup basic config based on the shell
 if [ "$current_shell" = "bash" ]; then
   shopt -s expand_aliases
-  bind '"\e[5~"':history-search-backward # Page up to look backward in history
-  bind '"\e[6~"':history-search-forward  # Page up to look forward in history
+  # if shell is interactif
+  if [[ $- == *i* ]]; then
+    bind '"\e[5~"':history-search-backward # Page up to look backward in history
+    bind '"\e[6~"':history-search-forward  # Page up to look forward in history
+  fi
 
   source "${MAIN_BASHRC_ROOT}/path.sh"
 elif [ "$current_shell" = "zsh" ]; then
