@@ -9,8 +9,8 @@
 - [Features](#features)
 - [Git](#git)
   - [Git guide](readme/README_git_guide.md)
-- [Cmder](#cmder)
-  - [Cmder shortcuts](#cmder-shortcuts)
+- [Cmder shortcuts](#cmder-shortcuts)
+- [AutoHotkey shorcuts](#autoHotkey-shorcuts)
 - [Customization](#customization)
 - [Usefull links](#usefull-links)
 
@@ -141,6 +141,14 @@ You can define those environment variables to customize git:
    - ctrl+tab: focus on next tab on the right
    - ctrl+shift+tab: focus on next tab on the left
    - win+alf+arrow (left, right): move the current tab to the arrow direction
+
+## AutoHotkey
+
+### AutoHotkey shorcuts
+
+- Win + !: switch ON/OFF current window always on top
+- Win + Shift + Up arrow: maximize current window among all similar monitors
+- Win + Shift + Down arrow: maximize current window in only one monitor
 
 ## Usefull links
 

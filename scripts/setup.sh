@@ -48,6 +48,7 @@ usage() {
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
   echo "    vscode: install Visual Studio Code 1.44.0" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
+  echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2
   echo "    node: install NodeJs 2.14.1" 1>&2
   echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
@@ -67,23 +68,11 @@ check_dir_var() {
 
 while [ $# -gt 0 ]; do
   case $1 in
-  python2)
-    APPS="$APPS python2"
-    ;;
-  vscode)
-    APPS="$APPS vscode"
-    ;;
-  cmder)
-    APPS="$APPS cmder"
+  python2 | vscode | cmder | autohotkey | node | xampp)
+    APPS="$APPS $1"
     ;;
   cpp)
     APPS="$APPS make cmake msys2"
-    ;;
-  node)
-    APPS="$APPS node"
-    ;;
-  xampp)
-    APPS="$APPS xampp"
     ;;
   -s | --silent)
     SETUP_SILENT=1
