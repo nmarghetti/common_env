@@ -6,6 +6,7 @@ tyriar.shell-launcher                      : Multi shell terminal
 dbaeumer.vscode-eslint                     : Javascript linter
 davidanson.vscode-markdownlint             : Markdown linter
 bierner.markdown-preview-github-styles     : Markdown preview with Github style
+alanwalk.markdown-toc                      : Markdown Table of content generation
 dzannotti.vscode-babel-coloring            : Javascript Babel syntax coloring
 waderyan.gitblame                          : Git blame
 josee9988.changelog-and-markdown-snippets  : Changelog/Mardown snippets
