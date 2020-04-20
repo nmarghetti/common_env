@@ -89,7 +89,7 @@ EOM
         "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WIN_APPS_COMMON/VSCode_data/extensions" --user-data-dir "$WIN_APPS_COMMON/VSCode_data/user-data" --install-extension "$extension"
         [ $? -eq 0 ] && certificate_error=0 && continue
       fi
-      echo "It seems that you have problems with your ssl certificate, you can try to temporarily set the VSCode settings http.proxyStrictSSL to true"
+      echo "It seems that you have problems with your ssl certificate, you can try to temporarily set the VSCode settings http.proxyStrictSSL to false"
     fi
   done <"$extension_to_install"
   [ $changed_settings_ssl -eq 1 ] && sed -i -re 's/"http.proxyStrictSSL": false/"http.proxyStrictSSL": true/' "$setting_path"

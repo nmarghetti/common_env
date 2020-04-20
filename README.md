@@ -1,18 +1,25 @@
-# Common env ![Build](https://github.com/nmarghetti/common_env/workflows/Build/badge.svg)
+# Common env
+
+![Build](https://github.com/nmarghetti/common_env/workflows/Build/badge.svg)
 
 ---
 
-- [Description](#description)
-- [Setup](#setup)
-  - [Portable environment for Windows](#portable-environment-for-windows)
-  - [Common configuration only](#common-configuration-only)
-- [Features](#features)
-- [Git](#git)
-  - [Git guide](readme/README_git_guide.md)
-- [Cmder shortcuts](#cmder-shortcuts)
-- [AutoHotkey shorcuts](#autoHotkey-shorcuts)
-- [Customization](#customization)
-- [Usefull links](#usefull-links)
+<!-- TOC -->
+
+- [Common env](#common-env)
+  - [Description](#description)
+  - [Setup](#setup)
+    - [Portable environment for Windows](#portable-environment-for-windows)
+    - [Common configuration only](#common-configuration-only)
+  - [Features](#features)
+  - [Git](#git)
+  - [Cmder](#cmder)
+    - [Cmder shortcuts](#cmder-shortcuts)
+  - [AutoHotkey](#autohotkey)
+    - [AutoHotkey shorcuts](#autohotkey-shorcuts)
+  - [Usefull links](#usefull-links)
+
+<!-- /TOC -->
 
 ---
 

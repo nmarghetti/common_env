@@ -1,10 +1,15 @@
-# Setup
+# **Setup**
 
 ---
 
-- [Steps](#steps)
-- [Installation](#installation)
-- [Known installation issues](#known-installation-issues)
+<!-- TOC -->
+
+- [**Setup**](#setup)
+  - [**Steps**](#steps)
+  - [**Installation**](#installation)
+  - [**Known installation issues**](#known-installation-issues)
+
+<!-- /TOC -->
 
 ---
 
