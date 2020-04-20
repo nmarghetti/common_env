@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.2'
+  cv = ! echo 'gitconfig 2.0.3'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -123,9 +123,9 @@
   # SUBMODULES
   clones = ! git cmd clone --recursive # git clones <repo_url> --> clone the repo and its submodules
   subm   = ! "f() { git cmd submodule update --init --recursive \"$@\"; }; f" # update all submodules or the given one
-  submr  = ! git moduleAction reset # update all submodules or the given one and discard any change
-  submu  = ! git moduleAction upgrade # upgrade the submodules to their latest version
-  moduleAction = ! "f() { \
+  submr  = ! git module-action reset # update all submodules or the given one and discard any change
+  submu  = ! git module-action upgrade # upgrade the submodules to their latest version
+  module-action = ! "f() { \
     local action=$1; \
     shift; \
     [ $# -gt 1 ] && git echoe \"Only one path of submodule (or none for all) is accepted\" && return 1; \
