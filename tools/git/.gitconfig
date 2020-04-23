@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.3'
+  cv = ! echo 'gitconfig 2.0.4'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -74,21 +74,22 @@
     }; f" # git login-auto [machine [login [password]]] --> create ~/.netrc file to auto login
 
   # STATUS
-  st  = ! git cmd status # basic status
-  sta = ! git st --ignored=matching # basic status + ignored files
-  sts = ! git st --untracked-files=no # basic status without untracked files
-  s   = ! "param=; git versionmajor2 && param='--ahead-behind --show-stash --find-renames'; git st $param --short --branch" # short status
+  st  = ! "cd -- ${GIT_PREFIX:-.}; git cmd status" # basic status
+  sta = ! "cd -- ${GIT_PREFIX:-.}; git st --ignored=matching" # basic status + ignored files
+  sts = ! "cd -- ${GIT_PREFIX:-.}; git st --untracked-files=no" # basic status without untracked files
+  s   = ! "cd -- ${GIT_PREFIX:-.}; param=; git versionmajor2 && param='--ahead-behind --show-stash --find-renames'; git st $param --short --branch" # short status
   sa  = s --ignored=matching # short status with ignored files
   ss  = s --untracked-files=no # short status without untracked files
 
   # ADD
-  a    = ! git cmd add --verbose # add files
-  au   = ! git a --update # add all modified files
-  aa   = ! git a --all # add all files
-  ax   = ! git a --chmod=+x # add files with executable status (useful when using git on filesystem not supporting this filemode)
-  aci  = ! git au && git ci # git aci 'commit message' -> add updated files and commit with 'commit message'
-  aca  = ! git au && git ca # add updated files and amend it to the previous commit
+  a    = ! "cd -- ${GIT_PREFIX:-.}; git cmd add --verbose" # add files
+  au   = ! "cd -- ${GIT_PREFIX:-.}; git a --update" # add all modified files
+  aa   = ! "cd -- ${GIT_PREFIX:-.}; git a --all" # add all files
+  ax   = ! "cd -- ${GIT_PREFIX:-.}; git a --chmod=+x" # add files with executable status (useful when using git on filesystem not supporting this filemode)
+  aci  = ! "cd -- ${GIT_PREFIX:-.}; git au && git ci" # git aci 'commit message' -> add updated files and commit with 'commit message'
+  aca  = ! "cd -- ${GIT_PREFIX:-.}; git au && git ca" # add updated files and amend it to the previous commit
   chmodx = ! "f() { \
+      cd -- ${GIT_PREFIX:-.}; \
       local regexp=\"$1\"; \
       if [ -z \"$regexp\" ]; then \
         regexp='\\.(sh|py|awk)$'; \
@@ -96,10 +97,10 @@
       git ls-files | grep -E \"$regexp\" | xargs git ax; \
     }; f" # add executable mode to all files in the repository matching the given regexp (default='\.(sh|py|awk)$')
 
-  addu = ! git au
-  add-update = ! git au
-  add-chmodx = ! gti ax
-  add-all = ! git aa
+  addu = ! "cd -- ${GIT_PREFIX:-.}; git au"
+  add-update = ! "cd -- ${GIT_PREFIX:-.}; git au"
+  add-chmodx = ! "cd -- ${GIT_PREFIX:-.}; gti ax"
+  add-all = ! "cd -- ${GIT_PREFIX:-.}; git aa"
 
   # COMMIT
   ci   = ! git cmd commit -m # git ci 'commit message'
@@ -398,15 +399,16 @@
   # It is too colorize the output on Linux, macOS, Windows, on different terminal (tty or not)
   # TODO: to optimize, each display takes too much time !!!
   cmd = ! "f(){ \
+      cd -- ${GIT_PREFIX:-.}; \
       if [ \"$GIT_CMD_NOECHO\" = \"1\" ]; then \
         :; \
       elif [ \"$GIT_CMD_NOCOLOR\" = \"1\" ]; then \
         echo \"------~~~=<[ git $@ ]>=~~~------\"; \
       else \
         git echocolor 32 \"git $@\"; \
-        if [ ! \"$(git echocmd)\" = \"echo\" ]; then \
-          color='-c color.ui=always'; \
-        fi; \
+      fi; \
+      if [ ! \"$(git echocmd)\" = \"echo\" ]; then \
+        color='-c color.ui=always'; \
       fi; \
       [ ! \"$GIT_CMD_DRY\" = \"1\" ] && git $color \"$@\"; \
     } ; f" # echo with cmd color (green) and run cmd

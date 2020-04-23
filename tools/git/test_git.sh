@@ -94,6 +94,10 @@ echo 'info' >info.txt && git aa && git ci 'Add info' && echo 'data' >data.txt &&
 git reset-commit-last 2 && git s && git reset-repo && git s && git aa && git ci 'Add info and data' && git s && git lga
 git remove-commit-last 1 && git lga
 
+echoStep "Add executable file"
+touch script.sh && git aa && git ci 'Add script.sh' && git ls && ls -Al
+git chmodx && git s && git df && git aca && git ls && ls -Al && git lga
+
 # Clean folder
 rm -rf "$TMPDIR"
 
