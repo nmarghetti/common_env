@@ -56,23 +56,22 @@ function setup_gitbash() {
   done
 
   # Add git-bash and git-gui to PortableApps menu
-  if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/rsync.exe" ]; then
-    echo "Unable to put Git-bash nor Git-GUI in PortableApps menu as rsync is not available"
-  else
-    rsync -vau "$SETUP_TOOLS_ROOT/gitbash/PortableGitLauncher" "$APPS_ROOT/PortableApps/"
-    [ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon.ico" ] && cp "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git-for-windows.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon.ico"
-    [ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon1.ico" ] && cp "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git-for-windows.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon1.ico"
-    [ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon2.ico" ] && cp "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/msys2-32.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon2.ico"
-    [ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon3.ico" ] && cp "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon3.ico"
-  fi
+  rsync -vau "$SETUP_TOOLS_ROOT/gitbash/PortableGitLauncher" "$APPS_ROOT/PortableApps/"
+  rsync -au "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git-for-windows.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon.ico"
+  rsync -au "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git-for-windows.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon1.ico"
+  rsync -au "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/msys2-32.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon2.ico"
+  rsync -au "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon3.ico"
+
+  [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
 
   # Generate ssh keys
   if [ ! -f "$APPS_ROOT/home/.ssh/id_rsa" ]; then
-    echo -ne "\nDo you want to create rsa 4096 SSH keys ? (Y/n)"
-    read -r answer
+    local answer='y'
+    echo
+    read -rep "Do you want to create rsa 4096 SSH keys (Y/n)?: " -i "$answer" answer
     if [ -z "$answer" ] || [[ "$answer" =~ ^[yY]$ ]]; then
       ssh-keygen -t rsa -b 4096
-      echo -e "\nYou can now deploy your public SSH key with the following command: ssh-copy-id login@remote_machine\n"
+      echo -e "\nYou can now deploy your public SSH key with the following command:\n\tssh-copy-id login@remote_machine\n"
       # The input reading does not work well for password
       # answer=1
       # while [ -n "$answer" ]; do

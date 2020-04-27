@@ -141,8 +141,8 @@
       "label": "Git_bash"
     },
     {
-      "shell": "${env:APPS_ROOT}/PortableApps/PuTTYPortable/App/putty/PUTTY.EXE",
-      "args": ["-load", "config_name", "-t"],
+      "shell": "${env:APPS_ROOT}\\PortableApps\\PuTTY\\PUTTY.EXE",
+      "args": ["-load", "remote", "-t"],
       "label": "putty"
     }
   ],

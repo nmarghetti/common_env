@@ -4,6 +4,7 @@ get_path_to_windows() {
   [ -z "$1" ] && echo "Need the path as first parameter" >&2 && return 1
   local path=$1
   [ "$(echo "$path" | cut -b -5)" = "/mnt/" ] && path="$(echo "$path" | cut -b 5-)"
+  [ "$(echo "$path" | cut -b -8)" = "/drives/" ] && path="$(echo "$path" | cut -b 8-)"
   [ ! "$(echo "$path" | cut -b 3)" = '/' ] && [ -n "$(echo "$path" | cut -b 3)" ] && echo "Invalid path to convert" >&2 && return 1
   echo "$(echo $path | cut -b 2 | tr '[:lower:]' '[:upper:]'):$(echo "$path" | cut -b 3-)"
 }

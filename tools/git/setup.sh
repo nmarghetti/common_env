@@ -22,21 +22,15 @@ EOM
 
   # setup git user/email if not set yet
   if [ "$SETUP_SILENT" -eq 0 ]; then
-    local current_user=$(git config --global user.name)
-    if [ -z "$current_user" ] || [ "$current_user" = "user" ] || [ "$current_user" = "root" ]; then
-      current_user=$USER
-      if [ -z "$current_user" ]; then
-        current_user=$USERNAME
-      fi
-      echo -n "Please enter your git user name ($current_user): "
-      local user
-      read -r user
+    local user=$(git config --global user.name)
+    local mail
+    if [ -z "$user" ] || [ "$user" = "user" ] || [ "$user" = "root" ]; then
+      user=$USERNAME
       if [ -z "$user" ]; then
-        user=$current_user
+        user=$USER
       fi
-      echo -n "Please enter your git user email address: "
-      local mail
-      read -r mail
+      read -rep "Please enter your git user name: " -i "$user" user
+      read -rep "Please enter your git user email address: " mail
       git config --global user.name "$user"
       git config --global user.email "$mail"
     fi

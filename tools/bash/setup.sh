@@ -26,13 +26,21 @@ EOM
   # Add content to .bashrc
   local content=$(
     cat <<-EOM
-if [ ! "\$(basename "\${BASH_SOURCE[0]}")" = ".bashrc" ]; then
+if [[ ! "\$(basename "\${BASH_SOURCE[0]}")" = ".bashrc" ]]; then
   echo "ERROR !!! It does not seem that you are sourcing .bashrc with bash, not sourcing common_env, many things will probably not work !!!" >&2
+elif [[ "\$OSTYPE" == "cygwin" ]] && [[ "\$(basename "\${BASH_SOURCE[1]}")" == ".bash_profile" ]]; then
+  : # Avoid sourcing twice for cygwin
 else
-  $([ -n "$COMMON_ENV_SETUP_MAC_PATH" ] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[ "\$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing '\$(readlink -f "\${BASH_SOURCE[0]}")' ..." >&2
+  $([[ -n "$COMMON_ENV_SETUP_MAC_PATH" ]] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[[ "\$COMMON_ENV_DEBUG" = "1" ]] && echo "Sourcing '\$(readlink -f "\${BASH_SOURCE[0]}")' ..." >&2
   # Ensure that \$HOME points to where is located the current file being sourced
   export HOME=\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)
-  source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
+  if [[ -f "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")" ]]; then
+    source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
+  elif [[ -f "/mnt$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")" ]]; then
+    source "/mnt$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
+  else
+    echo "ERROR !!! Unable to find .bashrc"
+  fi
 fi
 EOM
   )

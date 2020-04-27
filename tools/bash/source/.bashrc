@@ -41,13 +41,30 @@ if [ "$current_shell" = "bash" ]; then
   shopt -s expand_aliases
   # if shell is interactif
   if [[ $- == *i* ]]; then
-    bind '"\e[5~"':history-search-backward # Page up to look backward in history
-    bind '"\e[6~"':history-search-forward  # Page up to look forward in history
+    # showkey -a give the key pressed
+    # check /etc/inputrc
+    # check bind -pl
+    bind '"\e[5~"':history-search-backward # Page Up to look backward in history
+    bind '"\e[6~"':history-search-forward  # Page Down to look forward in history
+    bind '"\e[1;5D"':backward-word         # Ctrl-Left
+    bind '"\e[1;5C"':forward-word          # Ctrl-Right
+    bind '"\e[1;3D"':backward-word         # Alt-Left
+    bind '"\e[1;3C"':forward-word          # Alt-Right
   fi
 
   source "${MAIN_BASHRC_ROOT}/path.sh"
 elif [ "$current_shell" = "zsh" ]; then
   setopt aliases
+
+  # if shell is interactif
+  if [[ -o login ]]; then
+    bindkey '^[OD' backward-word    # Ctrl-Left
+    bindkey '^[OC' forward-word     # Ctrl-Right
+    bindkey '^[[1;5D' backward-word # Ctrl-Left
+    bindkey '^[[1;5C' forward-word  # Ctrl-Right
+    bindkey '^[[1;3D' backward-word # Alt-Left
+    bindkey '^[[1;3C' forward-word  # Alt-Right
+  fi
 
   source "${MAIN_BASHRC_ROOT}/path_zsh.sh"
 fi
@@ -60,7 +77,11 @@ export PATH="${HOME}/bin:$PATH"
 if [ "$current_shell" = "bash" ]; then
 
   # ********** BEGIN - Specific for Windows platform with PortableApps **********
-  export APPS_ROOT=$(cd && cd .. && pwd)
+  if [ -z "$APPS_ROOT" ]; then
+    export APPS_ROOT=$(cd && cd .. && pwd)
+  else
+    export APPS_ROOT=$(cd "$APPS_ROOT" && pwd)
+  fi
   if [ -d "$APPS_ROOT/PortableApps" ]; then
     if [ -z "$BASH_VERSION" ]; then
       echo "ERROR !!! You are are not sourcing with bash, you might encounter problem !!!" >&2
@@ -86,7 +107,7 @@ if [ "$current_shell" = "bash" ]; then
     pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
     pathPrepend "${HOME}/bin"
 
-    if [ ! "$COMMON_ENV_GIT_PROMPT" = "0" ]; then
+    if [ ! "$OSTYPE" = "cygwin" ] && [ ! "$COMMON_ENV_GIT_PROMPT" = "0" ]; then
       # If shell is in interactive mode
       case $- in
       *i*)
@@ -108,7 +129,7 @@ if [ "$current_shell" = "bash" ]; then
     alias cddev="cd '${APPS_ROOT}/Documents/dev'"
     alias cdenv="cd '${APPS_ROOT}/Documents/dev/common_env'"
 
-    test -d "$HOME/.venv/3" && source pythonvenv set 3
+    [ ! "$OSTYPE" = "cygwin" ] && test -d "$HOME/.venv/3" && source pythonvenv set 3
   else
     unset APPS_ROOT
   fi
@@ -158,17 +179,21 @@ alias pyunset='deactivate 2>/dev/null'
 # Do some checks only if not done since at least 24h
 COMMON_ENV_LAST_CHECK="$HOME/.common_env_check"
 COMMON_ENV_CHANGED=0
+
 if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [ $(expr $(date +%s) - $(date -r "$COMMON_ENV_LAST_CHECK" +%s)) -ge 86400 ]; then
   current_commit=$(cd "$MAIN_BASHRC_ROOT" && git log -1 --pretty=format:%H)
   # Things not needed to be checked just after a setup
   if [ -f "$COMMON_ENV_LAST_CHECK" ]; then
     # Check for update if access to github
-    pingopt="-c"
-    if [ "$OSTYPE" = "msys" ]; then
-      pingopt="-n"
-    fi
-    ping $pingopt 1 -w 1 github.com &>/dev/null
-    if [ $? -eq 0 ]; then
+    ping_option=--help
+    case "$(system_get_os_host)" in
+    Windows) ping_option='-n 1 -w 1' ;;
+    Linux) ping_option='-c 1 -w 1' ;;
+    Mac) ping_option='-c 1 -t 1' ;;
+    esac
+    check_update=1
+    ping $ping_option github.com &>/dev/null || check_update=0
+    if [ $check_update -eq 1 ]; then
       common_env_check_update
       [ ! "$current_commit" = "$(cd "$MAIN_BASHRC_ROOT" && git log -1 --pretty=format:%H)" ] && COMMON_ENV_CHANGED=1
     fi

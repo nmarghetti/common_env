@@ -33,5 +33,7 @@ function setup_portableapps() {
     rm -f "$tmp_file"
   fi
 
+  rsync -vau "$SETUP_TOOLS_ROOT/portableapps/common_path.cmd" "$APPS_ROOT/PortableApps/CommonFiles/"
+
   return 0
 }

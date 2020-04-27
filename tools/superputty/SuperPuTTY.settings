@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <AutoUpdateCheck>True</AutoUpdateCheck>
+  <SessionsTreeFont>Arial Unicode MS, 8.25pt</SessionsTreeFont>
+  <ShowDocumentIcons>False</ShowDocumentIcons>
+  <TabTextBehavior>Static</TabTextBehavior>
+  <PscpHomePrefix>/home/</PscpHomePrefix>
+  <WindowState>Maximized</WindowState>
+  <SessionsSearchMode>CaseSensitive</SessionsSearchMode>
+  <PuttyPanelShowNewSessionMenu>True</PuttyPanelShowNewSessionMenu>
+  <DefaultLayoutName>&lt;Auto Restore&gt;</DefaultLayoutName>
+  <MultipleTabCloseConfirmation>False</MultipleTabCloseConfirmation>
+  <MinttyExe>..\PortableGit\usr\bin\mintty.exe</MinttyExe>
+  <DockingRestrictFloatingWindows>False</DockingRestrictFloatingWindows>
+  <CommandBarHistory>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfHistoryEntry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /&gt;</CommandBarHistory>
+  <ShowToolBarCommands>False</ShowToolBarCommands>
+  <Action_Options_Shortcut>F2</Action_Options_Shortcut>
+  <PscpExe>..\PuTTY\PSCP.EXE</PscpExe>
+  <ExpandSessionsTreeOnStartup>False</ExpandSessionsTreeOnStartup>
+  <TabSwitcher>SuperPutty.Utils.VisualOrderTabSwitchStrategy</TabSwitcher>
+  <Action_OpenScriptEditor_Shortcut>None</Action_OpenScriptEditor_Shortcut>
+  <SendCommandsToVisibleOnly>False</SendCommandsToVisibleOnly>
+  <AlwaysOnTop>False</AlwaysOnTop>
+  <Opacity>1</Opacity>
+  <ShowToolBarConnections>False</ShowToolBarConnections>
+  <SettingsFolder>.</SettingsFolder>
+  <Action_FocusActiveSession_Shortcut>None</Action_FocusActiveSession_Shortcut>
+  <RestoreWindowLocation>True</RestoreWindowLocation>
+  <PersistCommandBarHistory>True</PersistCommandBarHistory>
+  <EnableKeyboadShortcuts>True</EnableKeyboadShortcuts>
+  <PuttyExe>..\PuTTY\PUTTY.EXE</PuttyExe>
+  <SessionsShowSearch>True</SessionsShowSearch>
+  <Action_CloseTab_Shortcut>None</Action_CloseTab_Shortcut>
+  <EnableControlTabSwitching>True</EnableControlTabSwitching>
+  <ApplicationVersion>
+  </ApplicationVersion>
+  <Action_RenameTab_Shortcut>None</Action_RenameTab_Shortcut>
+  <ExitConfirmation>True</ExitConfirmation>
+  <Action_FullScreen_Shortcut>F11</Action_FullScreen_Shortcut>
+  <Action_GotoConnectionBar_Shortcut>None</Action_GotoConnectionBar_Shortcut>
+  <ShowStatusBar>False</ShowStatusBar>
+  <SaveCommandHistoryDays>7</SaveCommandHistoryDays>
+  <SingleInstanceMode>False</SingleInstanceMode>
+  <RestrictContentToDocumentTabs>False</RestrictContentToDocumentTabs>
+  <Action_SwitchSession_Shortcut>None</Action_SwitchSession_Shortcut>
+  <PscpRootHomePrefix>/</PscpRootHomePrefix>
+  <Action_DuplicateSession_Shortcut>None</Action_DuplicateSession_Shortcut>
+  <ShowMenuBar>False</ShowMenuBar>
+  <Action_PrevTab_Shortcut>None</Action_PrevTab_Shortcut>
+  <AllowPlainTextPuttyPasswordArg>False</AllowPlainTextPuttyPasswordArg>
+  <Action_OpenSession_Shortcut>None</Action_OpenSession_Shortcut>
+  <MinimizeToTray>False</MinimizeToTray>
+  <WindowActivator>SuperPutty.Utils.KeyEventWindowActivator</WindowActivator>
+  <QuickSelectorCaseSensitiveSearch>False</QuickSelectorCaseSensitiveSearch>
+  <SessionsTreeShowLines>False</SessionsTreeShowLines>
+  <Action_NextTab_Shortcut>None</Action_NextTab_Shortcut>
+  <Action_GotoCommandBar_Shortcut>None</Action_GotoCommandBar_Shortcut>
+  <VNCExe>
+  </VNCExe>
+</Settings>

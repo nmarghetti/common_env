@@ -43,7 +43,11 @@ You can launch Start.exe to start PortableApps. From there you will be able to r
 
 ## **Installation**
 
-1. Download [**setup.cmd**](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.cmd) and [setup.ini](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.ini) (Right click -> "Save Link As...") into a folder preferably with no space (eg. "C:\PortableEnv") and execute setup.cmd
+1. Download [**setup.cmd**](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.cmd) and [setup.ini](https://raw.githubusercontent.com/nmarghetti/common_env/master/tools/setup.ini) (Right click -> "Save Link As...")
+
+   Save them into a folder preferably with no space (eg. "C:\PortableEnv").\
+    You can edit setup.ini to select what you want to install.\
+    Execute setup.cmd.
 
    ![Project properties](portable_env_setup_step_01.png)
 
@@ -75,15 +79,40 @@ You can launch Start.exe to start PortableApps. From there you will be able to r
 
    ![Project properties](portable_env_setup_step_08.png)
 
+1. Export yout SSH key to PuTTY format
+
+   - Press OK for the "PuTTYgen Notice"
+
+     ![Project properties](portable_env_setup_step_09.png)
+
+   - Press "Save private key" button and you can press "Yes" when asked to leave the passphrase empty
+
+     ![Project properties](portable_env_setup_step_10.png)
+
+   - Ensure to save it as "C:\\PortableEnv\\home\\.ssh\\id_rsa.ppk"
+
+     ![Project properties](portable_env_setup_step_11.png)
+
+   - Configure the connexion to a remote machine
+
+     - Enter the name of the remote machine you want to configure and press Enter
+     - Press "Yes" when it asks to allow modification with "Registry Editor"
+     - Answer yes when it asks if you are sure you want to connect
+     - Enter your password to connect to the remote machine
+
+     ![Project properties](portable_env_setup_step_12.png)
+
 1. Run Start.exe
 
-   ![Project properties](portable_env_setup_step_09.png)
+   ![Project properties](portable_env_setup_step_13.png)
 
-1. Run Start.exe
+   You get those configured applications.
 
-   You get those configured applications and you can get more with the "Apps" button on the right.
+   ![Project properties](portable_env_setup_step_14.png)
 
-   ![Project properties](portable_env_setup_step_10.png)
+   You can get more with the "Apps" button on the right, then "Get More Apps..." and "By Category".
+
+   ![Project properties](portable_env_setup_step_15.png)
 
 ## **Known installation issues**
 

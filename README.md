@@ -97,7 +97,10 @@ If you are on Windows, you can get a portable development environment (it is not
 
 - **Visual Studio Code** with several extensions
 - **Git for Windows** (Git-bash)
+- **PuTTY**
 - **Cmder**
+- **MobaXterm**
+- **SuperPuTTY**
 - **Python** (2.7)
 - **Python** (3.8)
 - **Node.js**
@@ -188,8 +191,15 @@ You can define those environment variables to customize git:
    - [Homepage](https://portableapps.com/)
    - [App setting](https://portableapps.com/development/portableapps.com_format#appinfo)
 
+1. **Xterm**
+
+   - [PuTTY](https://www.putty.org/)
+   - [SuperPutty](https://github.com/jimradford/superputty)
+   - [Cmder](https://cmder.net/): [ConEmu](https://conemu.github.io/), [Clink](https://mridgers.github.io/clink/)
+   - [MobaXterm](https://mobaxterm.mobatek.net/)
+
 1. **Other**
 
-   - [Cmder](https://cmder.net/): [ConEmu](https://conemu.github.io/), [Clink](https://mridgers.github.io/clink/)
    - [Bash/Unix/Linux tutorial](https://www.tutorialspoint.com/unix_commands/bash.htm)
+   - Bash: [style](https://github.com/progrium/bashstyle), [obsolete](https://wiki.bash-hackers.org/scripting/obsolete), [cheatsheet](https://bertvv.github.io/cheat-sheets/Bash.html), [parse args](https://unix.stackexchange.com/questions/62950/getopt-getopts-or-manual-parsing-what-to-use-when-i-want-to-support-both-shor), [ArgBash](https://argbash.io/send_template#generated), [Parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
    - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm)

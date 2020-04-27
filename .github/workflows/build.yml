@@ -178,6 +178,13 @@ jobs:
           git debugo
           git config --global user.name runner
           bash ./tools/git/test_git.sh
+      # Check update
+      - name: Check update
+        shell: bash
+        env:
+          COMMON_ENV_FORCE_CHECK: 1
+        run: |
+          source "$HOME/.bashrc"
 
       # Install zsh on Linux
       - name: Install zsh on Linux

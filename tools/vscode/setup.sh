@@ -41,9 +41,7 @@ EOM
   sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" "$setting_path"
 
   # Better add VSCode in PortableApps menu
-  if [ -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/rsync.exe" ]; then
-    rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeLauncher" "$APPS_ROOT/PortableApps/"
-  fi
+  rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeLauncher" "$APPS_ROOT/PortableApps/"
   # Install extensions
   echo -n "Checking extensions"
   local installed_extensions=$(mktemp)
