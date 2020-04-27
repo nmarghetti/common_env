@@ -19,9 +19,7 @@ function setup_autohotkey() {
   fi
   [ ! -f "$autohotkey/AutoHotkeyU64.exe" ] && return $ERROR
   # Better add VSCode in PortableApps menu
-  if [ -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/rsync.exe" ]; then
-    rsync -vau "$SETUP_TOOLS_ROOT/autohotkey/AutoHotkeyLauncher" "$APPS_ROOT/PortableApps/"
-  fi
+  rsync -vau "$SETUP_TOOLS_ROOT/autohotkey/AutoHotkeyLauncher" "$APPS_ROOT/PortableApps/"
 
   return 0
 }

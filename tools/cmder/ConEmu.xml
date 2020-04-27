@@ -124,11 +124,7 @@
 			<value name="ColorKeyValue" type="dword" data="00010101"/>
 			<value name="UseCurrentSizePos" type="hex" data="01"/>
 			<value name="WindowMode" type="dword" data="00000520"/>
-			<value name="ConWnd Width" type="dword" data="0000008b"/>
-			<value name="ConWnd Height" type="dword" data="00000020"/>
 			<value name="Cascaded" type="hex" data="01"/>
-			<value name="ConWnd X" type="long" data="2255"/>
-			<value name="ConWnd Y" type="long" data="-1132"/>
 			<value name="16bit Height" type="ulong" data="0"/>
 			<value name="AutoSaveSizePos" type="hex" data="01"/>
 			<value name="IntegralSize" type="hex" data="00"/>
@@ -497,7 +493,7 @@
 				<key name="Task2" modified="2020-04-15 16:21:13" build="191012">
 					<value name="Name" type="string" data="{Ssh::remote machine1}"/>
 					<value name="GuiArgs" type="string" data='/icon "%SystemRoot%\System32\SHELL32.dll,273"'/>
-					<value name="Cmd1" type="string" data='cmd /c ""%CMDER_ROOT%\..\PortableGit\usr\bin\ssh.exe" remote_machine1" -cur_console:t:"machine1"'/>
+					<value name="Cmd1" type="string" data='cmd /c ""%CMDER_ROOT%\..\PortableGit\usr\bin\ssh.exe" remote_machine1" -cur_console:t:"label_machine1"'/>
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -507,7 +503,7 @@
 					<value name="Name" type="string" data="{Ssh::remote machine2}"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data='/icon "%SystemRoot%\System32\SHELL32.dll,273"'/>
-					<value name="Cmd1" type="string" data='cmd /c ""%CMDER_ROOT%\..\PortableGit\usr\bin\ssh.exe" remote_machine2" -cur_console:t:"machine2"'/>
+					<value name="Cmd1" type="string" data='cmd /c ""%CMDER_ROOT%\..\PortableGit\usr\bin\ssh.exe" remote_machine2" -cur_console:t:"label_machine2"'/>
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 					<value name="Flags" type="dword" data="00000004"/>

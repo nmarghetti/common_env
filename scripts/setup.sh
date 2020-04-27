@@ -37,19 +37,24 @@ cd "$SETUP_ROOT"
 [ $? -ne 0 ] && echo "Unable to go to the parent directory of $SCRIPT_NAME ($SETUP_ROOT)" && exit 1
 
 SETUP_SILENT=0
+SETUP_SKIP_DEFAULT=0
 DEFAULT_APPS="bash git"
 APPS=$DEFAULT_APPS
 
 usage() {
-  echo "Usage: $SCRIPT_NAME [-s|--silent] [app [app...] | all]" 1>&2
+  echo "Usage: $SCRIPT_NAME [-s|--silent] [app [app...]]" 1>&2
   echo "  Options:" 1>&2
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
   echo "    vscode: install Visual Studio Code 1.44.0" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
+  echo "    mobaxterm: install MobaXterm 20.2" 1>&2
+  echo "    putty: install PuTTY 0.73" 1>&2
+  echo "    superputty: install SuperPuTTY 1.4.0.9" 1>&2
   echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2
   echo "    node: install NodeJs 2.14.1" 1>&2
+  echo "    cygwin: install Cygwin" 1>&2
   echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
   echo "In any case it will setup some bash and git config, and (only on Windows) install python 3.8.2" 1>&2
@@ -68,7 +73,7 @@ check_dir_var() {
 
 while [ $# -gt 0 ]; do
   case $1 in
-  python2 | vscode | cmder | autohotkey | node | xampp)
+  python2 | vscode | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | xampp)
     APPS="$APPS $1"
     ;;
   cpp)
@@ -76,6 +81,9 @@ while [ $# -gt 0 ]; do
     ;;
   -s | --silent)
     SETUP_SILENT=1
+    ;;
+  -k | --skip-default-apps)
+    SETUP_SKIP_DEFAULT=1
     ;;
   -h | --help)
     usage
@@ -164,15 +172,19 @@ if [ -n "$APPS_ROOT" ]; then
 
   export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
   export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
+  export WINDOWS_SETUP_TOOLS_ROOT="$(get_path_to_windows_back "$SETUP_TOOLS_ROOT")"
   export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
   export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
 
-  # Ensure that git will be in the path is not yet the case
+  # Ensure that git will be in the path if not yet the case
   type git &>/dev/null || export PATH=$APPS_ROOT/PortableApps/PortableGit/bin:$PATH
 
   # Ensure to also setup gitbash, portableapps and python
-  APPS="gitbash portableapps python $APPS"
+  [[ "$SETUP_SKIP_DEFAULT" -eq 0 ]] && APPS="gitbash portableapps python $APPS"
 fi
+
+# Get functions to download tarball
+source "$SETUP_TOOLS_ROOT/$tool/bash/bin/download_tarball.sh"
 
 # Install the selected apps
 for tool in $APPS; do
