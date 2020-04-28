@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfSessionData xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SessionData SessionId="mintty" SessionName="mintty" ImageKey="computer" Host="localhost" Port="22" Proto="Mintty" PuttySession="Default Settings" Username="" ExtraArgs="" SPSLFileName="" RemotePath="" LocalPath="" />
+  <SessionData SessionId="local_mintty" SessionName="local_mintty" ImageKey="computer" Host="localhost" Port="22" Proto="Mintty" PuttySession="Default Settings" Username="" ExtraArgs="" SPSLFileName="" RemotePath="" LocalPath="" />
   <SessionData SessionId="remote" SessionName="remote" ImageKey="computer" Host="" Port="22" Proto="SSH" PuttySession="superPutty" Username="" ExtraArgs="" SPSLFileName="" RemotePath="" LocalPath="" />
 </ArrayOfSessionData>

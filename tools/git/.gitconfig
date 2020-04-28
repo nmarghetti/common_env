@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.4'
+  cv = ! echo 'gitconfig 2.0.5'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -167,6 +167,7 @@
   ls-ignored = ! git lsi
 
   # REMOTE REPOSITORIES
+  remotes = ! git cmd remote -v # list remote repositories
   upstream = ! git cmd remote add upstream # git upstream <repo_url> --> add upstream repo
   origin = ! git cmd remote set-url # git origin <repo_url> --> change origin repo
 
