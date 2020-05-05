@@ -50,6 +50,8 @@ if [ "$current_shell" = "bash" ]; then
     bind '"\e[1;5C"':forward-word          # Ctrl-Right
     bind '"\e[1;3D"':backward-word         # Alt-Left
     bind '"\e[1;3C"':forward-word          # Alt-Right
+
+    # export PS4='[$0: $LINENO]+ '
   fi
 
   source "${MAIN_BASHRC_ROOT}/path.sh"
@@ -174,6 +176,7 @@ alias ll='ls -lh'
 alias pylist='pythonvenv list'
 alias pycreate='pythonvenv create'
 alias pyset='source pythonvenv set'
+alias pyinfo='pythonvenv info'
 alias pyunset='deactivate 2>/dev/null'
 
 # Do some checks only if not done since at least 24h
@@ -185,7 +188,7 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
   # Things not needed to be checked just after a setup
   if [ -f "$COMMON_ENV_LAST_CHECK" ]; then
     # Check for update if access to github
-    ping_option=--help
+    ping_option='--help'
     case "$(system_get_os_host)" in
     Windows) ping_option='-n 1 -w 1' ;;
     Linux) ping_option='-c 1 -w 1' ;;

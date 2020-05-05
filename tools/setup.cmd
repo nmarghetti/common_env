@@ -5,6 +5,7 @@ REM http://www.trytoprogram.com/batch-file/
 
 set APPS_ROOT=%CD%
 set HOME=%APPS_ROOT%\home
+::set APPDATA=%APPS_ROOT%\AppData
 set COMMON_ENV_FULL_DEBUG=0
 set COMMON_ENV_BRANCH=master
 if "%COMMON_ENV_INSTALL_DEVELOP%" == "1" (
@@ -150,6 +151,12 @@ if not exist "%HOME%" (
   mkdir "%HOME%"
 )
 
+REM Create APPDATA
+::cd "%APPS_ROOT%"
+::if not exist "%APPDATA%" (
+::  mkdir "%APPDATA%"
+::)
+
 REM Copy setup.ini if present
 cd "%APPS_ROOT%"
 if exist setup.ini (
@@ -183,6 +190,12 @@ if "%branch%" NEQ "%COMMON_ENV_BRANCH%" (
 REM Setup
 cd "%APPS_ROOT%"
 echo ---------------- Start setup with bash ------------------
+REM First light install with pacman package manager
+if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
+  echo First installation, first install pacman package manager
+  start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" pacman
+  start "Install pacman packages" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
+)
 "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh"
 
 if not errorlevel 1 (
