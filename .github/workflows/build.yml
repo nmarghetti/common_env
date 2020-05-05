@@ -112,7 +112,9 @@ jobs:
 
           echo "  * Check path"
           pathList
-          echo "  * Check python"
+          echo "  * Check current python"
+          pyinfo
+          echo "  * Create python venv"
           pythonvenv list
           pycreate
           pylist
@@ -154,8 +156,7 @@ jobs:
         run: |
           source "$HOME/.bashrc"
           echo "  * Check current python"
-          type python
-          python -c "import sys; print(f'Python version: {sys.version}\\nPython path:\\n{sys.path}')"
+          pyinfo
           echo "  * Create python venv"
           pythonvenv list
           pycreate

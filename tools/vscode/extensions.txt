@@ -14,6 +14,8 @@ ms-vscode.notepadplusplus-keybindings      : Notepad++ keymap binding
 msjsdiag.debugger-for-chrome               : Javascript debugger for Chrome
 firefox-devtools.vscode-firefox-debug      : Javascript debugger for Firefox
 lfurzewaddock.vscode-wsl-workspacefolder   : WSL extensions
+rogalmic.bash-debug                        : Bash debugger
+mads-hartmann.bash-ide-vscode              : Bash IDE
 MS-vsliveshare.vsliveshare                 : Live sharing
 ms-vscode.powershell                       : PowerShell
 tyriar.shell-launcher                      : Multi shell

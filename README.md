@@ -95,8 +95,11 @@ git clone https://github.com/nmarghetti/common_env.git
 
 If you are on Windows, you can get a portable development environment (it is not hardly installed in the system, all the applications are portable) with the following tools especially configured:
 
-- **Visual Studio Code** with several extensions
-- **Git for Windows** (Git-bash)
+- **Visual Studio Code** (~250M) with several extensions
+- **Git for Windows** (~280M)
+  - tools: **curl**, **rsync**, **tree**, **wget** (~6M)
+  - **pacman** package manager (~50M) and additional packages:
+    - **man** (~130M)
 - **PuTTY**
 - **Cmder**
 - **MobaXterm**
@@ -105,7 +108,7 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Python** (3.8)
 - **Node.js**
 - **Cygwin**
-- C/C++ tools: **CMake**, **GCC**
+- **XAMPP**
 
 You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):
 
@@ -171,6 +174,7 @@ You can define those environment variables to customize git:
 
    - [Homepage](https://www.python.org/)
    - Documentation: [Python2.7](https://docs.python.org/2.7/) / [Python 3.x](https://docs.python.org/3/)
+   - [Pip](https://pip.pypa.io/en/stable/reference/pip_config/)
    - Portable Python packaging
      - PortablePython (not developped anymore): [homepage](https://portablepython.com/), [download](https://portablepython.com/wiki/Download/)
      - [WinPython](http://winpython.github.io/)
@@ -201,6 +205,7 @@ You can define those environment variables to customize git:
 1. **Other**
 
    - [Bash/Unix/Linux tutorial](https://www.tutorialspoint.com/unix_commands/bash.htm)
-   - Bash: [style](https://github.com/progrium/bashstyle), [obsolete](https://wiki.bash-hackers.org/scripting/obsolete), [cheatsheet](https://bertvv.github.io/cheat-sheets/Bash.html), [parse args](https://unix.stackexchange.com/questions/62950/getopt-getopts-or-manual-parsing-what-to-use-when-i-want-to-support-both-shor), [ArgBash](https://argbash.io/send_template#generated), [Parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html)
+   - Bash: [Reference manual](https://www.gnu.org/software/bash/manual/html_node/index.html#SEC_Contents), [style](https://github.com/progrium/bashstyle), [obsolete](https://wiki.bash-hackers.org/scripting/obsolete), [cheatsheet](https://bertvv.github.io/cheat-sheets/Bash.html), [parse args](https://unix.stackexchange.com/questions/62950/getopt-getopts-or-manual-parsing-what-to-use-when-i-want-to-support-both-shor), [ArgBash](https://argbash.io/send_template#generated), [Parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html), [set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
    - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm)
    - [Cygwin](https://cygwin.com/): [Portable Cygwin](https://github.com/vegardit/cygwin-portable-installer)
+   - Pacman: [homepage](https://www.archlinux.org/pacman/), [documentation](https://www.archlinux.org/pacman/pacman.8.html), [wiki](https://wiki.archlinux.org/index.php/pacman)

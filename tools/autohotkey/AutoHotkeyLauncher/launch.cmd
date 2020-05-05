@@ -1,7 +1,5 @@
 @echo off
-setlocal EnableDelayedExpansion
+call ..\CommonFiles\common_path.cmd
 
-cd ..\..
-set APPS_ROOT=%CD%
-
+cd "%APPS_ROOT%"
 START /B PortableApps\AutoHotkey\AutoHotkeyU64.exe Documents\dev\common_env\tools\autohotkey\hotkey.ahk

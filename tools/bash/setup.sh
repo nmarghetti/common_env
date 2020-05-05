@@ -3,14 +3,14 @@
 # article about bash and zsh startup scripts https://tanguy.ortolo.eu/blog/article25/shrc
 
 function setup_bash() {
-  if [ ! -z "$HOME" ]; then
+  if [[ ! -z "$HOME" ]]; then
     mkdir -vp "$HOME"
   fi
 
   # Create template .bashrc and .zshrc if not there yet
   local shellrc
   for shellrc in .bashrc .zshrc; do
-    if [ ! -f "$HOME/$shellrc" ]; then
+    if [[ ! -f "$HOME/$shellrc" ]]; then
       echo "Create $HOME/$shellrc"
       cat >"$HOME/$shellrc" <<EOM
 #! /bin/bash

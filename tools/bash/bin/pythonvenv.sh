@@ -87,8 +87,24 @@ set)
   shift
   set_env "$@"
   ;;
+info)
+  echo "* Python"
+  type python
+  echo && echo "* Python version"
+  python -c "import sys; print(sys.version)"
+  echo && echo "* Python path"
+  python -c "import sys; print('\n'.join(sys.path))"
+  echo && echo "* Pip version"
+  python -m pip --version
+  [[ $? -eq 0 ]] && {
+    echo && echo "* Pip config"
+    python -m pip config list -v
+    echo && echo "* Pip cache"
+    python -c "from pip._internal.utils.appdirs import user_cache_dir; print(user_cache_dir('pip')); print(user_cache_dir('wheel'))"
+  }
+  ;;
 *)
-  echo "Unknown command '$@', must be create|list|set"
+  echo "Unknown command '$@', must be create|list|set|info"
   exit 1
   ;;
 esac

@@ -23,21 +23,19 @@ function setup_python() {
   fi
 
   # Install python 3.8
-  if [ ! -f "$python_bin" ]; then
+  if [[ ! -f "$python_bin" ]]; then
     mkdir -vp "$python_path"
     local tarball="python-${python_version}-amd64.exe"
-    if [ ! -f $tarball ]; then
-      wget --progress=bar:force https://www.python.org/ftp/python/$python_version/$tarball
-      test $? -ne 0 && echo "Error, unable to retrieve the executable." && return $ERROR
-    fi
+    download_tarball "https://www.python.org/ftp/python/$python_version/$tarball"
+    [[ $? -ne 0 ]] && echo "Binary file not installed" && return $ERROR
     # Need to eval in case there is space character in the path, but the return code is always 0
     local start=$(date +%s)
     eval "./$tarball -quiet -passive InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"
     local end=$(date +%s)
     # it the install took less than 3s, it probably has failed, ask for reinstall
-    if [ $(expr $end - $start) -le 3 ]; then
+    if [[ $(expr $end - $start) -le 3 ]]; then
       read -rp 'The python installation failed, maybe a previous installation needs to be removed first, do you want to try ? (Y/n)' answer
-      if [ -z "$answer" ] || [[ "$answer" =~ ^[yY]$ ]]; then
+      if [[ -z "$answer" ]] || [[ "$answer" =~ ^[yY]$ ]]; then
         eval "./$tarball -uninstall InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"
         eval "./$tarball -quiet -passive InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"
       fi
@@ -45,19 +43,19 @@ function setup_python() {
     test ! -f "$python_bin" && echo -e "\nError while installing python $python_version" && return $ERROR
     rm -f $tarball
   fi
-  if [ ! -f "$python_bin" ]; then
-    return $ERROR
-  fi
-  if ! "$python_bin" -m pip --version &>/dev/null; then
-    echo "No pip installed" >&2 && return $ERROR
-  fi
+  [[ ! -f "$python_bin" ]] && echo "Error: python binary is not installed" && return $ERROR
+  ! "$python_bin" -m pip --version &>/dev/null && echo "Error: pip is not installed" >&2 && return $ERROR
+
   # to be checked why putting $python_version in grep does not work
-  if [ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | grep -cE "^3.8.2$") -eq 0 ]; then
+  if [[ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | grep -cE "^3.8.2$") -eq 0 ]]; then
     "$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" create "$python_bin" || (echo "Error, unable to set python virtual env." && return $ERROR)
   fi
 
   for py in "$python_bin" "$APPS_ROOT/home/.venv/$python_version/Scripts/python.exe"; do
-    if [ -f "$py" ]; then
+    if [[ -f "$py" ]]; then
+      # "$py" -m pip config set global.index-url "https://pypi.python.org/simple/"
+      # "$py" -m pip config set global.find-links "https://pypi.python.org/simple/ https://pypi.org/simple/"
+      # "$py" -m pip config set global.download-cache "$WINDOWS_APPS_ROOT\\PortableApps\\Common\\python\\cache" --> does not seem to be taken into account, more based on %APPDATA%
       "$py" -m pip install --upgrade pip
       # Keep in mind the --user that can be used, eg. Python extension in VSCode
       "$py" -m pip install -U pylint   #--user

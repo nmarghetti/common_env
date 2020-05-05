@@ -2,22 +2,14 @@
 
 function setup_putty() {
   local ERROR=$SETUP_ERROR_CONTINUE
+  local putty_path="$APPS_ROOT/PortableApps/PuTTY"
 
-  putty_path="$APPS_ROOT/PortableApps/PuTTY"
   # Install PuTTY
-  if [ ! -f "$putty_path/PUTTY.EXE" ]; then
+  if [[ ! -f "$putty_path/PUTTY.EXE" ]]; then
     mkdir -vp "$putty_path"
-    tarball=putty.zip
-    if [ ! -f $tarball ]; then
-      wget --progress=bar:force https://the.earth.li/~sgtatham/putty/latest/w64/$tarball
-      test $? -ne 0 && echo "Error, unable to retrieve the zip." && return $ERROR
-    fi
-    unzip $tarball -d "$putty_path" | awk 'BEGIN {ORS="."} {print "."}'
-    test $? -ne 0 && echo -e "\nError, unable unzip the archive." && return $ERROR
-    echo
-    rm -f $tarball
+    download_tarball -e -d "$putty_path" "https://the.earth.li/~sgtatham/putty/latest/w64/putty.zip"
   fi
-  [ ! -f "$putty_path/PUTTY.EXE" ] && return $ERROR
+  [[ ! -f "$putty_path/PUTTY.EXE" ]] && echo "Binary file not installed" && return $ERROR
 
   # Better add PuTTY and PuTTYgen in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/putty/PuTTY" "$APPS_ROOT/PortableApps/"
@@ -27,13 +19,13 @@ function setup_putty() {
   #   "$APPS_ROOT/PortableApps/Cygwin/cygwin/bin/puttygen.exe" "$HOME/.ssh/id_rsa" -o "$HOME/.ssh/id_rsa.ppk"
   # fi
 
-  if [ ! -f "$HOME/.ssh/id_rsa.ppk" ] && [ -f "$HOME/.ssh/id_rsa" ]; then
+  if [[ ! -f "$HOME/.ssh/id_rsa.ppk" ]] && [[ -f "$HOME/.ssh/id_rsa" ]]; then
     echo -e "\nPress OK for the PuTTYgen notice"
     echo "Click on 'Save private key' button and save it as '$HOME/.ssh/id_rsa.ppk'"
     "$putty_path/PUTTYGEN.EXE" "$HOME/.ssh/id_rsa"
   fi
 
-  if [ ! -f "$putty_path/session.reg" ]; then
+  if [[ ! -f "$putty_path/session.reg" ]]; then
     local remote_machine
     echo
     read -rep "Enter the remote machine to configure (full name with domain or IP address):" remote_machine

@@ -2,23 +2,16 @@
 
 function setup_autohotkey() {
   local ERROR=$SETUP_ERROR_CONTINUE
+  local autohotkey_path="$APPS_ROOT/PortableApps/AutoHotkey"
 
-  autohotkey="$APPS_ROOT/PortableApps/AutoHotkey"
   # Install AutoHotkey
-  if [ ! -f "$autohotkey/AutoHotkeyU64.exe" ]; then
-    mkdir -p "$autohotkey"
-    tarball=ahk.zip
-    if [ ! -f $tarball ]; then
-      wget --progress=bar:force -O "$tarball" https://www.autohotkey.com/download/$tarball
-      test $? -ne 0 && echo "Error, unable to retrieve the zip." && return $ERROR
-    fi
-    unzip $tarball -d "$autohotkey/" | awk 'BEGIN {ORS="."} {print "."}'
-    test $? -ne 0 && echo -e "\nError, unable unzip the archive." && return $ERROR
-    echo
-    rm -f $tarball
+  if [[ ! -f "$autohotkey/AutoHotkeyU64.exe" ]]; then
+    mkdir -p "$autohotkey_path"
+    download_tarball -e -d "$autohotkey_path" "https://www.autohotkey.com/download/ahk.zip"
   fi
-  [ ! -f "$autohotkey/AutoHotkeyU64.exe" ] && return $ERROR
-  # Better add VSCode in PortableApps menu
+  [[ ! -f "$autohotkey_path/AutoHotkeyU64.exe" ]] && echo "Binary file not installed" && return $ERROR
+
+  # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/autohotkey/AutoHotkeyLauncher" "$APPS_ROOT/PortableApps/"
 
   return 0

@@ -7,11 +7,11 @@ function setup_mobaxterm() {
   # Install MobaXterm
   if [[ ! -f "$moba_path/MobaXterm_Personal_20.2.exe" ]]; then
     mkdir -vp "$moba_path"
-    download_tarball -o MobaXterm.zip -d "$moba_path" "https://download.mobatek.net/2022020030522248/MobaXterm_Portable_v20.2.zip"
+    download_tarball -e -o "MobaXterm.zip" -d "$moba_path" "https://download.mobatek.net/2022020030522248/MobaXterm_Portable_v20.2.zip"
   fi
-  [[ ! -f "$moba_path/MobaXterm_Personal_20.2.exe" ]] && return $ERROR
+  [[ ! -f "$moba_path/MobaXterm_Personal_20.2.exe" ]] && echo "Binary file not installed" && return $ERROR
 
-  # Better add Cmder in PortableApps menu
+  # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/mobaxterm/MobaXterm" "$APPS_ROOT/PortableApps/"
 
   [[ ! -f "$moba_path/MobaXterm.ini" ]] &&

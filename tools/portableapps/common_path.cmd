@@ -5,6 +5,10 @@ REM setlocal EnableDelayedExpansion
 cd ..\..
 set APPS_ROOT=%CD%
 set HOME=%APPS_ROOT%\home
+set APPDATA=%APPS_ROOT%\AppData
+
+REM PATH to /usr/bin
+set PATH=%APPS_ROOT%\PortableApps\PortableGit\usr\bin;%PATH%
 
 REM PATH to node
 if exist "%APPS_ROOT%\PortableApps\CommonFiles\node\node.exe" set PATH=%APPS_ROOT%\PortableApps\CommonFiles\node;%PATH%
