@@ -25,10 +25,7 @@ EOM
     local user=$(git config --global user.name)
     local mail
     if [[ -z "$user" ]] || [[ "$user" == "user" ]] || [[ "$user" == "root" ]]; then
-      user=$USERNAME
-      if [[ -z "$user" ]]; then
-        user=$USER
-      fi
+      user=${USER:-${USERNAME}}
       read -rep "Please enter your git user name: " -i "$user" user
       read -rep "Please enter your git user email address: " mail
       git config --global user.name "$user"
