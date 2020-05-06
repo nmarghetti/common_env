@@ -78,6 +78,7 @@ git clone https://github.com/nmarghetti/common_env.git
    Either you are on **Windows**, **Linux** or **macOS** and using **bash** or **zsh**, you would get:
 
    - **Python** virtual environment easy to handle with few simple shell functions:
+     - **pyinfo**: display information about the current python in use
      - **pylist**: list your available python venv
      - **pycreate** [python_path][version]: create a venv name _version_ with python from _python_path_
      - **pyset** version: activate the venv _version_ (it has to exist from list given by "pylist")

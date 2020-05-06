@@ -60,12 +60,14 @@ elif [ "$current_shell" = "zsh" ]; then
 
   # if shell is interactif
   if [[ -o login ]]; then
-    bindkey '^[OD' backward-word    # Ctrl-Left
-    bindkey '^[OC' forward-word     # Ctrl-Right
-    bindkey '^[[1;5D' backward-word # Ctrl-Left
-    bindkey '^[[1;5C' forward-word  # Ctrl-Right
-    bindkey '^[[1;3D' backward-word # Alt-Left
-    bindkey '^[[1;3C' forward-word  # Alt-Right
+    bindkey '^[OD' backward-word      # Ctrl-Left
+    bindkey '^[OC' forward-word       # Ctrl-Right
+    bindkey '^[[1;5D' backward-word   # Ctrl-Left
+    bindkey '^[[1;5C' forward-word    # Ctrl-Right
+    bindkey '^[[1;3D' backward-word   # Alt-Left
+    bindkey '^[[1;3C' forward-word    # Alt-Right
+    bindkey '^[[1~' beginning-of-line # Home
+    bindkey '^[[4~' end-of-line       # End
   fi
 
   source "${MAIN_BASHRC_ROOT}/path_zsh.sh"
