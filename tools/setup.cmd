@@ -5,7 +5,8 @@ REM http://www.trytoprogram.com/batch-file/
 
 set APPS_ROOT=%CD%
 set HOME=%APPS_ROOT%\home
-::set APPDATA=%APPS_ROOT%\AppData
+set APPDATA=%APPS_ROOT%\AppData\Roaming
+set LOCALAPPDATA=%APPS_ROOT%\AppData\Local
 set COMMON_ENV_FULL_DEBUG=0
 set COMMON_ENV_BRANCH=master
 if "%COMMON_ENV_INSTALL_DEVELOP%" == "1" (
@@ -152,10 +153,16 @@ if not exist "%HOME%" (
 )
 
 REM Create APPDATA
-::cd "%APPS_ROOT%"
-::if not exist "%APPDATA%" (
-::  mkdir "%APPDATA%"
-::)
+cd "%APPS_ROOT%"
+if not exist "%APPDATA%" (
+  mkdir "%APPDATA%"
+)
+
+REM Create LOCALAPPDATA
+cd "%APPS_ROOT%"
+if not exist "%LOCALAPPDATA%" (
+  mkdir "%LOCALAPPDATA%"
+)
 
 REM Copy setup.ini if present
 cd "%APPS_ROOT%"
@@ -191,9 +198,14 @@ REM Setup
 cd "%APPS_ROOT%"
 echo ---------------- Start setup with bash ------------------
 REM First light install with pacman package manager
-if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
+find "  app = pacman" setup.ini >nul 2>&1 && not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" && (
   echo First installation, first install pacman package manager
   start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" pacman
+  if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
+    echo Pacman package installer not installed. Exiting...
+    pause
+    exit 1
+  )
   start "Install pacman packages" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
 )
 "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh"

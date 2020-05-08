@@ -91,14 +91,18 @@ if [ "$current_shell" = "bash" ]; then
       echo "ERROR !!! You are are not sourcing with bash, you might encounter problem !!!" >&2
     fi
 
+    # Ensure SSH working
+    #[[ ! -d "/home/${USER:-${USERNAME}}/.ssh" ]] && mkdir -vp "/home/${USER:-${USERNAME}}/.ssh"
+    #cp -r "$HOME/.ssh/"* "/home/${USER:-${USERNAME}}/.ssh/"
+
     export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
     export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
     export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
     export WINDOWS_APPS_ROOT="$(echo "$WIN_APPS_ROOT" | tr '/' '\\')"
     export WINDOWS_APPS_COMMON="$(echo "$WIN_APPS_COMMON" | tr '/' '\\')"
-    export MSYS_SHELL=$APPS_COMMON/msys64/msys2_shell.cmd
+    # export MSYS_SHELL=$APPS_COMMON/msys64/msys2_shell.cmd
 
-    pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
+    # pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
     # pathAppend "$APPS_COMMON/msys64/usr/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/cmake/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/make/bin" 2>/dev/null
@@ -115,6 +119,7 @@ if [ "$current_shell" = "bash" ]; then
       # If shell is in interactive mode
       case $- in
       *i*)
+        export PS1_NO_GIT=$PS1
         # Git Prompt
         # For more information; check thoses files:
         # ${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh
@@ -125,10 +130,13 @@ if [ "$current_shell" = "bash" ]; then
         if [ ! "$(type -t __git_ps1)" = "function" ]; then
           source "${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh"
         fi
+        export PS1_GIT=$PS1
         ;;
       esac
     fi
 
+    alias prompt_nogit='[[ -n "$PS1_NO_GIT" ]] && export PS1=$PS1_NO_GIT'
+    alias prompt_git='[[ -n "$PS1_GIT" ]] && export PS1=$PS1_GIT'
     alias tsource="source '${MAIN_BASHRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
     alias cddev="cd '${APPS_ROOT}/Documents/dev'"
     alias cdenv="cd '${APPS_ROOT}/Documents/dev/common_env'"

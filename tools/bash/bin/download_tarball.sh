@@ -33,6 +33,7 @@ download_tarball() {
   local ssl_check=1
   local extract=0
   local tarball_type
+  [[ "$DOWNLOAD_NO_SSL_CHECK" == "1" ]] && ssl_check=0
   # reset getopts - check https://man.cx/getopts(1)
   OPTIND=1
   while getopts "hied:m:o:t:" opt; do
@@ -75,6 +76,8 @@ download_tarball() {
     local downloader=
     local downloader_option=
     [[ -z "$downloader" ]] && curl --version &>/dev/null && downloader="curl" && downloader_option="--progress-bar -L -o"
+    # Change certificate location if /mingw64/ssl/certs/ca-bundle.crt is empty
+    # [[ "$downloader" == "curl" ]] && [[ "$(type curl)" == "/mingw64/bin/curl" ]] && downloader_option="--cacert /usr/ssl/certs/ca-bundle.crt $downloader_option"
     [[ -z "$downloader" ]] && wget --version &>/dev/null && downloader="wget" && downloader_option="--progress=bar:force -O"
     [[ -z "$downloader" ]] && "$APPS_ROOT/wget.exe" --version &>/dev/null && downloader="$APPS_ROOT/wget.exe" && downloader_option="--progress=bar:force -O"
     [[ -z "$downloader" ]] && echo "Error: unable to use wget or curl" && return 1

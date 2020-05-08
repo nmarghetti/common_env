@@ -18,8 +18,10 @@
     "*.md": "markdown"
   },
   "files.exclude": {
-    "build": true,
     "**/*.pyc": true
+  },
+  "search.exclude": {
+    "**/build": true
   },
 
   "[json]": {
@@ -32,6 +34,10 @@
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format",
     "editor.formatOnSave": true
   },
   "[html]": {
@@ -147,27 +153,12 @@
     }
   ],
 
-  // CMake
-  "cmake.cmakePath": "${env:APPS_ROOT}/PortableApps/CommonFiles/cmake/bin/cmake.exe",
-  /*"cmake.mingwSearchDirs": [
-        "${env:APPS_ROOT}/PortableApps/CommonFiles/gcc/x64/x86_64-w64-mingw32",
-        "${env:APPS_ROOT}/PortableApps/CommonFiles/gcc/x64/bin",
-        "${env:APPS_ROOT}/PortableApps/PortableGit/mingw64"
-    ],*/
-  /*"cmake.preferredGenerators": [
-        "Unix Makefiles"
-    ],*/
-  "cmake.configureSettings": {
-    "CMAKE_MAKE_PROGRAM": "${env:APPS_ROOT}/PortableApps/CommonFiles/gcc/x64/bin/make.exe",
-    "CMAKE_GENERATOR": "Unix Makefiles"
-  },
-  //"cmake.generator": "Unix Makefiles",
-  "cmake.buildDirectory": "${workspaceRoot}/build",
-  "cmake.useCMakeServer": false,
-  //"cmake-tools-helper.cmake_download_path": "${env:APPS_ROOT}/PortableApps/CommonFiles/cmake-3.10.1-win64-x64",
-
   // C/C++
   "C_Cpp.intelliSenseEngine": "Default",
+  "clang-format.executable": "${env.APPS_ROOT}\\PortableApps\\CommonFiles\\node\\clang-format",
+
+  // Remote development
+  "remote.SSH.configFile": "%APPS_ROOT%/home/.ssh/config",
 
   // END - GENERATED CONTENT, DO NOT EDIT !!!
 

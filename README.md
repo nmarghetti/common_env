@@ -101,13 +101,15 @@ If you are on Windows, you can get a portable development environment (it is not
   - tools: **curl**, **rsync**, **tree**, **wget** (~6M)
   - **pacman** package manager (~50M) and additional packages:
     - **man** (~130M)
-- **PuTTY**
-- **Cmder**
-- **MobaXterm**
-- **SuperPuTTY**
+    - **make**, **cmake**, **mingw-w64-x86_64-toolchain** for C/C++ dev (~1G)
+- **PyCharm** (~700M)
+- **PuTTY** (~5M)
+- **Cmder** (~30M)
+- **MobaXterm** (~13M)
+- **SuperPuTTY** (~2M)
 - **Python** (2.7)
-- **Python** (3.8)
-- **Node.js**
+- **Python** (3.8) (~50M)
+- **Node.js** (~65M)
 - **Cygwin**
 - **XAMPP**
 
@@ -207,6 +209,6 @@ You can define those environment variables to customize git:
 
    - [Bash/Unix/Linux tutorial](https://www.tutorialspoint.com/unix_commands/bash.htm)
    - Bash: [Reference manual](https://www.gnu.org/software/bash/manual/html_node/index.html#SEC_Contents), [style](https://github.com/progrium/bashstyle), [obsolete](https://wiki.bash-hackers.org/scripting/obsolete), [cheatsheet](https://bertvv.github.io/cheat-sheets/Bash.html), [parse args](https://unix.stackexchange.com/questions/62950/getopt-getopts-or-manual-parsing-what-to-use-when-i-want-to-support-both-shor), [ArgBash](https://argbash.io/send_template#generated), [Parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html), [set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-   - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm)
+   - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm), [help](https://ss64.com/nt/)
    - [Cygwin](https://cygwin.com/): [Portable Cygwin](https://github.com/vegardit/cygwin-portable-installer)
    - Pacman: [homepage](https://www.archlinux.org/pacman/), [documentation](https://www.archlinux.org/pacman/pacman.8.html), [wiki](https://wiki.archlinux.org/index.php/pacman)

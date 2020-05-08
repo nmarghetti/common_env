@@ -1,0 +1,9 @@
+{
+    "BasedOnStyle"                                  : "Google",
+    "Language"                                      : "Cpp",
+    "ColumnLimit"                                   : 120,
+    "Standard"                                      : "Auto",
+    "TabWidth"                                      : 2,
+    "UseTab"                                        : "Never",
+}
+

@@ -49,7 +49,9 @@ cd "$SETUP_ROOT"
 SETUP_SILENT=0
 SETUP_SKIP_DEFAULT=0
 DEFAULT_APPS="bash git"
-DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash pacman portableapps python"
+# Remove pacman form default so far as it seems to break bash
+# DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash pacman portableapps python"
+DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash portableapps python"
 DEFAULT_APPS_GREP=$(echo "$DEFAULT_WIN_APPS" | tr ' ' '|')
 APPS=
 
@@ -59,7 +61,8 @@ usage() {
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
-  echo "    vscode: install Visual Studio Code 1.44.0" 1>&2
+  echo "    vscode: install latest Visual Studio Code" 1>&2
+  echo "    pycharm: install latest PyCharm community" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
   echo "    mobaxterm: install MobaXterm 20.2" 1>&2
   echo "    putty: install PuTTY 0.73" 1>&2
@@ -85,7 +88,10 @@ check_dir_var() {
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-  pacman | python2 | vscode | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | xampp)
+  bash | git | gitbash | pacman | portableapps | python)
+    APPS="$APPS $1"
+    ;;
+  pacman | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | xampp)
     APPS="$APPS $1"
     ;;
   # cpp)
@@ -109,10 +115,13 @@ while [[ $# -gt 0 ]]; do
   shift
 done
 
-# If no apps given, take the ones from config file
-if [[ -z "$APPS" ]]; then
-  common_env_app=$(git config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
-  [[ -n "$common_env_app" ]] && APPS="$DEFAULT_APPS $common_env_app"
+if [[ -f "$HOME/.common_env.ini" ]]; then
+  # If no apps given, take the ones from config file
+  if [[ -z "$APPS" ]]; then
+    common_env_app=$(git config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
+    [[ -n "$common_env_app" ]] && APPS="$DEFAULT_APPS $common_env_app"
+  fi
+  [[ "$(git config -f $HOME/.common_env.ini --get install.sslcheck)" == "0" ]] && export DOWNLOAD_NO_SSL_CHECK=1
 fi
 
 # Ensure to have default apps (except if skipped)
@@ -164,11 +173,15 @@ if [[ -n "$APPS_ROOT" ]]; then
     [[ $? -ne 0 ]] || [[ ! -d "$APPS_ROOT" ]] && echo "APPS_ROOT='$APPS_ROOT' does not exist" && exit 1
   fi
 
+  export APPDATA="$APPS_ROOT/AppData/Roaming"
+  export LOCALAPPDATA="$APPS_ROOT/AppData/Local"
   export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
   export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
   export WINDOWS_SETUP_TOOLS_ROOT="$(get_path_to_windows_back "$SETUP_TOOLS_ROOT")"
   export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
   export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
+
+  mkdir -p "$APPDATA" "$LOCALAPPDATA"
 
   # Ensure that git will be in the path if not yet the case
   type git &>/dev/null || export PATH=$APPS_ROOT/PortableApps/PortableGit/bin:$PATH
@@ -190,7 +203,7 @@ if [[ -n "$path_with_space" ]]; then
     echo "    $path: '${!path}'"
   done
   answer='y'
-  if [[ $SETUP_SILENT -eq 0 ]] && !([[ -n "$APPS_ROOT" ]] && [[ -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/pacman.exe" ]]); then
+  if [[ $SETUP_SILENT -eq 0 ]] && !([[ -n "$APPS_ROOT" ]] && [[ -f "$APPS_ROOT/home/.gitconfig" ]]); then
     answer='n'
     read -rep "Are you sure you want to proceed (y/N) ? " -i $answer answer
   fi
