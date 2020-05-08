@@ -7,7 +7,7 @@
     "bierner.markdown-preview-github-styles", // Markdown preview with Github style
     "alanwalk.markdown-toc", // Markdown Table of content generation
     "dzannotti.vscode-babel-coloring", // Javascript Babel syntax coloring
-    "waderyan.gitblame", // Git blame
+    "eamodio.gitlens", // Git tool
     "josee9988.changelog-and-markdown-snippets", // Changelog/Mardown snippets
     "ms-vscode.notepadplusplus-keybindings", // Notepad++ keymap binding
     "msjsdiag.debugger-for-chrome", // Javascript debugger for Chrome
@@ -19,6 +19,7 @@
     "ms-vscode.powershell", // PowerShell
     "tyriar.shell-launcher", // Multi shell
     "ms-python.python", // Python
+    "xaver.clang-format", // C++ formatter
     "ms-vscode.cpptools", // C++
     "twxs.cmake", // CMake
     "ms-vscode.cmake-tools" // CMake Tools

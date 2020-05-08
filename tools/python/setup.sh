@@ -20,6 +20,8 @@ function setup_python() {
   else
     export PYTHONUSERBASE="$python_winpath"
     export PATH="$PYTHONUSERBASE/Python38/Scripts:$PATH"
+    unset PYTHONPATH
+    unset PYTHONHOME
   fi
 
   # Install python 3.8
@@ -27,7 +29,7 @@ function setup_python() {
     mkdir -vp "$python_path"
     local tarball="python-${python_version}-amd64.exe"
     download_tarball "https://www.python.org/ftp/python/$python_version/$tarball"
-    [[ $? -ne 0 ]] && echo "Binary file not installed" && return $ERROR
+    [[ $? -ne 0 ]] && echo "Unable to get the installer" && return $ERROR
     # Need to eval in case there is space character in the path, but the return code is always 0
     local start=$(date +%s)
     eval "./$tarball -quiet -passive InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"

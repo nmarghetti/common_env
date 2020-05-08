@@ -39,5 +39,18 @@ function setup_putty() {
     }
   fi
 
+  # create ssh config
+  if [[ ! -f "$HOME/.ssh/config" ]]; then
+    local remote_machine=$(powershell -Command "Get-ItemPropertyValue -path HKCU:\Software\SimonTatham\PuTTY\Sessions\remote -name HostName" 2>/dev/null)
+    [[ $? -eq 0 ]] && [[ -n "$remote_machine" ]] && {
+      cat >"$HOME/.ssh/config" <<SSHCONFIG
+Host $remote_machine
+  HostName $remote_machine
+  User ${USER:-${USERNAME}}
+  IdentityFile $WIN_APPS_ROOT/home/.ssh/id_rsa
+SSHCONFIG
+    }
+  fi
+
   return 0
 }

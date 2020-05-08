@@ -33,7 +33,7 @@ if "%COMMON_ENV_INSTALL_APPS_ROOT%" EQU "." (
     pause
     exit 1
   )
-  rem setup.cmd
+  setup.cmd
 ) else (
   %COMMON_ENV_INSTALL_APPS_ROOT%\Documents\dev\common_env\tools\setup.cmd
 )

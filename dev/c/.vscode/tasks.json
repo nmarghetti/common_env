@@ -1,0 +1,28 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Build",
+      "command": "cmake -DCMAKE_BUILD_TYPE:STRING=Debug -H. -Bbuild -G 'Unix Makefiles' && make -C build",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Compile",
+      "command": "./compile.sh",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Run",
+      "command": "./build/hello.exe",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

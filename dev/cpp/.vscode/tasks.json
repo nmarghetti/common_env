@@ -1,0 +1,26 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Build",
+      "command": "cmake -DCMAKE_BUILD_TYPE:STRING=Debug -H. -Bbuild -G 'Unix Makefiles' && make -C build",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Compile",
+      "command": "./compile.sh",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Run",
+      "command": "./build/fs.exe",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

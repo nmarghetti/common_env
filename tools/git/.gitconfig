@@ -46,13 +46,19 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.6'
+  cv = ! echo 'gitconfig 2.0.8'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
 
   # DISPLAY ALIAS
   dry = ! GIT_CMD_DRY=1 git # Only display the command for the given alias, do not run it (eg. type "git dry mg" --> it displays "git merge --no-edit")
+
+  info = ! "f() { \
+      echo \"$(git rev-list --count --all) commits overall\"; \
+      `#echo \"$(git rev-list --count HEAD) commits in HEAD\";` \
+      echo \"$(git lsr 2>/dev/null | wc -l) files in HEAD\"; \
+    }; f"
 
   # CONFIG
   gconf = ! vi $HOME/.gitconfig # edit global git config
@@ -335,6 +341,7 @@
   lcbu   = ! branch=$1 && shift && git lc upstream/$branch # Last commiter from given branch from upstream
 
   # LOG
+  lgc     = ! git cmd log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(bold blue)%><(7,trunc)%an%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log with better view on last committer
   lg      = ! git cmd log --graph --date=short --pretty=format:'%C(green)%ad%Creset %C(auto)%h%Creset %C(auto)%d%Creset %s - %C(green)(%C(bold blue)%an%Creset %C(green)%ar)%Creset' # full current branch log
   lg5     = ! git --no-pager lg -5 && echo # limit to 5 commits
   lg10    = ! git --no-pager lg -10 && echo # limit to 10 commits

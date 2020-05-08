@@ -24,6 +24,8 @@ EOM
   done
 
   # Add content to .bashrc
+  local setup_tool_root=$(readlink -f "$SETUP_TOOLS_ROOT")
+  [[ "$(echo "$setup_tool_root" | cut -b -4)" == "/mnt" ]] && setup_tool_root=$(echo "$setup_tool_root" | cut -b 5-)
   local content=$(
     cat <<-EOM
 if [[ ! "\$(basename "\${BASH_SOURCE[0]}")" = ".bashrc" ]]; then
@@ -34,10 +36,10 @@ else
   $([[ -n "$COMMON_ENV_SETUP_MAC_PATH" ]] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[[ "\$COMMON_ENV_DEBUG" = "1" ]] && echo "Sourcing '\$(readlink -f "\${BASH_SOURCE[0]}")' ..." >&2
   # Ensure that \$HOME points to where is located the current file being sourced
   export HOME=\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)
-  if [[ -f "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")" ]]; then
-    source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
-  elif [[ -f "/mnt$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")" ]]; then
-    source "/mnt$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
+  if [[ -f "$setup_tool_root/bash/source/.bashrc" ]]; then
+    source "$setup_tool_root/bash/source/.bashrc"
+  elif [[ -f "/mnt$setup_tool_root/bash/source/.bashrc" ]]; then
+    source "/mnt$setup_tool_root/bash/source/.bashrc"
   else
     echo "ERROR !!! Unable to find .bashrc"
   fi

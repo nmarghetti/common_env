@@ -5,10 +5,14 @@ REM setlocal EnableDelayedExpansion
 cd ..\..
 set APPS_ROOT=%CD%
 set HOME=%APPS_ROOT%\home
-set APPDATA=%APPS_ROOT%\AppData
+set APPDATA=%APPS_ROOT%\AppData\Roaming
+set LOCALAPPDATA=%APPS_ROOT%\AppData\Local
 
 REM PATH to /usr/bin
 set PATH=%APPS_ROOT%\PortableApps\PortableGit\usr\bin;%PATH%
+
+REM PATH to /mingw64/bin if gcc installed
+if exist "%APPS_ROOT%\PortableApps\PortableGit\mingw64\bin\g++.exe" set PATH=%APPS_ROOT%\PortableApps\PortableGit\mingw64\bin;%PATH%
 
 REM PATH to node
 if exist "%APPS_ROOT%\PortableApps\CommonFiles\node\node.exe" set PATH=%APPS_ROOT%\PortableApps\CommonFiles\node;%PATH%
