@@ -98,6 +98,9 @@ echoStep "Add executable file"
 touch script.sh && git aa && git ci 'Add script.sh' && git ls && ls -Al
 git chmodx && git s && git df && git aca && git ls && ls -Al && git lga
 
+echoStep "List all files"
+git ls . && git lsr && git lso
+
 # Clean folder
 rm -rf "$TMPDIR"
 
