@@ -210,11 +210,11 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
       common_env_check_update
       [ ! "$current_commit" = "$(cd "$MAIN_BASHRC_ROOT" && git log -1 --pretty=format:%H)" ] && COMMON_ENV_CHANGED=1
     fi
-
-    # Update git config
-    type rgit &>/dev/null && rgit
   fi
   touch "$COMMON_ENV_LAST_CHECK"
+
+  # Update git config
+  type rgit &>/dev/null && rgit
 
   # Refresh tool links
   source "${MAIN_BASHRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
