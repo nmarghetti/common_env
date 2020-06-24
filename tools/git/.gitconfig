@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.9'
+  cv = ! echo 'gitconfig 2.0.10'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -208,7 +208,7 @@
   rbcol   = ! git co --theirs # during rebase conflict, select local changes
   rbcor   = ! git co --ours # during rebase conflict, select changes from remote
   rba     = ! git rb --abort # abort rebase
-  rbc     = ! git rebasec # continue rebase
+  rbc     = ! git rb --continue # continue rebase
   rbi     = ! nb=$1 && shift && git rb -i HEAD~$nb # git rbi x --> interactively manage x last commits
   rebasei = ! git rbi
 
