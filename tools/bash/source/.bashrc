@@ -56,10 +56,10 @@ if [ "$current_shell" = "bash" ]; then
 
   source "${MAIN_BASHRC_ROOT}/path.sh"
 elif [ "$current_shell" = "zsh" ]; then
-  setopt aliases
-
   # if shell is interactif
   if [[ -o login ]]; then
+    setopt aliases
+
     bindkey '^[OD' backward-word      # Ctrl-Left
     bindkey '^[OC' forward-word       # Ctrl-Right
     bindkey '^[[1;5D' backward-word   # Ctrl-Left
