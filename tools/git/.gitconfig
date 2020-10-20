@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.10'
+  cv = ! echo 'gitconfig 2.0.11'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -105,7 +105,7 @@
 
   addu = ! "cd -- ${GIT_PREFIX:-.}; git au"
   add-update = ! "cd -- ${GIT_PREFIX:-.}; git au"
-  add-chmodx = ! "cd -- ${GIT_PREFIX:-.}; gti ax"
+  add-chmodx = ! "cd -- ${GIT_PREFIX:-.}; git ax"
   add-all = ! "cd -- ${GIT_PREFIX:-.}; git aa"
 
   # COMMIT
