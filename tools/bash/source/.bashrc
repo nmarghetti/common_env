@@ -104,6 +104,7 @@ if [ "$current_shell" = "bash" ]; then
 
     # pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
     # pathAppend "$APPS_COMMON/msys64/usr/bin" 2>/dev/null
+    pathAppend "/mingw64/bin"
     pathPrepend "$APPS_COMMON/cmake/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/make/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/node" 2>/dev/null

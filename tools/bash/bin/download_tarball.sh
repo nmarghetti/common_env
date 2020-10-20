@@ -16,7 +16,7 @@ Usage: download_tarball [option] url
     -o <filename>: output tarball filename (guest from last part of url if empty)
     -d <path>: directory where to extract
     -m <dirname>: directory name where files are extracted, if specified move all files from there back to extract directory
-    -t <type>: type of tarball: zip, tgz, exe (automatically guest by extension)
+    -t <type>: type of tarball: zip, tgz, zst, exe (automatically guest by extension)
     -h: display this help message
 
 Example:
@@ -45,7 +45,7 @@ download_tarball() {
     m) extracted_directory=$OPTARG ;;
     t)
       case "$OPTARG" in
-      zip | tgz | exe) tarball_type=$OPTARG ;;
+      zip | tgz | zst | exe) tarball_type=$OPTARG ;;
       *)
         download_tarball_usage "Error: unsupported tarball type: '$tarball_type'."
         return 2
@@ -115,6 +115,7 @@ download_tarball() {
       *zip) tarball_type="zip" ;;
       *tar\.gz) tarball_type="tgz" ;;
       *tar\.xz) tarball_type="txz" ;;
+      *zst) tarball_type="zst" ;;
       *)
         echo "Error: unable to find the type of tarball with the extension: '${tarball#*.}'"
         return 1
@@ -132,6 +133,7 @@ download_tarball() {
       zip) cmd="unzip '$tarball' -d '${directory%/}/'" ;;
       tgz) cmd="tar -xvf '$tarball' -C '${directory%/}/'" ;;
       txz) cmd="tar -xvJf '$tarball' -C '${directory%/}/'" ;;
+      zst) cmd="tar -I zstd -xvf '$tarball' -C '${directory%/}/'" ;;
       esac
       eval "$cmd" | awk 'BEGIN {ORS="."} {print "."}' || err=1
       echo

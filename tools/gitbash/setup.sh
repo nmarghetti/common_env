@@ -11,7 +11,7 @@ function setup_gitbash() {
 
   # Install Git for Windows
   if [[ ! -f "$git_path/bin/git.exe" ]]; then
-    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.28.0.windows.1/PortableGit-2.28.0-64-bit.7z.exe"
+    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.29.0.windows.1/PortableGit-2.29.0-64-bit.7z.exe"
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return $ERROR
 
@@ -24,22 +24,29 @@ function setup_gitbash() {
 
   # Install curl, rsync
   local extra_tools=(
-    'curl:curl-7.69.1-1-x86_64.pkg.tar.xz'
-    'rsync:rsync-3.1.3-1-x86_64.pkg.tar.xz'
+    'msys-zstd-1.dll:libzstd-1.4.5-2-x86_64.pkg.tar.xz'
+    'zstd.exe:zstd-1.4.5-2-x86_64.pkg.tar.xz'
+    'msys-xxhash-0.8.0.dll:libxxhash-0.8.0-1-x86_64.pkg.tar.zst'
+    # 'msys-metalink-3.dll:libmetalink-0.1.3-3-x86_64.pkg.tar.zst'
+    # 'msys-curl-4.dll:libcurl-7.71.1-1-x86_64.pkg.tar.zst'
+    # 'curl.exe:curl-7.71.1-1-x86_64.pkg.tar.zst'
+    'rsync.exe:rsync-3.2.2-2-x86_64.pkg.tar.zst'
   )
   # Install extra tools from ini
   extra_tools+=($(git config -f "$HOME/.common_env.ini" --get-all gitbash.msystool | tr '\n' ' '))
 
   local index
   local tool
+  local toolfile
   for index in $(seq 0 $(expr ${#extra_tools[@]} - 1)); do
     tool=$(basename "$(echo "${extra_tools[$index]}" | cut -d: -f1)" .exe)
     [[ -z "$tool" ]] && continue
     tarball=$(echo "${extra_tools[$index]}" | cut -d: -f2)
-    if [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${tool}.exe" ]]; then
+    toolfile=$(echo "${extra_tools[$index]}" | cut -d: -f1)
+    if [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${toolfile}" ]]; then
       echoColor 36 "Adding ${tool}..."
       download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/$tarball"
-      [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${tool}.exe" ]] && echo "Error while installing ${tool}..." && return $ERROR
+      [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${toolfile}" ]] && echo "Error while installing ${tool}..." && return $ERROR
     fi
   done
 
