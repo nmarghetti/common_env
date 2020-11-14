@@ -7,7 +7,7 @@ function setup_node() {
   # Install NodeJs
   if [[ ! -f "$nodejs_path/node.exe" ]]; then
     mkdir -vp "$nodejs_path"
-    download_tarball -e -d "$nodejs_path" -m "node-v12.14.1-win-x64" "https://nodejs.org/dist/v12.14.1/node-v12.14.1-win-x64.zip"
+    download_tarball -e -d "$nodejs_path" -m "node-v12.19.0-win-x64" "https://nodejs.org/download/release/v12.19.0/node-v12.19.0-win-x64.zip"
   fi
   [[ ! -f "$nodejs_path/node.exe" ]] && echo "Binary file not installed" && return $ERROR
 
