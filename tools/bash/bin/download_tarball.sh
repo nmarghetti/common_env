@@ -135,7 +135,7 @@ download_tarball() {
       txz) cmd="tar -xvJf '$tarball' -C '${directory%/}/'" ;;
       zst) cmd="tar -I zstd -xvf '$tarball' -C '${directory%/}/'" ;;
       esac
-      eval "$cmd" | awk 'BEGIN {ORS="."} {print "."}' || err=1
+      eval "$cmd" | awk 'BEGIN {ORS="."; limit=40; for(c=0; c<limit*2;c++){back=back"\b"; space=space" ";} } {print "."; if (NR % limit == 0) printf back space back }' || err=1
       echo
       [[ -n "$extracted_directory" ]] && (
         cd "$directory" && cd "$extracted_directory" && mv * ../ && cd .. && rmdir "$extracted_directory"
