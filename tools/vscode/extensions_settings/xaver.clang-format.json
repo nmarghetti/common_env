@@ -1,0 +1,8 @@
+{
+  "clang-format.executable": "${env.APPS_ROOT}\\PortableApps\\CommonFiles\\node\\clang-format",
+
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.formatOnSave": true
+  }
+}

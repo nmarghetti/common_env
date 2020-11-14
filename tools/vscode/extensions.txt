@@ -5,7 +5,7 @@ foxundermoon.shell-format                  : Shell formatter
 tyriar.shell-launcher                      : Multi shell terminal
 dbaeumer.vscode-eslint                     : Javascript linter
 davidanson.vscode-markdownlint             : Markdown linter
-shd101wyy.markdown-preview-enhanced     : Markdown preview with Github style
+shd101wyy.markdown-preview-enhanced        : Markdown preview with Github style
 alanwalk.markdown-toc                      : Markdown Table of content generation
 dzannotti.vscode-babel-coloring            : Javascript Babel syntax coloring
 waderyan.gitblame                          : Git blame

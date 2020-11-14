@@ -23,90 +23,15 @@
   "search.exclude": {
     "**/build": true
   },
-
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[cpp]": {
-    "editor.defaultFormatter": "xaver.clang-format",
-    "editor.formatOnSave": true
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
   "[log]": {
     "files.trimTrailingWhitespace": false,
     "editor.formatOnSave": false
   },
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.python",
-    "editor.formatOnSave": true
-  },
-  "[shellscript]": {
-    "editor.defaultFormatter": "foxundermoon.shell-format",
-    "editor.formatOnSave": true
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
 
   "workbench.colorTheme": "Visual Studio Dark",
 
-  // Prettier
-  "prettier.bracketSpacing": true,
-  "prettier.endOfLine": "lf",
-  "prettier.htmlWhitespaceSensitivity": "css",
-  "prettier.insertPragma": false,
-  "prettier.jsxBracketSameLine": false,
-  "prettier.jsxSingleQuote": false,
-  "prettier.printWidth": 140,
-  "prettier.proseWrap": "preserve",
-  "prettier.quoteProps": "as-needed",
-  "prettier.requirePragma": false,
-  "prettier.semi": true,
-  "prettier.singleQuote": true,
-  "prettier.tabWidth": 2,
-  "prettier.trailingComma": "all",
-  "prettier.useTabs": false,
-  "prettier.vueIndentScriptAndStyle": false,
-
-  // Python
-  "python.venvPath": "${env:HOME}/.venv",
-  "python.pythonPath": "${env:HOME}/.venv/3.8.2/Scripts/python.exe",
-  "python.formatting.provider": "autopep8",
-  "python.formatting.autopep8Args": [
-    "--indent-size=2",
-    "--max-line-length=140"
-  ],
-  "python.linting.pylintEnabled": false,
-  "python.linting.enabled": true,
-  "python.linting.lintOnSave": true,
-
   // Javascript
   "javascript.preferences.quoteStyle": "single",
-
-  // Git blame
-  "gitblame.infoMessageFormat": "${author.name} (${time.ago}): ${commit.summary}",
-  "gitblame.statusBarMessageFormat": "${commit.hash_short,6} ${author.name} (${time.ago}): ${commit.summary}",
 
   // Terminal
   "terminal.integrated.shell.windows": "bash.exe",
@@ -117,59 +42,8 @@
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.scrollback": 10000,
 
-  // Shell launcher for several terminal configuration
-  "shellLauncher.shells.windows": [
-    {
-      "shell": "cmd.exe",
-      "label": "cmd"
-    },
-    {
-      "shell": "cmd.exe",
-      "args": [
-        "/k",
-        "${env:APPS_ROOT}/PortableApps/cmder/vendor/bin/vscode_init.cmd"
-      ],
-      "label": "Cmder"
-    },
-    {
-      "shell": "wsl.exe",
-      "label": "WSL"
-    },
-    {
-      "shell": "powershell.exe",
-      "label": "PowerShell"
-    },
-    {
-      "shell": "powershell.exe",
-      "args": [
-        "-ExecutionPolicy",
-        "Bypass",
-        "-NoLogo",
-        "-NoProfile",
-        "-NoExit",
-        "-Command",
-        ". '${env:APPS_ROOT}\\PortableApps\\cmder\\vendor\\conemu-maximus5\\\\..\\\\profile.ps1'"
-      ],
-      "label": "Cmder powershell"
-    },
-    {
-      "shell": "bash.exe",
-      "args": ["--init-file", "${env:HOME}/.bashrc"],
-      "label": "Git_bash"
-    },
-    {
-      "shell": "${env:APPS_ROOT}\\PortableApps\\PuTTY\\PUTTY.EXE",
-      "args": ["-load", "remote", "-t"],
-      "label": "putty"
-    }
-  ],
-
   // C/C++
   "C_Cpp.intelliSenseEngine": "Default",
-  "clang-format.executable": "${env.APPS_ROOT}\\PortableApps\\CommonFiles\\node\\clang-format",
-
-  // Remote development
-  "remote.SSH.configFile": "%APPS_ROOT%/home/.ssh/config",
 
   // END - GENERATED CONTENT, DO NOT EDIT !!!
 
