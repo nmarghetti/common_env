@@ -29,11 +29,6 @@ function setup_vscode() {
 }
 EOM
   fi
-  local content="$("$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=content "$SETUP_TOOLS_ROOT/vscode/settings.json" | sed -re 's#\\#\\\\#g')"
-  local settings="$(cat "$setting_path")"
-  echo "$settings" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v content="$content" >|"$setting_path"
-  sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" "$setting_path"
-
   # Setup VSCode key bindings
   local keybindings_path="$VSCodeData/user-data/User/keybindings.json"
   [[ ! -f "$keybindings_path" ]] && cp -vf "$SETUP_TOOLS_ROOT/vscode/keybindings.json" "$keybindings_path"
@@ -61,6 +56,7 @@ EOM
       [[ ! "${extensions["$extension"]}" == "0" ]] && extensions["$extension"]=1
     fi
   done
+
   # Check extensions
   local certificate_error=0
   local changed_settings_ssl=0
@@ -73,6 +69,7 @@ EOM
     fi
     [ -z "$extension" ] && continue
     echoColor 36 "Checking extension $extension_name..."
+    # Install extension if not already installed
     echo ${installed_extensions[@]} | tr ' ' '\n' | grep -iE "^$extension_name$" &>/dev/null && continue
     if [ $certificate_error -eq 1 ]; then
       [ ! "$(echo "$extension" | tr '.' '\n' | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')" = "vsix" ] && echo "Skipping '$extension' due to certificate error" && continue
@@ -92,6 +89,28 @@ EOM
   #done <<< $(cat "$extension_to_install")
   #done < <(cat "$extension_to_install")
   #done <"$extension_to_install"
+
+  # Set VSCode settings with all installed extension
+  echo "Configuring settings..."
+  installed_extensions=$(cat <<<$("$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --list-extensions))
+  # Always remember to double backslash anytime you manipulate the settings content: ... | sed -re 's#\\#\\\\#g'
+  local settings_content="$("$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=content "$SETUP_TOOLS_ROOT/vscode/settings.json" | sed -re 's#\\#\\\\#g')"
+  local extension_settings_content
+  local lextension
+  for extension in $installed_extensions; do
+    echoColor 36 "Checking $extension..."
+    lextension=$(echo "$extension" | tr '[:upper:]' '[:lower:]')
+    local extension_setting="$SETUP_TOOLS_ROOT/vscode/extensions_settings/$lextension.json"
+    if [[ -f "$extension_setting" ]]; then
+      extension_settings_content="$(sed '1d;$d' "$extension_setting" | sed -re 's#\\#\\\\#g'),"
+      settings_content=$(echo -e "$settings_content\n\n  // $extension\n$extension_settings_content\n\n" | sed -re 's#\\#\\\\#g')
+    fi
+  done
+  # Update settings
+  local settings="$(cat "$setting_path")"
+  echo "$settings" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v content="$settings_content" >|"$setting_path"
+  sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" "$setting_path"
+
   [ $changed_settings_ssl -eq 1 ] && sed -i -re 's/"http.proxyStrictSSL": false/"http.proxyStrictSSL": true/' "$setting_path"
   rm -f "$tmp_log"
 }

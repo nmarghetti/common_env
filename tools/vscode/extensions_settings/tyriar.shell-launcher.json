@@ -1,0 +1,47 @@
+{
+  "shellLauncher.shells.windows": [
+    {
+      "shell": "cmd.exe",
+      "label": "cmd"
+    },
+    {
+      "shell": "cmd.exe",
+      "args": [
+        "/k",
+        "${env:APPS_ROOT}/PortableApps/cmder/vendor/bin/vscode_init.cmd"
+      ],
+      "label": "Cmder"
+    },
+    {
+      "shell": "wsl.exe",
+      "label": "WSL"
+    },
+    {
+      "shell": "powershell.exe",
+      "label": "PowerShell"
+    },
+    {
+      "shell": "powershell.exe",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-NoLogo",
+        "-NoProfile",
+        "-NoExit",
+        "-Command",
+        ". '${env:APPS_ROOT}\\PortableApps\\cmder\\vendor\\conemu-maximus5\\\\..\\\\profile.ps1'"
+      ],
+      "label": "Cmder powershell"
+    },
+    {
+      "shell": "bash.exe",
+      "args": ["--init-file", "${env:HOME}/.bashrc"],
+      "label": "Git_bash"
+    },
+    {
+      "shell": "${env:APPS_ROOT}\\PortableApps\\PuTTY\\PUTTY.EXE",
+      "args": ["-load", "remote", "-t"],
+      "label": "putty"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "gitblame.infoMessageFormat": "${author.name} (${time.ago}): ${commit.summary}",
+  "gitblame.statusBarMessageFormat": "${commit.hash_short,6} ${author.name} (${time.ago}): ${commit.summary}"
+}
