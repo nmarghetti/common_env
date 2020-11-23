@@ -4,28 +4,38 @@
 
 # create_env [python_bin] [version]
 function create_env() {
+  if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+    echo "pycreate [path_to_python] [venv_name]"
+    echo 'eg. pycreate "$(which python)" "3.9.0"'
+    return 1
+  fi
   local pythonbin="python"
+  # python 3 is used with python3 under macOS
+  which python3 &>/dev/null
+  [[ $? -eq 0 ]] && pythonbin="python3"
   which "$1" &>/dev/null
   if [ $? -eq 0 ]; then
     pythonbin=$(which "$1")
     shift
     unset PYTHONHOME PYTHONPATH
   fi
-  local version=$1
-  if [ -z "$version" ]; then
-    version=$("$pythonbin" --version 2>&1 | cut -d' ' -f2 | tr -d '[[:space:]]')
+  local version=$("$pythonbin" --version 2>&1 | cut -d' ' -f2 | tr -d '[[:space:]]')
+  local env_name=$1
+  if [ -z "$env_name" ]; then
+    env_name=$version
   fi
   echo "python bin path: '$pythonbin'"
   echo "python version: '$version'"
-  if [[ ! "$version" =~ ^[-.a-zA-Z0-9]+$ ]]; then
-    echo "Version '$version' is not valid"
+  echo "python env name: '$env_name'"
+  if [[ ! "$env_name" =~ ^[-.a-zA-Z0-9]+$ ]]; then
+    echo "Env name '$env_name' is not valid"
     return 1
   fi
   local major_version=$(echo $version | cut -b 1)
   cd && mkdir -p .venv && cd ".venv"
   test $? -ne 0 && echo "Unable to go to .venv in home directory" && return 1
-  test -d "$version" && echo "Version '$version' already exist" && return 1
-  echo "Create python env '$PWD/$version'"
+  test -d "$env_name" && echo "Python venv '$env_name' already exist" && return 1
+  echo "Create python env '$PWD/$env_name'"
   if [ "$major_version" = "2" ]; then
     # for python 2
     "$pythonbin" -m virtualenv -h &>/dev/null
@@ -33,13 +43,16 @@ function create_env() {
       "$pythonbin" -m pip install virtualenv && "$pythonbin" -m virtualenv -h &>/dev/null
       [ $? -ne 0 ] && echo "Unable to install virtualenv" && return 1
     fi
-    "$pythonbin" -m virtualenv "$version"
+    "$pythonbin" -m virtualenv "$env_name"
   else
     # for python 3
-    "$pythonbin" -m venv "$version"
+    "$pythonbin" -m venv "$env_name"
   fi
-  [ -d "$major_version" ] && rm -rf "$major_version" # Delete if it is a folder (no symlink on Windows)
-  ln -sf "$version" "$major_version"
+  local env_first_letter=$(echo $env_name | cut -b 1)
+  if [[ "$env_first_letter" == "2" ]] || [[ "$env_first_letter" == "3" ]]; then
+    [ -d "$env_first_letter" ] && rm -rf "$env_first_letter" # Delete if it is a folder (no symlink on Windows)
+    ln -sf "$env_name" "$env_first_letter"
+  fi
 }
 
 function set_env() {
