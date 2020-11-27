@@ -108,6 +108,7 @@ if [ "$current_shell" = "bash" ]; then
     pathPrepend "$APPS_COMMON/cmake/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/make/bin" 2>/dev/null
     pathPrepend "$APPS_COMMON/node" 2>/dev/null
+    pathPrepend "$APPS_COMMON/gradle/bin" 2>/dev/null
     [ -f "$WIN_APPS_COMMON/python/python.exe" ] && export PYTHONUSERBASE="$WINDOWS_APPS_COMMON\\python"
     pathPrepend "$APPS_COMMON/python/Python38/Scripts" 2>/dev/null
     pathPrepend "$APPS_COMMON/python/Scripts" 2>/dev/null

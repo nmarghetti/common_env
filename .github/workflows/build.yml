@@ -45,6 +45,10 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
+      # Upgrade bash on Mac
+      - name: Upgrade bash on Mac
+        if: runner.os == 'macOs'
+        run: brew install bash
       # Check system on Linux and Mac
       - name: Check system on Linux and Mac
         if: runner.os == 'Linux' || runner.os == 'macOs'

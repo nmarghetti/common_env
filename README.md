@@ -110,6 +110,7 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Python** (2.7)
 - **Python** (3.8) (~50M)
 - **Node.js** (~65M)
+- **Gradle** (~110M)
 - **Cygwin**
 - **XAMPP**
 

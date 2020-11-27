@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 system_get_os() {
   local os=

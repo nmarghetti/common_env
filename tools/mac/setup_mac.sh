@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # Check it is ran with bash
 if [ ! "$(basename "$SHELL")" = "bash" ]; then

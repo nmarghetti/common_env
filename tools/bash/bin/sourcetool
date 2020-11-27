@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 [ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
 
@@ -15,7 +15,7 @@ fi
 
 mkdir -p "${SOURCETOOL_BIN}"
 
-"${SOURCETOOL_ROOT}/toolupdatelink.sh" "${SOURCETOOL_BIN}" > /dev/null
+"${SOURCETOOL_ROOT}/toolupdatelink.sh" "${SOURCETOOL_BIN}" >/dev/null
 
 if ! echo ${PATH} | grep -E -q "(^|:)${SOURCETOOL_BIN}(\$|:)"; then
   export PATH=${PATH}:${SOURCETOOL_BIN}

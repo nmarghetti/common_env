@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 get_path_to_windows() {
   [ -z "$1" ] && echo "Need the path as first parameter" >&2 && return 1

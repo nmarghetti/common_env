@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 function setup_putty() {
   local ERROR=$SETUP_ERROR_CONTINUE

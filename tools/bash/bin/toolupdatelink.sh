@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 [ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
 
@@ -29,8 +29,8 @@ LINK_PATH=${SCRIPT_DIR}
 if [ ! -z "$1" ]; then
   DEST_DIR=$(cd "$1" 2>/dev/null && pwd)
   [[ ! -d "${DEST_DIR}" ]] && exitMsg "Destination directory '${1}' doest not exist"
-  echo "last_dir=${DEST_DIR}" >| "${SAVE_FILE}"
-  elif [ -f "${SAVE_FILE}" ]; then
+  echo "last_dir=${DEST_DIR}" >|"${SAVE_FILE}"
+elif [ -f "${SAVE_FILE}" ]; then
   DEST_DIR=$(grep 'last_dir=' "${SAVE_FILE}" | head -1 | cut -d= -f2)
   [[ ! -d "${DEST_DIR}" ]] && exitMsg "Destination directory '${1}' taken from '${SAVE_FILE}' doest not exist"
 else
@@ -57,4 +57,3 @@ if ! echo $PATH | grep -E -q "(^|:)${DEST_DIR}(\$|:)"; then
   echo "Add '${DEST_DIR}' is in your path:"
   echo "export PATH=\$PATH:${DEST_DIR}"
 fi
-

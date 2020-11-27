@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 [ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
 
