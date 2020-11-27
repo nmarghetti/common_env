@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # https://www.jetbrains.com/help/pycharm/installation-guide.html#standalone
 function setup_pycharm() {

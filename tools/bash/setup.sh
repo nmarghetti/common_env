@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # article about bash and zsh startup scripts https://tanguy.ortolo.eu/blog/article25/shrc
 
@@ -13,7 +13,7 @@ function setup_bash() {
     if [[ ! -f "$HOME/$shellrc" ]]; then
       echo "Create $HOME/$shellrc"
       cat >"$HOME/$shellrc" <<EOM
-#! /bin/bash
+#! /usr/bin/env bash
 
 # BEGIN - GENERATED CONTENT, DO NOT EDIT !!!
 # END - GENERATED CONTENT, DO NOT EDIT !!!

@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # Crazy stuff to check about bash there:
 # https://github.com/niieani/bash-oo-framework
@@ -7,10 +7,12 @@
 # https://github.com/mnorin/bash-scripts/tree/master/objects
 
 # Check it is ran with bash
-if [[ ! "$(basename "$SHELL")" = "bash" ]]; then
+if [[ ! "$(basename "$SHELL" .exe)" = "bash" ]]; then
   echo "Please run with: bash $0" >&2
   exit 1
 fi
+
+[[ "$(echo "$BASH_VERSION" | cut -b 1)" -lt 4 ]] && echo "Please use bash 4 or above" && exit 1
 
 export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
 [[ "$COMMON_ENV_FULL_DEBUG" == "1" ]] && eval "$COMMON_ENV_DEBUG_CMD"
@@ -68,7 +70,8 @@ usage() {
   echo "    putty: install PuTTY 0.73" 1>&2
   echo "    superputty: install SuperPuTTY 1.4.0.9" 1>&2
   echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2
-  echo "    node: install NodeJs 2.14.1" 1>&2
+  echo "    node: install NodeJs 12.19.0" 1>&2
+  echo "    gradle: install Gradle 6.7.1" 1>&2
   echo "    cygwin: install Cygwin" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
@@ -91,7 +94,7 @@ while [[ $# -gt 0 ]]; do
   bash | git | gitbash | pacman | portableapps | python)
     APPS="$APPS $1"
     ;;
-  pacman | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | xampp)
+  pacman | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | gradle | xampp)
     APPS="$APPS $1"
     ;;
   # cpp)

@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # Check documentation https://github.com/msys2/msys2/wiki/MSYS2-installation
 # https://solarianprogrammer.com/2019/11/05/install-gcc-windows/

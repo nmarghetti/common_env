@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 function setup_python2() {
   local ERROR=$SETUP_ERROR_CONTINUE

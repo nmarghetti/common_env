@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # Remove all given paths from $PATH, or the variable of the first arg if it starts with %, eg. %LD_LIBRARY_PATH
 # a given can be multiple if contaning ':', in that case each path is removed one by one
@@ -68,8 +68,8 @@ function pathAdd() {
         # Check the path exist
         if [ ! -d "$pathToAdd" ]; then
           echo "Unable to add path that does not exist: '$pathToAdd'" >&2
-          # Check the path is not already added
-          elif echo ${path} | grep -qE "(^|:)${pathToAdd}(:|\$)"; then
+        # Check the path is not already added
+        elif echo ${path} | grep -qE "(^|:)${pathToAdd}(:|\$)"; then
           echo "Warn: adding several time the same path '$pathToAdd'" >&2
         else
           path=$path:$pathToAdd
@@ -102,6 +102,6 @@ function pathPrepend() {
 }
 
 # display the path
-function pathList () {
+function pathList() {
   echo "$PATH" | tr ":" "\n"
 }

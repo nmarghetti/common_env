@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # Check documentation https://docs.python.org/3/using/windows.html#installing-without-ui
 # pip install location https://pip.pypa.io/en/latest/user_guide/#user-installs

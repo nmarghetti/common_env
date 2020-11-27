@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # https://github.com/git/git/blob/v2.26.0/Documentation/gittutorial.txt
 function setup_gitbash() {

@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 function setup_windows_path() {
   if [ $(echo "$PATH" | grep 'PortableApps/PortableGit/bin' | grep -c 'PortableApps/home/.venv/') -eq 0 ]; then

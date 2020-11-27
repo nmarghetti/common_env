@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 function setup_xampp() {
   local ERROR=$SETUP_ERROR_CONTINUE

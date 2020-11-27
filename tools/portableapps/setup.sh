@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 # https://portableapps.com/manuals/PortableApps.comLauncher/ref/paf/appinfo.html
 function setup_portableapps() {
   local app_path="$APPS_ROOT/PortableApps/PortableApps.com"
