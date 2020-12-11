@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.11'
+  cv = ! echo 'gitconfig 2.0.12'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -392,7 +392,7 @@
 
   # TOOLS
   brcurrent = symbolic-ref --short HEAD # gives current branch
-  defbr = ! repo=$1 && (shift || (echo "defbr needs the remote repo" >&2 && exit 1)) && shift && git remote show $repo | grep 'HEAD branch' | cut -d: -f2 | tr -d '[:space:]' # Get default remote branch
+  defbr = ! repo=$1 && (shift || (echo "defbr needs the remote repo" >&2 && exit 1)) && shift && git remote show $repo | grep 'HEAD' | head -1 | cut -d: -f2 | tr -d '[:space:]' # Get default remote branch
   defbro = ! git defbr origin
   defbru = ! git defbr upstream
   remotebr = ! repo=$1 && (shift || (echo "remotebr needs the remote repo" >&2 && exit 1)) && shift && git ls-remote --heads $repo | tr '[[:space:]]' '\n' | grep refs/heads | cut -d'/' -f3 # List remote branch
