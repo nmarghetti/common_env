@@ -1,7 +1,4 @@
 {
-  // BEGIN - GENERATED CONTENT, DO NOT EDIT !!!
-
-  // VSCode
   "extensions.autoUpdate": false,
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
@@ -30,22 +27,13 @@
 
   "workbench.colorTheme": "Visual Studio Dark",
 
-  // Javascript
   "javascript.preferences.quoteStyle": "single",
 
-  // Terminal
   "terminal.integrated.shell.windows": "bash.exe",
   "terminal.integrated.shellArgs.windows": [
     "--init-file",
     "${env:HOME}/.bashrc"
   ],
   "terminal.integrated.copyOnSelection": true,
-  "terminal.integrated.scrollback": 10000,
-
-  // C/C++
-  "C_Cpp.intelliSenseEngine": "Default",
-
-  // END - GENERATED CONTENT, DO NOT EDIT !!!
-
-  "http.proxyStrictSSL": true
+  "terminal.integrated.scrollback": 10000
 }

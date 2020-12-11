@@ -43,9 +43,9 @@ if [ $NEED_INSTALL -eq 1 ]; then
   brew install gnu-sed >&2   # gsed
   brew install gawk >&2      # gawk
   brew install findutils >&2 # gxargs
-  # type greadlink gecho gsed gawk gxargs
 
-  # Check installtion
+  # Check installation
+  type greadlink gecho gsed gawk gxargs
   greadlink -f "$0" | gxargs -I '{}' --no-run-if-empty gecho -en "args: \e[33m{}\e[0m" | gsed -re 's/args/script/' | gawk '{ print $0 }'
 fi
 

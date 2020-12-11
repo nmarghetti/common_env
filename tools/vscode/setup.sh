@@ -29,10 +29,6 @@ function setup_vscode() {
 }
 EOM
   fi
-  # Setup VSCode key bindings
-  local keybindings_path="$VSCodeData/user-data/User/keybindings.json"
-  [[ ! -f "$keybindings_path" ]] && cp -vf "$SETUP_TOOLS_ROOT/vscode/keybindings.json" "$keybindings_path"
-
   # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeLauncher" "$APPS_ROOT/PortableApps/"
 
@@ -48,7 +44,8 @@ EOM
     extensions[$extension]=1
   done
   # Handle requested wanted/unwanted extensions
-  for extension in $(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g"); do
+  for extension in $(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension); do
+    extension=$(echo "$extension" | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
     if [[ "$(echo "$extension" | cut -b 1)" == "-" ]]; then
       extension=$(echo "$extension" | cut -b 2-)
       extensions["$extension"]=0
@@ -56,6 +53,10 @@ EOM
       [[ ! "${extensions["$extension"]}" == "0" ]] && extensions["$extension"]=1
     fi
   done
+
+  # for extension in "${!extensions[@]}"; do
+  #   echo "$extension: ${extensions["$extension"]}"
+  # done
 
   # Check extensions
   local certificate_error=0
@@ -92,24 +93,35 @@ EOM
 
   # Set VSCode settings with all installed extension
   echo "Configuring settings..."
+  local custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension-settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
   installed_extensions=$(cat <<<$("$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --list-extensions))
   # Always remember to double backslash anytime you manipulate the settings content: ... | sed -re 's#\\#\\\\#g'
-  local settings_content="$("$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=content "$SETUP_TOOLS_ROOT/vscode/settings.json" | sed -re 's#\\#\\\\#g')"
-  local extension_settings_content
+  local common_settings="$SETUP_TOOLS_ROOT/vscode/settings/settings.json"
+  [[ -n "$custom_settings" ]] && [[ -f "$custom_settings/settings.json" ]] && common_settings="$custom_settings/settings.json"
+  local settings_content="$(echo -e "\n  // VSCode")\n$(sed '1d;$d' "$common_settings" | sed -re 's#\\#\\\\#g'),"
+
   local lextension
+  local extra_settings_content
   for extension in $installed_extensions; do
     echoColor 36 "Checking $extension..."
     lextension=$(echo "$extension" | tr '[:upper:]' '[:lower:]')
-    local extension_setting="$SETUP_TOOLS_ROOT/vscode/extensions_settings/$lextension.json"
+    local extension_setting="$SETUP_TOOLS_ROOT/vscode/settings/$lextension.json"
+    [[ -n "$custom_settings" ]] && [[ -f "$custom_settings/$lextension.json" ]] && extension_setting="$custom_settings/$lextension.json"
     if [[ -f "$extension_setting" ]]; then
-      extension_settings_content="$(sed '1d;$d' "$extension_setting" | sed -re 's#\\#\\\\#g'),"
-      settings_content=$(echo -e "$settings_content\n\n  // $extension\n$extension_settings_content\n\n" | sed -re 's#\\#\\\\#g')
+      extra_settings_content="$(sed '1d;$d' "$extension_setting" | sed -re 's#\\#\\\\#g'),"
+      settings_content=$(echo -e "$settings_content\n\n  // $extension\n$extra_settings_content\n\n" | sed -re 's#\\#\\\\#g')
     fi
   done
   # Update settings
   local settings="$(cat "$setting_path")"
   echo "$settings" | "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v content="$settings_content" >|"$setting_path"
   sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" "$setting_path"
+
+  # Setup VSCode key bindings
+  local keybindings_path="$VSCodeData/user-data/User/keybindings.json"
+  local keybindings="$SETUP_TOOLS_ROOT/vscode/settings/keybindings.json"
+  [[ -n "$custom_settings" ]] && [[ -f "$custom_settings/keybindings.json" ]] && keybindings="$custom_settings/keybindings.json"
+  [[ ! -f "$keybindings_path" ]] && cp -vf "$keybindings" "$keybindings_path"
 
   [ $changed_settings_ssl -eq 1 ] && sed -i -re 's/"http.proxyStrictSSL": false/"http.proxyStrictSSL": true/' "$setting_path"
   rm -f "$tmp_log"

@@ -35,5 +35,8 @@ if "%COMMON_ENV_INSTALL_APPS_ROOT%" EQU "." (
   )
   setup.cmd
 ) else (
-  %COMMON_ENV_INSTALL_APPS_ROOT%\Documents\dev\common_env\tools\setup.cmd
+  if not exist setup.ini (
+    copy "%COMMON_ENV_INSTALL_APPS_ROOT%\Documents\dev\common_env\tools\setup.ini" setup.ini
+  )
+  "%COMMON_ENV_INSTALL_APPS_ROOT%\Documents\dev\common_env\tools\setup.cmd"
 )

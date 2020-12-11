@@ -2,12 +2,12 @@
 
 ---
 
-<!-- TOC -->
+<!-- TOC depthFrom:2 -->
 
-- [**Setup**](#setup)
-  - [**Steps**](#steps)
-  - [**Installation**](#installation)
-  - [**Known installation issues**](#known-installation-issues)
+- [**Steps**](#steps)
+- [**Installation**](#installation)
+- [**Custom VSCode settings**](#custom-vscode-settings)
+- [**Known installation issues**](#known-installation-issues)
 
 <!-- /TOC -->
 
@@ -31,13 +31,24 @@ Here are the steps to follow during the installation.
 
 You should end up with a folder structure as follow:
 
-```text
-C:\PortableEnv
-├── Documents
-├── PortableApps
-├── Start.exe
-└── home
+<!--
+```puml
+@startsalt
+{
+  C:\PortableEnv
+  {T
+    +
+    ++ Documents
+    ++ PortableApps
+    ++ Start.exe
+    ++ home
+  }
+}
+@endsalt
 ```
+-->
+
+![Folder structure](http://www.plantuml.com/plantuml/svg/SoWkIImgAKxCAU6gvb9GSBQA2SWlAabCoabrpIi32bI7S2a0WJQ4r5PmoKykpKtDAoc62S2KEnOKmCM2GMRgfLQamWGoydD1x5gkMYw7rBmKi7K0)
 
 You can launch Start.exe to start PortableApps. From there you will be able to run Git bash terminal, the user's HOME would be the home folder above.
 
@@ -114,6 +125,21 @@ You can launch Start.exe to start PortableApps. From there you will be able to r
 
    ![Project properties](portable_env_setup_step_15.png)
 
+## **Custom VSCode settings**
+
+You can override the default VSCode settings, extension settings and key bindings by adding `vscode_settings` folder inspired from this [folder](https://github.com/nmarghetti/common_env/tree/master/tools/vscode/settings).
+
+```text
+C:/PortableEnv
+├── setup.cmd
+├── setup.ini
+└── vscode_settings
+    ├── esbenp.prettier-vscode.json
+    ├── foxundermoon.shell-format.json
+    ├── keybindings.json
+    └── settings.json
+```
+
 ## **Known installation issues**
 
 1. Your computer does not have wget nor curl installed
@@ -123,13 +149,13 @@ You can launch Start.exe to start PortableApps. From there you will be able to r
    ```text
      C:/PortableEnv
      ├── setup.cmd
-     └── setup.ini
+     |── setup.ini
      └── wget.exe
    ```
 
 1. Error during download (eg. 'unable to get local issuer certificate')
 
-   In that case you can manually download [PortableApps 16.1.1](https://portableapps.com/downloading/?a=PortableApps.comPlatform&s=s&d=pa&n=The%20PortableApps.com%20Platform&f=PortableApps.com_Platform_Setup_16.1.1.paf.exe) and [64-bit Git for Windows Portable 2.2.26](https://github.com/git-for-windows/git/releases/download/v2.26.0.windows.1/PortableGit-2.26.0-64-bit.7z.exe) and start again the installation. Notice that you should save the files as follow:
+   In that case you can manually download [PortableApps 17.1.1](https://portableapps.com/downloading/?a=PortableApps.comPlatform&s=s&d=pa&n=The%20PortableApps.com%20Platform&f=PortableApps.com_Platform_Setup_17.1.1.paf.exe) and [64-bit Git for Windows Portable 2.29.2](https://github.com/git-for-windows/git/releases/download/v2.29.2.windows.3/PortableGit-2.29.2.3-64-bit.7z.exe) and start again the installation. Notice that you should save the files as follow:
 
    ```text
      C:/PortableEnv
