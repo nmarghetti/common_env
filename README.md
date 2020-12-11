@@ -4,20 +4,19 @@
 
 ---
 
-<!-- TOC -->
+<!-- TOC depthFrom:2 -->
 
-- [Common env](#common-env)
-  - [Description](#description)
-  - [Setup](#setup)
-    - [Portable environment for Windows](#portable-environment-for-windows)
-    - [Common configuration only](#common-configuration-only)
-  - [Features](#features)
-  - [Git](#git)
-  - [Cmder](#cmder)
-    - [Cmder shortcuts](#cmder-shortcuts)
-  - [AutoHotkey](#autohotkey)
-    - [AutoHotkey shorcuts](#autohotkey-shorcuts)
-  - [Usefull links](#usefull-links)
+- [Description](#description)
+- [Setup](#setup)
+  - [Portable environment for Windows](#portable-environment-for-windows)
+  - [Common configuration only](#common-configuration-only)
+- [Features](#features)
+- [Git](#git)
+- [Cmder](#cmder)
+  - [Cmder shortcuts](#cmder-shortcuts)
+- [AutoHotkey](#autohotkey)
+  - [AutoHotkey shorcuts](#autohotkey-shorcuts)
+- [Usefull links](#usefull-links)
 
 <!-- /TOC -->
 

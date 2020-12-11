@@ -65,3 +65,13 @@ system_get_shells() {
     echo "Unable to find shells installed"
   fi
 }
+
+system_ping() {
+  local ping_option
+  case "$(system_get_os_host)" in
+  Windows) ping_option='-n 1 -w 1' ;;
+  Linux) ping_option='-c 1 -w 1' ;;
+  Mac) ping_option='-c 1 -t 1' ;;
+  esac
+  ping $ping_option "$@"
+}

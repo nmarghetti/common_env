@@ -1,0 +1,12 @@
+{
+  "remote.SSH.configFile": "%APPS_ROOT%/home/.ssh/config",
+  "remote.SSH.defaultExtensions": [
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "redhat.vscode-yaml",
+    "davidanson.vscode-markdownlint",
+    "alanwalk.markdown-toc",
+    "shd101wyy.markdown-preview-enhanced",
+    "foxundermoon.shell-format"
+  ]
+}

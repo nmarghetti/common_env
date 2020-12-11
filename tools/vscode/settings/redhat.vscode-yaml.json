@@ -1,0 +1,9 @@
+{
+  "yaml.format.enable": true,
+  "yaml.format.printWidth": 140,
+  "yaml.format.singleQuote": true,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true
+  }
+}

@@ -200,14 +200,8 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
   # Things not needed to be checked just after a setup
   if [ -f "$COMMON_ENV_LAST_CHECK" ]; then
     # Check for update if access to github
-    ping_option='--help'
-    case "$(system_get_os_host)" in
-    Windows) ping_option='-n 1 -w 1' ;;
-    Linux) ping_option='-c 1 -w 1' ;;
-    Mac) ping_option='-c 1 -t 1' ;;
-    esac
     check_update=1
-    ping $ping_option github.com &>/dev/null || check_update=0
+    system_ping github.com &>/dev/null || check_update=0
     if [ $check_update -eq 1 ]; then
       common_env_check_update
       [ ! "$current_commit" = "$(cd "$MAIN_BASHRC_ROOT" && git log -1 --pretty=format:%H)" ] && COMMON_ENV_CHANGED=1

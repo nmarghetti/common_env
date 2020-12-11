@@ -11,7 +11,7 @@ function setup_gitbash() {
 
   # Install Git for Windows
   if [[ ! -f "$git_path/bin/git.exe" ]]; then
-    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.29.0.windows.1/PortableGit-2.29.0-64-bit.7z.exe"
+    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.29.2.windows.3/PortableGit-2.29.2.3-64-bit.7z.exe"
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return $ERROR
 
@@ -27,13 +27,10 @@ function setup_gitbash() {
     'msys-zstd-1.dll:libzstd-1.4.5-2-x86_64.pkg.tar.xz'
     'zstd.exe:zstd-1.4.5-2-x86_64.pkg.tar.xz'
     'msys-xxhash-0.8.0.dll:libxxhash-0.8.0-1-x86_64.pkg.tar.zst'
-    # 'msys-metalink-3.dll:libmetalink-0.1.3-3-x86_64.pkg.tar.zst'
-    # 'msys-curl-4.dll:libcurl-7.71.1-1-x86_64.pkg.tar.zst'
-    # 'curl.exe:curl-7.71.1-1-x86_64.pkg.tar.zst'
     'rsync.exe:rsync-3.2.2-2-x86_64.pkg.tar.zst'
   )
   # Install extra tools from ini
-  extra_tools+=($(git config -f "$HOME/.common_env.ini" --get-all gitbash.msystool | tr '\n' ' '))
+  extra_tools+=($(git config -f "$HOME/.common_env.ini" --get-all gitbash.msystool 2>/dev/null | tr '\n' ' '))
 
   local index
   local tool
