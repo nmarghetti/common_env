@@ -124,7 +124,10 @@ if [[ -f "$HOME/.common_env.ini" ]]; then
     common_env_app=$(git config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
     [[ -n "$common_env_app" ]] && APPS="$DEFAULT_APPS $common_env_app"
   fi
-  [[ "$(git config -f "$HOME/.common_env.ini" --get install.sslcheck 2>/dev/null)" == "0" ]] && export DOWNLOAD_NO_SSL_CHECK=1
+  if [[ "$(git config -f "$HOME/.common_env.ini" --get install.sslcheck 2>/dev/null)" == "0" ]]; then
+    export DOWNLOAD_NO_SSL_CHECK=1
+    "$SETUP_TOOLS_ROOT/ssl_allow.sh"
+  fi
 fi
 
 # Ensure to have default apps (except if skipped)

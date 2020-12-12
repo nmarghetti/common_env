@@ -15,6 +15,10 @@ function setup_gitbash() {
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return $ERROR
 
+  # Allow Msys2 to use the proper Home: https://sourceforge.net/p/msys2/tickets/111/?page=2
+  # Replace db_home: env windows cygwin desc
+  sed -i -re "s#^db_home:.*#db_home: $(echo "$HOME" | sed -re 's/ /%_/g')#" /etc/nsswitch.conf
+
   # Install wget
   if [[ ! -f "$git_path/usr/bin/wget.exe" ]]; then
     echoColor 36 "Adding wget..."
