@@ -1,12 +1,14 @@
 #! /usr/bin/env bash
 
 function setup_pacman() {
+  local ERROR=$SETUP_ERROR_STOP
   # Install pacman
   if [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/pacman.exe" ]]; then
-    download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/pacman-5.2.1-6-x86_64.pkg.tar.xz"
-    download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/pacman-mirrors-20200329-1-any.pkg.tar.xz"
-    download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/msys2-keyring-r9.397a52e-1-any.pkg.tar.xz"
+    download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/pacman-5.2.2-4-x86_64.pkg.tar.xz" || exit $ERROR
+    download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/pacman-mirrors-20201208-1-any.pkg.tar.xz" || exit $ERROR
+    download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz" || exit $ERROR
 
+    echo "Initializing pacman keys..."
     pacman-key --init
     pacman-key --populate msys2
     pacman-key --refresh-keys
