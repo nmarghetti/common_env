@@ -8,7 +8,7 @@
       "shell": "cmd.exe",
       "args": [
         "/k",
-        "${env:APPS_ROOT}/PortableApps/cmder/vendor/bin/vscode_init.cmd"
+        "${env:APPS_ROOT}\\PortableApps\\cmder\\vendor\\bin\\vscode_init.cmd"
       ],
       "label": "Cmder"
     },
@@ -35,11 +35,11 @@
     },
     {
       "shell": "bash.exe",
-      "args": ["--init-file", "${env:HOME}/.bashrc"],
+      "args": ["--init-file", "${env:HOME}\\.bashrc"],
       "label": "Git_bash"
     },
     {
-      "shell": "${env:APPS_ROOT}\\PortableApps\\PuTTY\\PUTTY.EXE",
+      "shell": "%WINDOWS_APPS_ROOT%\\PortableApps\\PuTTY\\PUTTY.EXE",
       "args": ["-load", "remote", "-t"],
       "label": "putty"
     }

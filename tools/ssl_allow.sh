@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 update=0
 grep insecure ~/.curlrc &>/dev/null || {
