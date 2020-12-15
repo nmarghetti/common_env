@@ -117,6 +117,11 @@ if [ "$current_shell" = "bash" ]; then
     pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
     pathPrepend "${HOME}/bin"
 
+    if [[ "$OSTYPE" == "msys" ]]; then
+      source "${MAIN_BASHRC_ROOT}/msys.sh"
+      alias ln=msys_ln
+    fi
+
     if [ ! "$OSTYPE" = "cygwin" ] && [ ! "$COMMON_ENV_GIT_PROMPT" = "0" ]; then
       # If shell is in interactive mode
       case $- in
