@@ -12,11 +12,14 @@ Download tarball:
 Usage: download_tarball [option] url
   options:
     -i: ignore ssl certificate check (not secure)
+    -c: ca certificate path
+    -v: verbose
     -e: extract the tarball
-    -o <filename>: output tarball filename (guest from last part of url if empty)
+    -o <filename>: output tarball filename (guest from last part of url if empty) or '-' to write it to stdout
     -d <path>: directory where to extract
     -m <dirname>: directory name where files are extracted, if specified move all files from there back to extract directory
     -t <type>: type of tarball: zip, tgz, zst, exe (automatically guest by extension)
+    -p <path>: path to the command to use to download, eg. wget, /usr/bin/curl, etc.
     -h: display this help message
 
 Example:
@@ -31,18 +34,24 @@ download_tarball() {
   local directory=.
   local extracted_directory=
   local ssl_check=1
+  local cacert=
   local extract=0
   local tarball_type
+  local downloader=
+  local verbose=
   [[ "$DOWNLOAD_NO_SSL_CHECK" == "1" ]] && ssl_check=0
   # reset getopts - check https://man.cx/getopts(1)
   OPTIND=1
-  while getopts "hied:m:o:t:" opt; do
+  while getopts "hviec:d:m:o:t:p:" opt; do
     case "$opt" in
     i) ssl_check=0 ;;
+    c) cacert=$OPTARG ;;
     e) extract=1 ;;
     o) tarball=$OPTARG ;;
     d) directory=$OPTARG ;;
     m) extracted_directory=$OPTARG ;;
+    p) downloader=$OPTARG ;;
+    v) verbose="-v" ;;
     t)
       case "$OPTARG" in
       zip | tgz | zst | exe) tarball_type=$OPTARG ;;
@@ -71,22 +80,44 @@ download_tarball() {
 
   # Download the tarball
   [[ -z "$tarball" ]] && tarball=$(basename "$url")
-  if [[ ! -f "$tarball" ]]; then
+  if [[ "$tarball" = "-" || ! -f "$tarball" ]]; then
     # Check how to download tarball
-    local downloader=
-    local downloader_option=
-    [[ -z "$downloader" ]] && curl --version &>/dev/null && downloader="curl" && downloader_option="--progress-bar -L -o"
+    local downloader_option
+    declare -A downloader_option=(
+      [curl]="$verbose --progress-bar -L"
+      [wget]="$verbose --progress=bar:force"
+    )
+    if [[ "$tarball" = "-" ]]; then
+      downloader_option[wget]="${downloader_option[wget]} -O -"
+      unset tarball
+    else
+      downloader_option[curl]="${downloader_option[curl]} -o"
+      downloader_option[wget]="${downloader_option[wget]} -O"
+    fi
+    local downloader_option_nossl
+    declare -A downloader_option_nossl=(
+      [curl]="-k"
+      [wget]="--no-check-certificate"
+    )
+    local downloader_option_cacert
+    declare -A downloader_option_cacert=(
+      [curl]="--cacert"
+      [wget]="--ca-certificate"
+    )
+    [[ -z "$downloader" ]] && curl --version &>/dev/null && downloader="curl"
     # Change certificate location if /mingw64/ssl/certs/ca-bundle.crt is empty
     # [[ "$downloader" == "curl" ]] && [[ "$(type curl)" == "/mingw64/bin/curl" ]] && downloader_option="--cacert /usr/ssl/certs/ca-bundle.crt $downloader_option"
-    [[ -z "$downloader" ]] && wget --version &>/dev/null && downloader="wget" && downloader_option="--progress=bar:force -O"
-    [[ -z "$downloader" ]] && "$APPS_ROOT/wget.exe" --version &>/dev/null && downloader="$APPS_ROOT/wget.exe" && downloader_option="--progress=bar:force -O"
+    [[ -z "$downloader" ]] && wget --version &>/dev/null && downloader="wget"
+    [[ -z "$downloader" ]] && "$APPS_ROOT/wget.exe" --version &>/dev/null && downloader="$APPS_ROOT/wget.exe"
     [[ -z "$downloader" ]] && echo "Error: unable to use wget or curl" && return 1
-    [[ $ssl_check -eq 0 ]] && {
-      [[ "$(basename "$downloader" .exe)" == "wget" ]] && downloader_option="--no-check-certificate $downloader_option"
-      [[ "$(basename "$downloader" .exe)" == "curl" ]] && downloader_option="-k $downloader_option"
-    }
+    local downloader_name="$(basename "$downloader" .exe)"
+    local option="${downloader_option[$downloader_name]}"
+    [[ -n "$tarball" ]] && option="$option '$tarball'"
+    [[ $ssl_check -eq 0 ]] && option="${downloader_option_nossl[$downloader_name]} $option"
+    [[ -n "$cacert" ]] && option="${downloader_option_cacert[$downloader_name]} '$cacert' $option"
     local tmp_output=$(mktemp)
-    (set -o pipefail && "$downloader" $downloader_option "$tarball" "$url" |& tee "$tmp_output")
+    # Would be better not to use eval but did not find a way to handle parameters with space in it
+    (set -o pipefail && eval "'$downloader' $option '$url'" 2> >(tee -a "$tmp_output" >&2) | cat)
     local download_ok=$?
     # Check what to do in case of error
     if [[ $download_ok -ne 0 ]] && [[ $ssl_check -eq 1 ]]; then
@@ -94,9 +125,8 @@ download_tarball() {
         local answer=y
         read -rep "There is a problem with SSL certificate, do you want to bypass it (Y/n) ? " -i $answer answer
         if [[ "$answer" =~ ^[yY]$ ]]; then
-          [[ "$(basename "$downloader")" == "wget" ]] && downloader_option="--no-check-certificate $downloader_option"
-          [[ "$(basename "$downloader")" == "curl" ]] && downloader_option="-k $downloader_option"
-          "$downloader" $downloader_option "$tarball" "$url"
+          option="${downloader_option_nossl[$downloader_name]} $option"
+          $(eval "'$downloader' $option '$url'")
           download_ok=$?
         fi
       fi
@@ -105,6 +135,9 @@ download_tarball() {
 
     [[ $download_ok -ne 0 ]] && echo "Error, unable to retrieve the tarball." && return 1
   fi
+
+  # Do not go further when printed to stdout
+  [[ -z "$tarball" ]] && return 0
 
   # Extract the tarball
   if [[ $extract -eq 1 ]]; then

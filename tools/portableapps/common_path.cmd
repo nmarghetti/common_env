@@ -28,7 +28,7 @@ REM PATH to python 3.8
 ::)
 if not exist "%APPS_ROOT%\PortableApps\CommonFiles\python\python.exe" goto :no_python_3_8
   set PYTHONUSERBASE=%APPS_ROOT%\PortableApps\CommonFiles\python
-  set PATH=%PYTHONUSERBASE%;%PYTHONUSERBASE%\Python38\Scripts;%PATH%
+  set PATH=%PYTHONUSERBASE%;%PYTHONUSERBASE%\Scripts;%PYTHONUSERBASE%\Python38\Scripts;%PATH%
 :no_python_3_8
 
 REM PATH to python venv 3.8

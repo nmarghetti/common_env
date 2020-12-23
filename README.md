@@ -1,5 +1,6 @@
 # Common env
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0bf097505ea14121b1fa979f9f5c66af)](https://www.codacy.com/gh/nmarghetti/common_env/dashboard?utm_source=github.com&utm_medium=referral&utm_content=nmarghetti/common_env&utm_campaign=Badge_Grade)
 ![Build](https://github.com/nmarghetti/common_env/workflows/Build/badge.svg)
 
 ---

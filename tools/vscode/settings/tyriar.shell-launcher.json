@@ -1,6 +1,10 @@
 {
   "shellLauncher.shells.windows": [
     {
+      "shell": "zsh.exe",
+      "label": "zsh"
+    },
+    {
       "shell": "cmd.exe",
       "label": "cmd"
     },

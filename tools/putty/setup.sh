@@ -42,7 +42,7 @@ function setup_putty() {
       fi
     done
     [[ -z "$remote_machine" ]] && remote_machine="remote_machine"
-    sed -re "s/%USERNAME%/$USERNAME/" -e "s/remote_machine/$remote_machine/" -e "s#%HOME%#$(echo "$WINDOWS_APPS_ROOT\\home" | sed -re "s#\\\\#\\\\\\\\\\\\\\\\#g")#" "$SETUP_TOOLS_ROOT/putty/session.reg" >"$putty_path/session.reg"
+    sed -re "s/%USERNAME%/${USER:-${USERNAME}}/" -e "s/remote_machine/$remote_machine/" -e "s#%HOME%#$(echo "$WINDOWS_APPS_ROOT\\home" | sed -re "s#\\\\#\\\\\\\\\\\\\\\\#g")#" "$SETUP_TOOLS_ROOT/putty/session.reg" >"$putty_path/session.reg"
     cmd //C regedit.exe //S "$WINDOWS_APPS_ROOT\\PortableApps\\PuTTY\\session.reg"
 
     [[ "$remote_machine" != "remote_machine" ]] && {
