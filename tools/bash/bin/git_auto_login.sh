@@ -14,7 +14,7 @@ if [ -z "$machine" ]; then
       machine="$(echo "$machine" | cut -d'@' -f2)"
     fi
     [ "$(echo "$machine" | grep -c ':')" -eq 1 ] && machine="$(echo "$machine" | cut -d':' -f1)"
-    [ -z "$login" ] && login=$USERNAME
+    [ -z "$login" ] && login=${USER:-${USERNAME}}
   fi
 fi
 

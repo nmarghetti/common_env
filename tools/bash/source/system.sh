@@ -28,14 +28,19 @@ system_get_os_host() {
   [ "$os" = "Unknown" ] && return 1
 }
 
+system_get_current_shell_path() {
+  [[ -e "/proc/$$/exe" ]] && readlink "/proc/$$/exe" && return 0
+  ps -p $$ | tr '[:space:]' '\n' | grep 'sh' | head -1 && return 0
+  echo "$SHELL"
+}
+
 system_get_current_shell() {
-  # sh -c 'ps -p $$ -o ppid=' | xargs -I'{}' readlink -f '/proc/{}/exe'
-  echo "$(basename "$SHELL" .exe)"
+  echo "$(basename "$(system_get_current_shell_path)" .exe)"
 }
 
 system_get_default_shell() {
   if [ -f /etc/passwd ]; then
-    cat /etc/passwd | grep -E "^$USER" | cut -d: -f7
+    grep -hE "^${USER:-${USERNAME}}" /etc/passwd | cut -d: -f7
   else
     echo $SHELL
   fi
@@ -60,7 +65,7 @@ system_display_shell_info() {
 
 system_get_shells() {
   if [ -f /etc/shells ]; then
-    cat /etc/shells | grep -E '^/'
+    grep -hE '^/' /etc/shells
   else
     echo "Unable to find shells installed"
   fi

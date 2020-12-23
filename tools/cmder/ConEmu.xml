@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2020-04-22 20:45:37" build="191012">
+		<key name=".Vanilla" modified="2020-12-18 14:42:01" build="191012">
 			<value name="ColorTable00" type="dword" data="00000000"/>
 			<value name="ColorTable01" type="dword" data="00ee0000"/>
 			<value name="ColorTable02" type="dword" data="0000cd00"/>
@@ -124,7 +124,11 @@
 			<value name="ColorKeyValue" type="dword" data="00010101"/>
 			<value name="UseCurrentSizePos" type="hex" data="01"/>
 			<value name="WindowMode" type="dword" data="00000520"/>
+			<value name="ConWnd Width" type="dword" data="00000078"/>
+			<value name="ConWnd Height" type="dword" data="0000001e"/>
 			<value name="Cascaded" type="hex" data="01"/>
+			<value name="ConWnd X" type="long" data="500"/>
+			<value name="ConWnd Y" type="long" data="500"/>
 			<value name="16bit Height" type="ulong" data="0"/>
 			<value name="AutoSaveSizePos" type="hex" data="01"/>
 			<value name="IntegralSize" type="hex" data="00"/>
@@ -479,8 +483,8 @@
 			<value name="DndLKey" type="hex" data="00"/>
 			<value name="DndRKey" type="hex" data="a2"/>
 			<value name="WndDragKey" type="dword" data="00121101"/>
-			<key name="Tasks" modified="2020-04-15 16:10:04" build="191012">
-				<value name="Count" type="long" data="9"/>
+			<key name="Tasks" modified="2020-12-19 02:50:45" build="191012">
+				<value name="Count" type="long" data="10"/>
 				<key name="Task1" modified="2020-04-15 10:57:01" build="191012">
 					<value name="Name" type="string" data="{Git bash}"/>
 					<value name="GuiArgs" type="string" data=' /icon "%CMDER_ROOT%\..\PortableGit\usr\share\git\git-for-windows.ico"'/>
@@ -490,16 +494,25 @@
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="Flags" type="dword" data="00000000"/>
 				</key>
-				<key name="Task2" modified="2020-04-15 16:21:13" build="191012">
-					<value name="Name" type="string" data="{Ssh::remote machine1}"/>
-					<value name="GuiArgs" type="string" data='/icon "%SystemRoot%\System32\SHELL32.dll,273"'/>
-					<value name="Cmd1" type="string" data='cmd /c ""%CMDER_ROOT%\..\PortableGit\usr\bin\ssh.exe" remote_machine1" -cur_console:t:"label_machine1"'/>
+				<key name="Task2" modified="2020-12-19 02:50:45" build="191012">
+					<value name="Name" type="string" data="{Git zsh}"/>
+					<value name="GuiArgs" type="string" data=' /icon "%CMDER_ROOT%\..\PortableGit\usr\share\git\git-for-windows.ico"'/>
+					<value name="Cmd1" type="string" data='cmd /c ""%CMDER_ROOT%\..\PortableGit\usr\bin\zsh.exe" --login -i" -cur_console:t:"Git-zsh"'/>
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
+					<value name="Flags" type="dword" data="00000004"/>
+				</key>
+				<key name="Task3" modified="2020-12-19 02:50:45" build="191012">
+					<value name="Name" type="string" data="{Ssh ncerndobedev6559}"/>
+					<value name="Hotkey" type="dword" data="00000000"/>
+					<value name="GuiArgs" type="string" data='/icon "%SystemRoot%\System32\SHELL32.dll,273"'/>
+					<value name="Cmd1" type="string" data='cmd /c ""%CMDER_ROOT%\..\PortableGit\usr\bin\ssh.exe" ncerndobedev6559.etv.nce.amadeus.net" -cur_console:t:"ncerndobedev6559"'/>
+					<value name="Active" type="long" data="0"/>
+					<value name="Count" type="long" data="1"/>
 					<value name="Flags" type="dword" data="00000000"/>
 				</key>
-				<key name="Task3" modified="2020-04-15 16:21:13" build="191012">
+				<key name="Task4" modified="2020-12-19 02:50:45" build="191012">
 					<value name="Name" type="string" data="{Ssh::remote machine2}"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data='/icon "%SystemRoot%\System32\SHELL32.dll,273"'/>
@@ -508,16 +521,16 @@
 					<value name="Count" type="long" data="1"/>
 					<value name="Flags" type="dword" data="00000004"/>
 				</key>
-				<key name="Task4" modified="2020-04-15 16:10:04" build="191012">
+				<key name="Task5" modified="2020-12-19 02:50:45" build="191012">
 					<value name="Name" type="string" data="{WSL}"/>
+					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data='-icon "%USERPROFILE%\AppData\Local\lxss\bash.ico"'/>
 					<value name="Cmd1" type="string" data='set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" &amp; %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:p:t:"Bash":m:/mnt'/>
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
-					<value name="Flags" type="dword" data="00000000"/>
 				</key>
-				<key name="Task5" modified="2020-04-15 16:10:04" build="191012">
+				<key name="Task6" modified="2020-12-19 02:50:45" build="191012">
 					<value name="Name" type="string" data="{PowerShell}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -526,34 +539,34 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task6" modified="2020-04-15 16:10:04" build="191012">
+				<key name="Task7" modified="2020-12-19 02:50:45" build="191012">
 					<value name="Name" type="string" data="{cmd}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data=""/>
-					<value name="Cmd1" type="string" data='cmd /k ""%ConEmuDir%\..\init.bat" " -cur_console:t:"cmd"'/>
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
+					<value name="Cmd1" type="string" data='cmd /k ""%ConEmuDir%\..\init.bat" " -cur_console:t:"cmd"'/>
 				</key>
-				<key name="Task7" modified="2020-04-15 16:19:19" build="191012">
+				<key name="Task8" modified="2020-12-19 02:50:45" build="191012">
 					<value name="Name" type="string" data="{As admin::cmd}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data=""/>
+					<value name="Cmd1" type="string" data='*cmd /k ""%ConEmuDir%\..\init.bat" " -cur_console:t:"[admin]cmd"'/>
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
-					<value name="Cmd1" type="string" data='*cmd /k ""%ConEmuDir%\..\init.bat" " -cur_console:t:"[admin]cmd"'/>
 				</key>
-				<key name="Task8" modified="2020-04-15 16:19:19" build="191012">
+				<key name="Task9" modified="2020-12-19 02:50:45" build="191012">
 					<value name="Name" type="string" data="{As admin::PowerShell}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data='/icon "%CMDER_ROOT%\..\VSCode\resources\app\resources\win32\powershell.ico"'/>
-					<value name="Cmd1" type="string" data='*PowerShell -ExecutionPolicy Bypass -NoLogo -NoProfile -NoExit -Command "Invoke-Expression &apos;Import-Module &apos;&apos;%ConEmuDir%\..\profile.ps1&apos;&apos;&apos;" -cur_console:t:"[admin]Powershell"'/>
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
+					<value name="Cmd1" type="string" data='*PowerShell -ExecutionPolicy Bypass -NoLogo -NoProfile -NoExit -Command "Invoke-Expression &apos;Import-Module &apos;&apos;%ConEmuDir%\..\profile.ps1&apos;&apos;&apos;" -cur_console:t:"[admin]Powershell"'/>
 				</key>
-				<key name="Task9" modified="2020-04-15 16:10:04" build="191012">
+				<key name="Task10" modified="2020-12-19 02:50:45" build="191012">
 					<value name="Name" type="string" data="{Show ANSI colors}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -867,7 +880,7 @@
 			</key>
 			<value name="StartCreateDelay" type="ulong" data="100"/>
 			<value name="DefaultTerminalDebugLog" type="hex" data="00"/>
-			<value name="LastMonitor" type="string" data="1663,-1440,4223,-50"/>
+			<value name="LastMonitor" type="string" data="0,0,1440,1050"/>
 			<value name="Restore2ActiveMon" type="hex" data="00"/>
 			<value name="DownShowExOnTopMessage" type="hex" data="00"/>
 			<value name="EnvironmentSet" type="multi">

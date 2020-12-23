@@ -19,6 +19,18 @@ function setup_gitbash() {
   # Replace db_home: env windows cygwin desc
   sed -i -re "s#^db_home:.*#db_home: $(echo "$HOME" | sed -re 's/ /%_/g')#" /etc/nsswitch.conf
 
+  # Install ca certificate if provided
+  local cacert=$(git config -f "$APPS_ROOT/setup.ini" --get install.cacert 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
+  if [[ -f "$cacert" ]]; then
+    local bundle
+    for bundle in /mingw64/ssl/certs/ca-bundle.crt /usr/ssl/certs/ca-bundle.crt; do
+      if [[ ! -f "$bundle" ]] || ! cmp --silent "$cacert" "$bundle"; then
+        [[ -f "$bundle" && ! -f "$bundle.backup" ]] && mv "$bundle" "$bundle.backup"
+        cp -vf "$cacert" "$bundle"
+      fi
+    done
+  fi
+
   # Install wget
   if [[ ! -f "$git_path/usr/bin/wget.exe" ]]; then
     echoColor 36 "Adding wget..."
@@ -26,7 +38,7 @@ function setup_gitbash() {
     [[ $? -ne 0 ]] && echo "Unable to retrieve wget" && return $ERROR
   fi
 
-  # Install curl, rsync
+  # Install rsync, zstd
   local extra_tools=(
     'msys-zstd-1.dll:libzstd-1.4.5-2-x86_64.pkg.tar.xz'
     'zstd.exe:zstd-1.4.5-2-x86_64.pkg.tar.xz'

@@ -21,8 +21,8 @@ if [ ! "$(uname -s)" = "Darwin" ]; then
 fi
 
 NEED_INSTALL=0
-# Install if greadlink, gsed, gawk and gecho are not all there
-type greadlink gsed gawk gecho gxargs &>/dev/null || NEED_INSTALL=1
+# Install if greadlink, gecho, gsed, gawk or gxargs are not all there
+test $(type greadlink gecho gsed gawk gxargs 2>&1 >/dev/null | wc -l) -eq 0 || NEED_INSTALL=1
 if [ $NEED_INSTALL -eq 1 ]; then
   answer='y'
   if [ $SETUP_SILENT -eq 0 ]; then

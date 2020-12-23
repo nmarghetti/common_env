@@ -7,7 +7,7 @@
 # https://github.com/mnorin/bash-scripts/tree/master/objects
 
 # Check it is ran with bash
-if [[ ! "$(basename "$SHELL" .exe)" = "bash" ]]; then
+if [[ "$(ps -p $$ | grep -c bash)" -eq 0 ]]; then
   echo "Please run with: bash $0" >&2
   exit 1
 fi
@@ -17,17 +17,14 @@ fi
 export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
 [[ "$COMMON_ENV_FULL_DEBUG" == "1" ]] && eval "$COMMON_ENV_DEBUG_CMD"
 
+if [[ "$(uname -s)" = "Darwin" ]]; then
+  echo "Setup for MAC"
+  source "$(dirname "$0")/../tools/mac/setup_mac.sh"
+fi
+
 # Check 'readlink -f' is available
 readlink -f "$0" &>/dev/null
-if [[ $? -ne 0 ]]; then
-  [[ ! "$(uname -s)" = "Darwin" ]] && echo "Unable to use 'readlink -f', exiting." && exit 1
-  echo "Setup for MAC"
-  # Try to run the Mac setup if readlink -f is not available
-  source "$(dirname "$0")/../tools/mac/setup_mac.sh"
-  [[ $? -ne 0 ]] && echo "Unable to run setup for mac" && exit 1
-  readlink -f "$0" &>/dev/null
-  [[ $? -ne 0 ]] && echo "Unable to use 'readlink -f', exiting." && exit 1
-fi
+[[ $? -ne 0 ]] && echo "Unable to use 'readlink -f', exiting." && exit 1
 
 SCRIPT=${BASH_SOURCE[0]}
 if [[ -z "$SCRIPT" ]] || [[ "$SCRIPT" = "bash" ]]; then
@@ -66,7 +63,7 @@ usage() {
   echo "    vscode: install latest Visual Studio Code" 1>&2
   echo "    pycharm: install latest PyCharm community" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
-  echo "    mobaxterm: install MobaXterm 20.2" 1>&2
+  echo "    mobaxterm: install MobaXterm 20.6" 1>&2
   echo "    putty: install PuTTY 0.73" 1>&2
   echo "    superputty: install SuperPuTTY 1.4.0.9" 1>&2
   echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2

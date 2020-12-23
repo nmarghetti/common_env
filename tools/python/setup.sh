@@ -19,7 +19,7 @@ function setup_python() {
     python_bin=$(which python)
   else
     export PYTHONUSERBASE="$python_winpath"
-    export PATH="$PYTHONUSERBASE/Python38/Scripts:$PATH"
+    export PATH="$PYTHONUSERBASE/Scripts:$PYTHONUSERBASE/Python38/Scripts:$PATH"
     unset PYTHONPATH
     unset PYTHONHOME
   fi
@@ -31,6 +31,7 @@ function setup_python() {
     download_tarball "https://www.python.org/ftp/python/$python_version/$tarball"
     [[ $? -ne 0 ]] && echo "Unable to get the installer" && return $ERROR
     # Need to eval in case there is space character in the path, but the return code is always 0
+    # Need to install for all user https://stackoverflow.com/questions/61641280/python3-8-venv-returned-exit-status-101/62207756#62207756
     local start=$(date +%s)
     eval "./$tarball -quiet -passive InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"
     local end=$(date +%s)
@@ -65,4 +66,5 @@ function setup_python() {
       "$py" -m pip install --upgrade autopep8 #--user
     fi
   done
+  set +x
 }
