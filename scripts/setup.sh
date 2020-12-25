@@ -47,7 +47,7 @@ cd "$SETUP_ROOT"
 
 SETUP_SILENT=0
 SETUP_SKIP_DEFAULT=0
-DEFAULT_APPS="bash git"
+DEFAULT_APPS="shell git"
 # Remove pacman form default so far as it seems to break bash
 # DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash pacman portableapps python"
 DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash portableapps python"
@@ -72,7 +72,7 @@ usage() {
   echo "    cygwin: install Cygwin" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
-  echo "In any case it will setup some bash and git config, and (only on Windows) install python 3.8.2" 1>&2
+  echo "In any case it will setup some shell and git config, and (only on Windows) install python 3.8.2" 1>&2
 }
 
 check_dir_var() {
@@ -88,7 +88,7 @@ check_dir_var() {
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-  bash | git | gitbash | pacman | portableapps | python)
+  shell | git | gitbash | pacman | portableapps | python)
     APPS="$APPS $1"
     ;;
   pacman | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | gradle | xampp)
@@ -165,10 +165,10 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # get functions to check the system
-source "$SETUP_TOOLS_ROOT/bash/source/system.sh"
+source "$SETUP_TOOLS_ROOT/shell/source/system.sh"
 
 if [[ -n "$APPS_ROOT" ]]; then
-  source "$SETUP_TOOLS_ROOT/bash/source/path_windows.sh"
+  source "$SETUP_TOOLS_ROOT/shell/source/path_windows.sh"
 
   # Ensure to get APPS_ROOT as posix path if not
   if [[ "$(echo "$APPS_ROOT" | grep -c ':')" -ne 0 ]]; then
@@ -191,6 +191,9 @@ if [[ -n "$APPS_ROOT" ]]; then
 
   # Ensure to have default windows apps (except if skipped)
   [[ "$SETUP_SKIP_DEFAULT" -eq 0 ]] && APPS="$DEFAULT_WIN_APPS $(echo "$APPS" | tr ' ' '\n' | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')"
+
+  # Update the path to common_env
+  echo "$(get_path_to_windows "$SETUP_ROOT")" >"$HOME/.common_env_path"
 fi
 
 # Check there is no space character in the paths used, otherwise warn the user
@@ -214,7 +217,7 @@ if [[ -n "$path_with_space" ]]; then
 fi
 
 # Get functions to download tarball
-source "$SETUP_TOOLS_ROOT/$tool/bash/bin/download_tarball.sh"
+source "$SETUP_TOOLS_ROOT/$tool/shell/bin/download_tarball.sh"
 
 # Install the selected apps
 for tool in $APPS; do

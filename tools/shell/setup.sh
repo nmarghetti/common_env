@@ -2,9 +2,17 @@
 
 # article about bash and zsh startup scripts https://tanguy.ortolo.eu/blog/article25/shrc
 
-function setup_bash() {
+function setup_shell() {
   if [[ ! -z "$HOME" ]]; then
     mkdir -vp "$HOME"
+  fi
+
+  # Create .bash_profile
+  if [[ ! -f "$HOME/.bash_profile" ]]; then
+    cat >"$HOME/.bash_profile" <<EOM
+test -f ~/.profile && . ~/.profile
+test -f ~/.bashrc && . ~/.bashrc
+EOM
   fi
 
   # Create template .bashrc and .zshrc if not there yet
@@ -13,8 +21,6 @@ function setup_bash() {
     if [[ ! -f "$HOME/$shellrc" ]]; then
       echo "Create $HOME/$shellrc"
       cat >"$HOME/$shellrc" <<EOM
-#! /usr/bin/env bash
-
 # Common env settings
 
 # Set to 1 to have some debug information about what is being sourced
@@ -46,29 +52,29 @@ else
   $([[ -n "$COMMON_ENV_SETUP_MAC_PATH" ]] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[[ "\$COMMON_ENV_DEBUG" = "1" ]] && echo "Sourcing '\$(readlink -f "\${BASH_SOURCE[0]}")' ..." >&2
   # Ensure that \$HOME points to where is located the current file being sourced
   export HOME=\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)
-  if [[ -f "$setup_tool_root/bash/source/.bashrc" ]]; then
-    source "$setup_tool_root/bash/source/.bashrc"
-  elif [[ -f "/mnt$setup_tool_root/bash/source/.bashrc" ]]; then
-    source "/mnt$setup_tool_root/bash/source/.bashrc"
+  if [[ -f "$setup_tool_root/shell/source/shellrc.sh" ]]; then
+    source "$setup_tool_root/shell/source/shellrc.sh"
+  elif [[ -f "/mnt$setup_tool_root/shell/source/shellrc.sh" ]]; then
+    source "/mnt$setup_tool_root/shell/source/shellrc.sh"
   else
-    echo "ERROR !!! Unable to find .bashrc"
+    echo "ERROR !!! Unable to find shellrc.sh"
   fi
 fi
 EOM
   )
   local bashrc="$(cat "$HOME/.bashrc")"
-  echo "$bashrc" | awk -f "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 \
+  echo "$bashrc" | awk -f "$SETUP_TOOLS_ROOT/shell/bin/generated_content.awk" -v action=replace -v replace_append=1 \
     -v content="$(echo "$content" | sed -re 's#\\#\\\\#g')" >|"$HOME/.bashrc"
 
   # Add content to .zshrc
   content=$(
     cat <<-EOM
   $([ -n "$COMMON_ENV_SETUP_MAC_PATH" ] && echo -ne "$COMMON_ENV_SETUP_MAC_PATH\n  ")[ "\$COMMON_ENV_DEBUG" = "1" ] && echo "Sourcing '\$0' ..." >&2
-  source "$(readlink -f "$SETUP_TOOLS_ROOT/bash/source/.bashrc")"
+  source "$(readlink -f "$SETUP_TOOLS_ROOT/shell/source/shellrc.sh")"
 EOM
   )
   local zshrc="$(cat "$HOME/.zshrc")"
-  echo "$zshrc" | awk -f "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 \
+  echo "$zshrc" | awk -f "$SETUP_TOOLS_ROOT/shell/bin/generated_content.awk" -v action=replace -v replace_append=1 \
     -v content="$(echo "$content" | sed -re 's#\\#\\\\#g')" >|"$HOME/.zshrc"
 
   # Check oh-my-bash
@@ -76,7 +82,7 @@ EOM
   #   local answer='n'
   #   read -rep "Do you want to install oh-my-bash (Y/n) ? " -i $answer answer
   #   if [[ "$answer" =~ ^[yY]?$ ]]; then
-  #     OSH_REPOSITORY="https://github.com/nmarghetti/oh-my-bash.git" "$(system_get_current_shell_path)" -c "$("$SETUP_TOOLS_ROOT/bash/bin/download_tarball.sh" -o - "https://raw.githubusercontent.com/nmarghetti/oh-my-bash/master/tools/install.sh")"
+  #     OSH_REPOSITORY="https://github.com/nmarghetti/oh-my-bash.git" "$(system_get_current_shell_path)" -c "$("$SETUP_TOOLS_ROOT/shell/bin/download_tarball.sh" -o - "https://raw.githubusercontent.com/nmarghetti/oh-my-bash/master/tools/install.sh")"
   #     [[ $? -eq 0 && -f "$HOME/.bashrc.pre-oh-my-bash" ]] && {
   #       mv "$HOME/.bashrc" "$HOME/.oh-my-bashrc"
   #       mv "$HOME/.bashrc.pre-oh-my-bash" "$HOME/.bashrc"
@@ -88,17 +94,17 @@ EOM
   test -n "$APPS_ROOT" && type zsh &>/dev/null && {
     # Install oh-my-zsh
     if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-      RUNZSH=no CHSH=no zsh -c "$("$SETUP_TOOLS_ROOT/bash/bin/download_tarball.sh" -o - "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh")"
+      RUNZSH=no CHSH=no zsh -c "$("$SETUP_TOOLS_ROOT/shell/bin/download_tarball.sh" -o - "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh")"
       if [[ -f "$HOME/.zshrc.pre-oh-my-zsh" ]]; then
         cat "$HOME/.zshrc.pre-oh-my-zsh" >>"$HOME/.zshrc" && rm -f "$HOME/.zshrc.pre-oh-my-zsh"
         sed -ri -e 's/^ZSH_THEME=.*$/ZSH_THEME="common-env"/' "$HOME/.zshrc"
       fi
     fi
 
-    if [[ -d "$HOME/.oh-my-zsh/custom/themes" ]]; then
+    if [[ -d "$HOME/.oh-my-zsh" ]]; then
       if [[ ! -f "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" || \
-        "$SETUP_TOOLS_ROOT/bash/common-env.zsh-theme" -nt "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ]]; then
-        cp -vf "$SETUP_TOOLS_ROOT/bash/common-env.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme"
+        "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" -nt "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ]]; then
+        cp -vf "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme"
       fi
     fi
 

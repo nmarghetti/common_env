@@ -1,13 +1,13 @@
-#! /bin/zsh
+#! /usr/bin/env zsh
 
-function pathRm() {
+pathRm() {
   if [ -z "$1" ]; then
     return 1
   fi
   export PATH=$(echo $PATH | tr ':' '\n' | grep -vE "^${1%/}/?\$" | tr '\n' ':')
 }
 
-function pathAdd() {
+pathAdd() {
   elt=${1%/}
   if [ ! -d "$elt" ]; then
     echo "Error: not adding '$elt' in the PATH, it is not an existing directory" >&2
@@ -22,16 +22,16 @@ function pathAdd() {
 }
 
 # append the given path
-function pathAppend() {
+pathAppend() {
   pathAdd "$@"
 }
 
 # insert at the beginning the given path
-function pathPrepend() {
+pathPrepend() {
   pathAdd "$@" prepend
 }
 
 # display the path
-function pathList () {
+pathList() {
   echo "$PATH" | tr ":" "\n"
 }

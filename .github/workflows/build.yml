@@ -53,7 +53,7 @@ jobs:
       - name: Check system on Linux and Mac
         if: runner.os == 'Linux' || runner.os == 'macOs'
         run: |
-          source tools/bash/source/system.sh
+          source tools/shell/source/system.sh
           echo "  * Current system: $(system_get_os)"
           echo "  * Current host system: $(system_get_os_host)"
           echo "  * Current shell: $(system_get_current_shell)"
@@ -65,7 +65,7 @@ jobs:
       - name: Check system with bash
         shell: bash
         run: |
-          source tools/bash/source/system.sh
+          source tools/shell/source/system.sh
           echo "  * Current system: $(system_get_os)"
           echo "  * Current host system: $(system_get_os_host)"
           echo "  * Current shell: $(system_get_current_shell)"
@@ -130,6 +130,9 @@ jobs:
         run: |
           echo "Setup everything"
           bash ./scripts/setup.sh -s
+      # Display ~/.bash_profile
+      - name: Display ~/.bash_profile
+        run: cat "$HOME/.bash_profile" | nl -ba
       # Display ~/.bashrc
       - name: Display ~/.bashrc
         run: cat "$HOME/.bashrc" | nl -ba

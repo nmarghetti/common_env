@@ -35,5 +35,5 @@ EOM
 
   # Add content into .gitconfig
   local gitconfig="$(cat "$HOME/.gitconfig")"
-  echo "$gitconfig" | awk -f "$SETUP_TOOLS_ROOT/bash/bin/generated_content.awk" -v action=replace -v replace_append=1 -v content_file="$SETUP_TOOLS_ROOT/git/.gitconfig" >|"$HOME/.gitconfig"
+  echo "$gitconfig" | awk -f "$SETUP_TOOLS_ROOT/shell/bin/generated_content.awk" -v action=replace -v replace_append=1 -v content_file="$SETUP_TOOLS_ROOT/git/.gitconfig" >|"$HOME/.gitconfig"
 }

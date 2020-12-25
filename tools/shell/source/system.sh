@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#! /bin/sh
 
 system_get_os() {
   local os=
@@ -42,23 +42,24 @@ system_get_default_shell() {
   if [ -f /etc/passwd ]; then
     grep -hE "^${USER:-${USERNAME}}" /etc/passwd | cut -d: -f7
   else
-    echo $SHELL
+    echo "$SHELL"
   fi
 }
 
 system_display_shell_info() {
-  case "$(basename "$SHELL")" in
+  local shell="$(system_get_current_shell)"
+  case "$shell" in
   bash | zsh)
     if [ "$1" = "eval" ]; then
-      for val in "$(set | grep -aE "^$(basename $SHELL | tr '[:lower:]' '[:upper:]')" | cut -d= -f1)"; do
+      for val in "$(set | grep -aE "^$(basename "$shell" | tr '[:lower:]' '[:upper:]')" | cut -d= -f1)"; do
         [ -n "$val" ] && echo "$val=${!val}"
       done
     else
-      set | grep -aE "^$(basename $SHELL | tr '[:lower:]' '[:upper:]')"
+      set | grep -aE "^$(basename "$shell" | tr '[:lower:]' '[:upper:]')"
     fi
     ;;
   *)
-    echo "Unsupported shell: '$SHELL'"
+    echo "Unsupported shell: '$shell'"
     ;;
   esac
 }
