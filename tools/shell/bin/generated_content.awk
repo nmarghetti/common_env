@@ -1,4 +1,4 @@
-#! /usr/bin/awk -f
+#! /usr/bin/env awk -f
 
 BEGIN	{
   for (i = 0; i < ARGC; ++i) {

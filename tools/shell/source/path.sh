@@ -4,7 +4,7 @@
 # a given can be multiple if contaning ':', in that case each path is removed one by one
 # eg. pathRm "path with space" anyPath otherPath multiplePath:path2:path3 "multiple path with space:path 1:path 2"
 # eg. pathRm %LD_LIBRARY_PATH /usr/bin
-function pathRm() {
+pathRm() {
   if [ $# -gt 0 ]; then
     local pathVar=PATH
     # If first arg starts with '%', it defines the varible to modify
@@ -39,7 +39,7 @@ function pathRm() {
 # a given can be multiple if contaning ':', in that case each path is added one by one
 # eg. pathRm "path with space" anyPath otherPath multiplePath:path2:path3 "multiple path with space:path 1:path 2"
 # eg. pathRm %LD_LIBRARY_PATH /usr/bin
-function pathAdd() {
+pathAdd() {
   if [ $# -gt 0 ]; then
     local append=1
     if [ "$1" = "prepend" ]; then
@@ -92,16 +92,16 @@ function pathAdd() {
 }
 
 # append the given path
-function pathAppend() {
+pathAppend() {
   pathAdd "$@"
 }
 
 # insert at the beginning the given path
-function pathPrepend() {
+pathPrepend() {
   pathAdd prepend "$@"
 }
 
 # display the path
-function pathList() {
+pathList() {
   echo "$PATH" | tr ":" "\n"
 }

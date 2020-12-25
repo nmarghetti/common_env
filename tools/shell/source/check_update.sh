@@ -38,5 +38,5 @@ function check_repo_update() {
 }
 
 function common_env_check_update() {
-  (check_repo_update "$MAIN_BASHRC_ROOT/../../..")
+  (check_repo_update "$COMMON_ENV_SHELLRC_ROOT/../../..")
 }

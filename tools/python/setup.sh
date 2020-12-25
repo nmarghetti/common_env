@@ -8,9 +8,8 @@ function setup_python() {
   # if there is already python >= 3.7, error would not stop the process
   type python &>/dev/null && python --version | cut -d' ' -f2 | cut -d'.' -f1,2 | grep -E '^3\.[7-9]' >/dev/null && ERROR=$SETUP_ERROR_CONTINUE
 
-  local python_path="PortableApps/CommonFiles/python"
-  local python_winpath="$(echo $WIN_APPS_ROOT/$python_path | tr '/' '\\')"
-  python_path="$APPS_ROOT/$python_path"
+  local python_path="$APPS_ROOT/PortableApps/CommonFiles/python"
+  local python_winpath="$(get_path_to_windows_back "$python_path")"
   local python_version="3.8.2"
   local python_bin="$python_path/python.exe"
 
@@ -50,8 +49,8 @@ function setup_python() {
   ! "$python_bin" -m pip --version &>/dev/null && echo "Error: pip is not installed" >&2 && return $ERROR
 
   # to be checked why putting $python_version in grep does not work
-  if [[ $("$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" list | grep -cE "^3.8.2$") -eq 0 ]]; then
-    "$SETUP_TOOLS_ROOT/bash/bin/pythonvenv.sh" create "$python_bin" || (echo "Error, unable to set python virtual env." && return $ERROR)
+  if [[ $("$SETUP_TOOLS_ROOT/shell/bin/pythonvenv.sh" list | grep -cE "^3.8.2$") -eq 0 ]]; then
+    "$SETUP_TOOLS_ROOT/shell/bin/pythonvenv.sh" create "$python_bin" || (echo "Error, unable to set python virtual env." && return $ERROR)
   fi
 
   for py in "$python_bin" "$APPS_ROOT/home/.venv/$python_version/Scripts/python.exe"; do
