@@ -78,7 +78,7 @@ You can launch Start.exe to start PortableApps. From there you will be able to r
 
    ![Project properties](portable_env_setup_step_05.png)
 
-1. For Git for Windows install, leave the path, just press OK
+1. For Git for Windows install, leave the path, just press OK if it asks
 
    ![Project properties](portable_env_setup_step_06.png)
 
