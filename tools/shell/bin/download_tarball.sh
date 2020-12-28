@@ -121,7 +121,7 @@ download_tarball() {
     local download_ok=$?
     # Check what to do in case of error
     if [[ $download_ok -ne 0 ]] && [[ $ssl_check -eq 1 ]]; then
-      if grep -E "(unable to get local issuer certificate|Unable to locally verify the issuer's authority)" "$tmp_output" &>/dev/null; then
+      if grep -E "(unable to get local issuer certificate|Unable to locally verify the issuer's authority|server certificate verification failed)" "$tmp_output" &>/dev/null; then
         local answer=y
         read -rep "There is a problem with SSL certificate, do you want to bypass it (Y/n) ? " -i $answer answer
         if [[ "$answer" =~ ^[yY]$ ]]; then

@@ -48,7 +48,6 @@ cd "$SETUP_ROOT"
 SETUP_SILENT=0
 SETUP_SKIP_DEFAULT=0
 DEFAULT_APPS="shell git"
-# Remove pacman form default so far as it seems to break bash
 # DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash pacman portableapps python"
 DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash portableapps python"
 DEFAULT_APPS_GREP=$(echo "$DEFAULT_WIN_APPS" | tr ' ' '|')
@@ -68,6 +67,7 @@ usage() {
   echo "    superputty: install SuperPuTTY 1.4.0.9" 1>&2
   echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2
   echo "    node: install NodeJs 12.19.0" 1>&2
+  echo "    nvm: install nvm which is a nodejs version manager" 1>&2
   echo "    gradle: install Gradle 6.7.1" 1>&2
   echo "    cygwin: install Cygwin" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
@@ -91,7 +91,7 @@ while [[ $# -gt 0 ]]; do
   shell | git | gitbash | pacman | portableapps | python)
     APPS="$APPS $1"
     ;;
-  pacman | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | gradle | xampp)
+  pacman | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | autohotkey | cygwin | node | nvm | gradle | xampp)
     APPS="$APPS $1"
     ;;
   # cpp)
@@ -246,7 +246,7 @@ common_env_app="$(git config -f "$HOME/.common_env.ini" --get-all install.app | 
 common_env_app="$(echo "$common_env_app" | tr ' ' '\n' | sort | uniq | tr '\n' ' ')"
 git config -f "$HOME/.common_env.ini" --unset-all install.app
 for app in $common_env_app; do
-  git config -f "$HOME/.common_env.ini" --add install.app $app
+  git config -f "$HOME/.common_env.ini" --add install.app "$app"
 done
 
 [[ -f "$HOME/.common_env_check" ]] && rm -f "$HOME/.common_env_check"
