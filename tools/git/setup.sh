@@ -21,16 +21,21 @@ EOM
   fi
 
   # setup git user/email if not set yet
-  if [[ "$SETUP_SILENT" -eq 0 ]]; then
-    local user=$(git config --global user.name)
-    local mail
-    if [[ -z "$user" ]] || [[ "$user" == "user" ]] || [[ "$user" == "root" ]]; then
-      user=${USER:-${USERNAME}}
-      read -rep "Please enter your git user name: " -i "$user" user
-      read -rep "Please enter your git user email address: " mail
-      git config --global user.name "$user"
-      git config --global user.email "$mail"
+  local user=$(git config --global user.name)
+  if [[ -z "$user" || "$user" == "user" || "$user" == "root" ]]; then
+    user="$(git config -f "$HOME/.common_env.ini" --get-all git.user)"
+    local mail="$(git config -f "$HOME/.common_env.ini" --get-all git.email)"
+    if [[ "$SETUP_SILENT" -eq 0 ]]; then
+      if [[ -z "$user" ]]; then
+        user=${USER:-${USERNAME}}
+        read -rep "Please enter your git user name: " -i "$user" user
+      fi
+      if [[ -z "$mail" ]]; then
+        read -rep "Please enter your git user email address: " mail
+      fi
     fi
+    git config --global user.name "$user"
+    git config --global user.email "$mail"
   fi
 
   # Add content into .gitconfig

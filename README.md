@@ -101,6 +101,7 @@ If you are on Windows, you can get a portable development environment (it is not
   - tools: **curl**, **rsync**, **tree**, **wget** (~6M)
   - **pacman** package manager (~50M) and additional packages:
     - **man** (~130M)
+    - **zsh**
     - **make**, **cmake**, **mingw-w64-x86_64-toolchain** for C/C++ dev (~1G)
 - **PyCharm** (~700M)
 - **PuTTY** (~5M)
@@ -110,6 +111,7 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Python** (2.7)
 - **Python** (3.8) (~50M)
 - **Node.js** (~65M)
+- **nvm** (~120K)
 - **Gradle** (~110M)
 - **Cygwin**
 - **XAMPP**
