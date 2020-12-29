@@ -65,6 +65,22 @@ if not exist setup.ini (
 
 REM Install PortableApps
 if not exist PortableApps (
+  if exist PortableApps.zip (
+    tar -xf PortableApps.zip 2> nul
+    if errorlevel 1 (
+      7z.exe x PortableApps.zip 2> nul
+    )
+    if errorlevel 1 (
+      "%ProgramFiles%\7-Zip\7z.exe" x PortableApps.zip 2> nul
+    )
+    if errorlevel 1 (
+      powershell -command "Expand-Archive -Force '%~dp0PortableApps.zip' '%~dp0'" 2> nul
+    )
+  )
+)
+
+REM Install PortableApps
+if not exist PortableApps (
 	if exist %APPS_EXE% (
     echo Installing PortableApps...
     echo During the installation please follow those steps:
