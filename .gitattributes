@@ -4,8 +4,13 @@
 # Normalize all line endings
 *	text=auto
 
-# Ensure all shell scripts use LF line endings
+# Ensure shell scripts use LF line endings
+*.awk text eol=lf
 *.sh text eol=lf
 *.bash text eol=lf
 *.zsh text eol=lf
+sourcetool text eol=lf
 
+# Ensure batch scripts use CRLF line endings
+*.cmd text eol=crlf
+*.ps1 text eol=crlf

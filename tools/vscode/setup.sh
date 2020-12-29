@@ -16,7 +16,7 @@ function setup_vscode() {
 
   # Setup VSCode user settings
   local setting_path="$VSCodeData/user-data/User/settings.json"
-  if [ ! -f "$setting_path" ]; then
+  if [[ ! -f "$setting_path" || "$(wc -l <<<"$setting_path")" -le 3 ]]; then
     mkdir -vp "$VSCodeData/user-data/User" "$VSCodeData/extensions"
     echo "Create $setting_path"
     cat >"$setting_path" <<EOM
@@ -114,7 +114,7 @@ EOM
   done
   # Update settings
   local settings="$(cat "$setting_path")"
-  echo "$settings" | "$SETUP_TOOLS_ROOT/shell/bin/generated_content.awk" -v action=replace -v content="$settings_content" >|"$setting_path"
+  echo "$settings" | awk -f "$SETUP_TOOLS_ROOT/shell/bin/generated_content.awk" -v action=replace -v content="$settings_content" >|"$setting_path"
   sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" -e "s#%WINDOWS_APPS_ROOT%#$(echo $WINDOWS_APPS_ROOT | sed -re 's#\\#\\\\\\\\#g')#g" "$setting_path"
   local remote_machine="$(git config -f "$HOME/.common_env.ini" --get putty.remote-machine 2>/dev/null)"
   [[ -z "$remote_machine" ]] && remote_machine="remote_machine"
