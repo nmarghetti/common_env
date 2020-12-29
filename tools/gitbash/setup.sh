@@ -79,20 +79,8 @@ function setup_gitbash() {
 
   # Generate ssh keys
   if [[ ! -f "$APPS_ROOT/home/.ssh/id_rsa" ]]; then
-    local answer='y'
-    echo
-    read -rep "Do you want to create rsa 4096 SSH keys (Y/n)?: " -i "$answer" answer
-    if [[ -z "$answer" ]] || [[ "$answer" =~ ^[yY]$ ]]; then
-      ssh-keygen -t rsa -b 4096
-      echo -e "\nYou can now deploy your public SSH key with the following command:\n\tssh-copy-id login@remote_machine\n"
-      # The input reading does not work well for password
-      # answer=1
-      # while [ -n "$answer" ]; do
-      #   echo -ne "\nType a remote machine where to deploy your public SSH key (or leave empty to stop):"
-      #   read -r answer
-      #   [ -n "$answer" ] && ssh-copy-id $answer
-      # done
-    fi
+    ssh-keygen -t rsa -b 4096 -f "$HOME/.ssh/id_rsa" -N ""
+    echo -e "\nYou can now deploy your public SSH key with the following command:\n\tssh-copy-id login@remote_machine\n"
   fi
 
   return 0
