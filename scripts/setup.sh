@@ -66,7 +66,7 @@ usage() {
   echo "    putty: install PuTTY 0.73" 1>&2
   echo "    superputty: install SuperPuTTY 1.4.0.9" 1>&2
   echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2
-  echo "    node: install NodeJs 12.19.0" 1>&2
+  echo "    node: install NodeJs 12.20.0" 1>&2
   echo "    nvm: install nvm which is a nodejs version manager" 1>&2
   echo "    gradle: install Gradle 6.7.1" 1>&2
   echo "    cygwin: install Cygwin" 1>&2

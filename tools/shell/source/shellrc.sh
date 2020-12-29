@@ -113,7 +113,7 @@ fi
 # pathPrepend "${HOME}/bin"
 export PATH="${HOME}/bin:$PATH"
 
-alias setup_common_env="$(readlink -f "${COMMON_ENV_SHELLRC_ROOT}/../../../scripts/setup.sh")"
+alias setup_common_env="'$(readlink -f "${COMMON_ENV_SHELLRC_ROOT}/../../../scripts/setup.sh")'"
 alias common_env_setup='setup_common_env'
 alias common_env_debug='export COMMON_ENV_DEBUG=1'
 alias common_env_nodebug='export COMMON_ENV_DEBUG=0'
