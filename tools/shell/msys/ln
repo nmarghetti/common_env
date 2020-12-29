@@ -1,0 +1,73 @@
+#! /usr/bin/env bash
+
+msys_ln_check_path() {
+  local location="$1"
+  if [[ "$location" =~ ^/ ]]; then
+    type get_path_to_windows &>/dev/null ||
+      source "$APPS_ROOT/Documents/dev/common_env/tools/shell/source/path_windows.sh" &>/dev/null ||
+      return 1
+    location="$(get_path_to_windows "$location" 2>/dev/null)"
+    [[ $? -ne 0 ]] && return 1
+  fi
+  echo "$location"
+}
+
+msys_ln() {
+  local source
+  local dest
+  local type='/H'
+  local force=0
+  local verbose=0
+  while [[ $# -ge 1 ]]; do
+    case $1 in
+    -f | --force) force=1 ;;
+    --version | -h | --help)
+      type "$FUNCNAME"
+      return 1
+      ;;
+    -v) verbose=1 ;;
+    -P | --physical) type='/H' ;;
+    -s | --symbolic) type='/D' ;;
+    -sf | -fs)
+      force=1
+      type='/D'
+      ;;
+    -sv | -vs)
+      verbose=1
+      type='/D'
+      ;;
+    -vsf | -vfs | -svf | -sfv | -fsv | -fvs)
+      verbose=1
+      force=1
+      type='/D'
+      ;;
+    -*) echo "Unsupported option '$1'" && return 1 ;;
+    *) break ;;
+    esac
+    shift
+  done
+  # Let the default ln do the job if not symlink
+  [[ "$type" != "/D" ]] && return 1
+  source="$1"
+  [[ -z "$source" ]] && echo "Missing source link" && return 1
+  dest="$2"
+  [[ -z "$dest" ]] && dest="$(basename "$source")"
+  source=$(msys_ln_check_path "$source")
+  dest=$(msys_ln_check_path "$dest")
+  local rm_option="-f"
+  [[ "$verbose" -eq 1 ]] && rm_option="-vf"
+  [[ "$source" != "$dest" && $force -eq 1 && -e "$dest" ]] && rm "$rm_option" "$dest"
+  if [[ -e "$dest" ]]; then
+    [[ "$verbose" -eq 1 ]] && echo "$dest already exist"
+    return 1
+  fi
+  # cmd <<<$(echo "mklink $type \"$dest\" \"$source\"") >/dev/null
+  cmd.exe /C "mklink $type \"$dest\" \"$source\"" &>/dev/null
+  local ret_val=$?
+  [[ "$ret_val" -eq 0 && "$verbose" -eq 1 ]] && echo "$dest -> $source"
+  return $ret_val
+}
+
+msys_ln "$@"
+[[ $? -eq 0 ]] && exit 0
+lnmsys "$@"

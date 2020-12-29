@@ -16,8 +16,8 @@ function setup_gitbash() {
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return $ERROR
 
   # Add custom ln to allow to have ln working with symlinks
-  # [[ -f "/usr/bin/ln.exe" ]] && mv "/usr/bin/ln.exe" "/usr/bin/lnmsys.exe"
-  # cmp --silent "/usr/bin/ln" "$SETUP_TOOLS_ROOT/shell/msys/ln" || cp -vf "$SETUP_TOOLS_ROOT/shell/msys/ln" "/usr/bin/ln"
+  [[ -f "/usr/bin/ln.exe" ]] && mv "/usr/bin/ln.exe" "/usr/bin/lnmsys.exe"
+  cmp --silent "/usr/bin/ln" "$SETUP_TOOLS_ROOT/shell/msys/ln" || cp -vf "$SETUP_TOOLS_ROOT/shell/msys/ln" "/usr/bin/ln"
 
   # Allow Msys2 to use the proper Home: https://sourceforge.net/p/msys2/tickets/111/?page=2
   # Replace db_home: env windows cygwin desc

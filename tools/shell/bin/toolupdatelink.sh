@@ -4,7 +4,7 @@
 
 SCRIPT_PATH=$(readlink -f "$0")
 SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
-SCRIPT_DIR=$(dirname "${SCRIPT_PATH}")
+SCRIPT_DIR=$(cd "$(dirname "${SCRIPT_PATH}")" && pwd)
 
 SAVE_FILE=~/.$(basename "${SCRIPT_NAME}" .sh)
 
@@ -49,7 +49,11 @@ find -L "${DEST_DIR}" -maxdepth 1 -type l -exec rm -vf {} \;
 
 for ext in awk sh pl py; do
   for i in $(ls *.${ext} 2>/dev/null); do
-    ln -vsf "${LINK_PATH}/$i" "${DEST_DIR}/$(basename "$i" .${ext})" 2>/dev/null
+    src="${LINK_PATH}/$i"
+    dest="${DEST_DIR}/$(basename "$i" .${ext})"
+    if [[ ! -L "$dest" || "$src" != "$(readlink "$dest")" ]]; then
+      ln -vsf "$src" "$dest" 2>/dev/null
+    fi
   done
 done
 
