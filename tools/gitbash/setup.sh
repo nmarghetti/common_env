@@ -78,7 +78,7 @@ function setup_gitbash() {
   [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
 
   # Generate ssh keys
-  if [[ ! -f "$APPS_ROOT/home/.ssh/id_rsa" ]]; then
+  if [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
     ssh-keygen -t rsa -b 4096 -f "$HOME/.ssh/id_rsa" -N ""
     echo -e "\nYou can now deploy your public SSH key with the following command:\n\tssh-copy-id login@remote_machine\n"
   fi
