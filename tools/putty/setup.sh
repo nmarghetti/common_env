@@ -47,7 +47,8 @@ function setup_putty() {
 
     [[ "$remote_machine" != "remote_machine" ]] && {
       echo -e "\nDeploying the SSH key on machine '$remote_machine'..."
-      ssh-copy-id "$remote_machine"
+      # ssh-keyscan $remote_machine 2>/dev/null >"$HOME/.ssh/known_hosts"
+      ssh-copy-id -i "$HOME/.ssh/id_rsa" -o StrictHostKeyChecking=no "$remote_machine"
     }
   fi
 
