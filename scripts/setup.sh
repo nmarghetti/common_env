@@ -116,6 +116,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -f "$HOME/.common_env.ini" ]]; then
+  # Ensure it is unix compliant
+  cat -v "$HOME/.common_env.ini" | grep '\^M' >/dev/null && dos2unix "$HOME/.common_env.ini"
   # If no apps given, take the ones from config file
   if [[ -z "$APPS" ]]; then
     common_env_app=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
