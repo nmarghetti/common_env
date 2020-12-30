@@ -30,7 +30,7 @@ function setup_putty() {
 
   local remote_machine
   if [[ ! -f "$putty_path/session.reg" ]]; then
-    remote_machine="$(git config -f "$HOME/.common_env.ini" --get putty.remote-machine 2>/dev/null)"
+    remote_machine="$(git --no-pager config -f "$HOME/.common_env.ini" --get putty.remote-machine 2>/dev/null)"
     echo
     local remote_machine_ok=0
     while [[ $remote_machine_ok -eq 0 ]]; do

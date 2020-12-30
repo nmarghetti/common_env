@@ -26,7 +26,7 @@ function setup_pacman() {
   fi
 
   # Install packages
-  local wished_packages="$(git config -f "$HOME/.common_env.ini" --get-all pacman.package | tr '\n' ' ')"
+  local wished_packages="$(git --no-pager config -f "$HOME/.common_env.ini" --get-all pacman.package | tr '\n' ' ')"
   if [[ -n "$wished_packages" ]]; then
     local packages=
     local package
