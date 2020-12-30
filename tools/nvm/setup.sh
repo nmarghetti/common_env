@@ -20,7 +20,7 @@ function setup_nvm() {
       eval "$cmd"
       [[ "$?" -ne 0 ]] && return "$ERROR"
     fi
-  done < <(git config -f "$HOME/.common_env.ini" --get-all nvm.install)
+  done < <(git --no-pager config -f "$HOME/.common_env.ini" --get-all nvm.install)
 
   return 0
 }

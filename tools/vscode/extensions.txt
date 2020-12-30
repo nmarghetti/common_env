@@ -1,5 +1,5 @@
 # To update setup.ini
-# git config -f tools/setup.ini --unset-all vscode.extension && while read extension; do git config -f tools/setup.ini --add vscode.extension "$extension"; done < <(cat tools/vscode/extensions.txt | grep -vE '^#') && sed -i -re 's/^([[:space:]]*extension[[:space:]]=[^:]+):(.*)$/\1#\2/' tools/setup.ini
+# git --no-pager config -f tools/setup.ini --unset-all vscode.extension && while read extension; do git --no-pager config -f tools/setup.ini --add vscode.extension "$extension"; done < <(cat tools/vscode/extensions.txt | grep -vE '^#') && sed -i -re 's/^([[:space:]]*extension[[:space:]]=[^:]+):(.*)$/\1#\2/' tools/setup.ini
 esbenp.prettier-vscode                     : Many language formatter
 foxundermoon.shell-format                  : Shell formatter
 tyriar.shell-launcher                      : Multi shell terminal

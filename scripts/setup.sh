@@ -118,10 +118,10 @@ done
 if [[ -f "$HOME/.common_env.ini" ]]; then
   # If no apps given, take the ones from config file
   if [[ -z "$APPS" ]]; then
-    common_env_app=$(git config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
+    common_env_app=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
     [[ -n "$common_env_app" ]] && APPS="$DEFAULT_APPS $common_env_app"
   fi
-  if [[ "$(git config -f "$HOME/.common_env.ini" --get install.sslcheck 2>/dev/null)" == "0" ]]; then
+  if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get install.sslcheck 2>/dev/null)" == "0" ]]; then
     export DOWNLOAD_NO_SSL_CHECK=1
     "$SETUP_TOOLS_ROOT/ssl_allow.sh"
   fi
@@ -242,11 +242,11 @@ for tool in $APPS; do
 done
 
 # Update the apps installed in $HOME/.common_env.ini
-common_env_app="$(git config -f "$HOME/.common_env.ini" --get-all install.app | tr '\n' ' ') $APPS"
+common_env_app="$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app | tr '\n' ' ') $APPS"
 common_env_app="$(echo "$common_env_app" | tr ' ' '\n' | sort | uniq | tr '\n' ' ')"
-git config -f "$HOME/.common_env.ini" --unset-all install.app
+git --no-pager config -f "$HOME/.common_env.ini" --unset-all install.app
 for app in $common_env_app; do
-  git config -f "$HOME/.common_env.ini" --add install.app "$app"
+  git --no-pager config -f "$HOME/.common_env.ini" --add install.app "$app"
 done
 
 [[ -f "$HOME/.common_env_check" ]] && rm -f "$HOME/.common_env_check"

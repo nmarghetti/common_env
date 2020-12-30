@@ -116,7 +116,7 @@ EOM
   local settings="$(cat "$setting_path")"
   echo "$settings" | awk -f "$SETUP_TOOLS_ROOT/shell/bin/generated_content.awk" -v action=replace -v content="$settings_content" >|"$setting_path"
   sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" -e "s#%WINDOWS_APPS_ROOT%#$(echo $WINDOWS_APPS_ROOT | sed -re 's#\\#\\\\\\\\#g')#g" "$setting_path"
-  local remote_machine="$(git config -f "$HOME/.common_env.ini" --get putty.remote-machine 2>/dev/null)"
+  local remote_machine="$(git --no-pager config -f "$HOME/.common_env.ini" --get putty.remote-machine 2>/dev/null)"
   [[ -z "$remote_machine" ]] && remote_machine="remote_machine"
   sed -ri -e "s#%REMOTE_MACHINE%#$remote_machine#g" "$setting_path"
 

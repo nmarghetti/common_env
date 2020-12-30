@@ -23,8 +23,8 @@ EOM
   # setup git user/email if not set yet
   local user=$(git config --global user.name)
   if [[ -z "$user" || "$user" == "user" || "$user" == "root" ]]; then
-    user="$(git config -f "$HOME/.common_env.ini" --get-all git.user)"
-    local mail="$(git config -f "$HOME/.common_env.ini" --get-all git.email)"
+    user="$(git --no-pager config -f "$HOME/.common_env.ini" --get-all git.user)"
+    local mail="$(git --no-pager config -f "$HOME/.common_env.ini" --get-all git.email)"
     if [[ "$SETUP_SILENT" -eq 0 ]]; then
       if [[ -z "$user" ]]; then
         user=${USER:-${USERNAME}}

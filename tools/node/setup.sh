@@ -12,7 +12,7 @@ function setup_node() {
   [[ ! -f "$nodejs_path/node.exe" ]] && echo "Binary file not installed" && return $ERROR
 
   # Install packages
-  local wished_packages="$(git config -f "$HOME/.common_env.ini" --get-all node.package | tr '\n' ' ')"
+  local wished_packages="$(git --no-pager config -f "$HOME/.common_env.ini" --get-all node.package | tr '\n' ' ')"
   if [[ -n "$wished_packages" ]]; then
     local packages=
     local package
