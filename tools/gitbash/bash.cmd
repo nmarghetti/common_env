@@ -15,21 +15,49 @@ cd "%PRJ_ROOT%"
 
 if "%1" == "git" (
   : Either run git-bash.exe
-  echo "Starting git-bash, the terminal is not always well handled by some commands."
-  echo "At least you can configure the mouse copy/paste."
-  echo "When it will be started, check the following:"
-  echo "    right click on title bar -> Option... -> Mouse"
+    CALL :MinttyInfo
   START /B "%PORTABLEAPPS_GIT%\git-bash.exe" --cd="%PRJ_ROOT%"
-) else  if "%1" == "mintty" (
+  goto Done
+) else if "%1" == "mintty" (
     : Either directly run mintty.exe
-    echo "Starting git-bash, the terminal is not always well handled by some commands."
-    echo "At least you can configure the mouse copy/paste."
-    echo "When it will be started, check the following:"
-    echo "    right click on title bar -> Option... -> Mouse"
+    CALL :MinttyInfo
     "%PORTABLEAPPS_GIT%\usr\bin\mintty.exe" --icon "%PORTABLEAPPS_GIT%\git-bash.exe,0" --exec "/usr/bin/bash" --login -i
-) else (
-  : Either run bash.exe
-  echo "Starting bash, no configurable mouse copy/paste"
-  "%PORTABLEAPPS_GIT%\bin\bash.exe" --init-file "%HOME%\.bashrc"
+    goto Done
+) else if "%1" == "tmux" (
+  if exist "%PORTABLEAPPS_GIT%\usr\bin\tmux.exe" (
+    : Either tmux through mintty.exe
+    CALL :MinttyInfo
+    "%PORTABLEAPPS_GIT%\usr\bin\mintty.exe" --icon "%PORTABLEAPPS_GIT%\git-bash.exe,0" --exec "/usr/bin/bash" --login -i -c tmux
+    goto Done
+  ) else (
+    echo tmux is not installed
+  )
+) else if "%1" == "zsh" (
+  if exist "%PORTABLEAPPS_GIT%\usr\bin\zsh.exe" (
+    : Either run zsh through bash.exe
+    echo Starting zsh through cmd ^(no configurable mouse copy/paste^)
+    "%PORTABLEAPPS_GIT%\bin\bash.exe" --init-file "%HOME%\.bashrc" -c zsh
+    goto Done
+  ) else (
+    echo zsh is not installed
+  )
+) else if "%1" == "zshtty" (
+    : Either zsh through mintty.exe
+    CALL :MinttyInfo
+    "%PORTABLEAPPS_GIT%\usr\bin\mintty.exe" --icon "%PORTABLEAPPS_GIT%\git-bash.exe,0" --exec "/usr/bin/zsh" --login -i
+    goto Done
 )
 
+: Either by default run bash.exe
+echo Starting bash through cmd ^(no configurable mouse copy/paste^)
+"%PORTABLEAPPS_GIT%\bin\bash.exe" --init-file "%HOME%\.bashrc"
+
+:Done
+EXIT /B %ERRORLEVEL%
+
+:MinttyInfo
+  echo Starting mintty, the terminal is not always well handled by some commands.
+  echo At least you can configure the mouse copy/paste.
+  echo When it will be started, check the following:
+  echo     right click on title bar -^> Option... -^> Mouse
+EXIT /B 0

@@ -90,25 +90,37 @@ EOM
   #   fi
   # fi
 
-  # Check zsh if in PortableApps on Windows
-  test -n "$APPS_ROOT" && type zsh &>/dev/null && {
-    # Install oh-my-zsh
-    if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-      RUNZSH=no CHSH=no zsh -c "$("$SETUP_TOOLS_ROOT/shell/bin/download_tarball.sh" -o - "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh")"
-      if [[ -f "$HOME/.zshrc.pre-oh-my-zsh" ]]; then
-        cat "$HOME/.zshrc.pre-oh-my-zsh" >>"$HOME/.zshrc" && rm -f "$HOME/.zshrc.pre-oh-my-zsh"
-        sed -ri -e 's/^ZSH_THEME=.*$/ZSH_THEME="common-env"/' "$HOME/.zshrc"
+  # For PortableApps on Windows
+  if [[ -n "$APPS_ROOT" ]]; then
+    # Check zsh
+    type zsh &>/dev/null && {
+      # Install oh-my-zsh
+      if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+        RUNZSH=no CHSH=no zsh -c "$("$SETUP_TOOLS_ROOT/shell/bin/download_tarball.sh" -o - "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh")"
+        if [[ -f "$HOME/.zshrc.pre-oh-my-zsh" ]]; then
+          cat "$HOME/.zshrc.pre-oh-my-zsh" >>"$HOME/.zshrc" && rm -f "$HOME/.zshrc.pre-oh-my-zsh"
+          sed -ri -e 's/^ZSH_THEME=.*$/ZSH_THEME="common-env"/' "$HOME/.zshrc"
+        fi
       fi
-    fi
 
-    if [[ -d "$HOME/.oh-my-zsh" ]]; then
-      if [[ ! -f "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" || \
-        "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" -nt "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ]]; then
-        cp -vf "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme"
+      if [[ -d "$HOME/.oh-my-zsh" ]]; then
+        if [[ ! -f "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" || \
+          "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" -nt "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ]]; then
+          cp -vf "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme"
+        fi
       fi
-    fi
+    }
 
-  }
+    # Check tmux
+    type tmux &>/dev/null && {
+      # Install oh-my-tmux
+      if [[ ! -d "$HOME/.oh-my-tmux" ]]; then
+        git clone https://github.com/gpakosz/.tmux.git "$HOME/.oh-my-tmux"
+        ln -svf "$HOME/.oh-my-tmux/.tmux.conf" "$HOME/.tmux.conf"
+        cp -vf "$HOME/.oh-my-tmux/.tmux.conf.local" "$HOME/"
+      fi
+    }
+  fi
 
   return 0
 }

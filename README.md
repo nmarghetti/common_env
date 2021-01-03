@@ -102,6 +102,7 @@ If you are on Windows, you can get a portable development environment (it is not
   - **pacman** package manager (~50M) and additional packages:
     - **man** (~130M)
     - **zsh**
+    - **tmux**
     - **make**, **cmake**, **mingw-w64-x86_64-toolchain** for C/C++ dev (~1G)
 - **PyCharm** (~700M)
 - **PuTTY** (~5M)
