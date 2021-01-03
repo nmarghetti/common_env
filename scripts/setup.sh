@@ -193,9 +193,6 @@ if [[ -n "$APPS_ROOT" ]]; then
 
   # Ensure to have default windows apps (except if skipped)
   [[ "$SETUP_SKIP_DEFAULT" -eq 0 ]] && APPS="$DEFAULT_WIN_APPS $(echo "$APPS" | tr ' ' '\n' | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')"
-
-  # Update the path to common_env
-  echo "$(get_path_to_windows "$SETUP_ROOT")" >"$HOME/.common_env_path"
 fi
 
 # Check there is no space character in the paths used, otherwise warn the user
@@ -250,6 +247,9 @@ git --no-pager config -f "$HOME/.common_env.ini" --unset-all install.app
 for app in $common_env_app; do
   git --no-pager config -f "$HOME/.common_env.ini" --add install.app "$app"
 done
+
+# Update the path to common_env
+echo "$SETUP_ROOT" >"$HOME/.common_env_path"
 
 [[ -f "$HOME/.common_env_check" ]] && rm -f "$HOME/.common_env_check"
 echo -e "Setup done.\n"

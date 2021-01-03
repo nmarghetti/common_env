@@ -168,7 +168,8 @@ jobs:
           pythonvenv list
           pycreate
           pylist
-          source pythonvenv set $(pythonvenv list | head -1)
+          source "$(pythonvenv set $(pylist | head -1))"
+          pyset $(pylist | head -1)
           echo "  * Check current python"
           type python
           python -c "import sys; print(f'Python version: {sys.version}\\nPython path:\\n{sys.path}')"
