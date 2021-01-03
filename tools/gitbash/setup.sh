@@ -6,7 +6,7 @@ function setup_gitbash() {
   local git_path="$APPS_ROOT/PortableApps/PortableGit"
 
   for file in bash.cmd mintty.cmd; do
-    [[ -f "$HOME/$file" ]] || cp -vf "$SETUP_TOOLS_ROOT/gitbash/$file" "$HOME/"
+    [[ ! -f "$HOME/$file" || "$SETUP_TOOLS_ROOT/gitbash/$file" -nt "$HOME/$file" ]] && cp -vf "$SETUP_TOOLS_ROOT/gitbash/$file" "$HOME/"
   done
 
   # Install Git for Windows
@@ -79,6 +79,10 @@ function setup_gitbash() {
   rsync -au "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git-for-windows.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon1.ico"
   rsync -au "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/msys2-32.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon2.ico"
   rsync -au "$APPS_ROOT/PortableApps/PortableGit/usr/share/git/git.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon3.ico"
+  [[ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon4.ico" ]] &&
+    download_tarball -o "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon4.ico" "https://raw.githubusercontent.com/zsh-users/zsh/master/Src/zsh.ico"
+  [[ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon5.ico" ]] &&
+    download_tarball -o "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon5.ico" "https://icon-icons.com/downloadimage.php?id=131831&root=2148/ICO/128/&file=tmux_icon_131831.ico"
 
   # Enable long path
   [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
