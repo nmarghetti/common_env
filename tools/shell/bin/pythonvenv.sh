@@ -58,7 +58,6 @@ function create_env() {
 }
 
 function set_env() {
-  set -x
   version=$1
   test -z "$version" && echo "Please specify version" && return 1
   cd && mkdir -p .venv && cd ".venv"
@@ -97,7 +96,6 @@ function set_env() {
   fi
   printf 'Please run the following command to activate:\n%s\n' "source '$(readlink -f "$pythonactivate")' && type python" >&2
   printf '%s\n' "$(readlink -f "$pythonactivate")"
-  set +x
 }
 
 main() {
