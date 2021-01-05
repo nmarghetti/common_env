@@ -214,6 +214,8 @@ You can define those environment variables to customize git:
 
    - [Bash/Unix/Linux tutorial](https://www.tutorialspoint.com/unix_commands/bash.htm)
    - Bash: [Reference manual](https://www.gnu.org/software/bash/manual/html_node/index.html#SEC_Contents), [style](https://github.com/progrium/bashstyle), [obsolete](https://wiki.bash-hackers.org/scripting/obsolete), [cheatsheet](https://bertvv.github.io/cheat-sheets/Bash.html), [parse args](https://unix.stackexchange.com/questions/62950/getopt-getopts-or-manual-parsing-what-to-use-when-i-want-to-support-both-shor), [ArgBash](https://argbash.io/send_template#generated), [Parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html), [set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+   - [Bash-it](https://github.com/Bash-it/bash-it): [doc](https://bash-it.readthedocs.io/en/latest/themes-list/)
+   - [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)
    - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm), [help](https://ss64.com/nt/)
    - [Cygwin](https://cygwin.com/): [Portable Cygwin](https://github.com/vegardit/cygwin-portable-installer)
    - Pacman: [homepage](https://www.archlinux.org/pacman/), [documentation](https://www.archlinux.org/pacman/pacman.8.html), [wiki](https://wiki.archlinux.org/index.php/pacman)

@@ -29,23 +29,36 @@ if "%1" == "git" (
     CALL :MinttyInfo
     "%PORTABLEAPPS_GIT%\usr\bin\mintty.exe" --icon "%PORTABLEAPPS_GIT%\git-bash.exe,0" --exec "/usr/bin/bash" --login -i -c tmux
     goto Done
-  ) else (
-    echo tmux is not installed
   )
+  echo tmux is not installed
 ) else if "%1" == "zsh" (
   if exist "%PORTABLEAPPS_GIT%\usr\bin\zsh.exe" (
     : Either run zsh through bash.exe
     echo Starting zsh through cmd ^(no configurable mouse copy/paste^)
     "%PORTABLEAPPS_GIT%\bin\bash.exe" --init-file "%HOME%\.bashrc" -c zsh
     goto Done
-  ) else (
-    echo zsh is not installed
   )
+  echo zsh is not installed
 ) else if "%1" == "zshtty" (
+  if exist "%PORTABLEAPPS_GIT%\usr\bin\zsh.exe" (
     : Either zsh through mintty.exe
     CALL :MinttyInfo
     "%PORTABLEAPPS_GIT%\usr\bin\mintty.exe" --icon "%PORTABLEAPPS_GIT%\git-bash.exe,0" --exec "/usr/bin/zsh" --login -i
     goto Done
+  )
+  echo zsh is not installed
+) else if "%1" == "tmuxzsh" (
+  if exist "%PORTABLEAPPS_GIT%\usr\bin\zsh.exe" (
+      if exist "%PORTABLEAPPS_GIT%\usr\bin\tmux.exe" (
+      : Either zsh through mintty.exe
+      CALL :MinttyInfo
+      "%PORTABLEAPPS_GIT%\usr\bin\mintty.exe" --icon "%PORTABLEAPPS_GIT%\git-bash.exe,0" --exec "/usr/bin/zsh" --login -i -c tmux
+      goto Done
+    )
+    echo tmux is not installed
+  ) else (
+    echo zsh is not installed
+  )
 )
 
 : Either by default run bash.exe
