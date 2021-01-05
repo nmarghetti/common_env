@@ -1,0 +1,54 @@
+#! /usr/bin/env bash
+
+# https://gist.github.com/matthiassb/9c8162d2564777a70e3ae3cbee7d2e95
+setupVpn() {
+  grep -q "$(hostname)" /etc/hosts || cat "127.0.0.1 $(hostname)" >>/etc/hosts
+
+  if [[ ! -f /etc/init.d/dns-sync.sh ]]; then
+    sudo curl -fL --compressed --progress-bar -o /etc/init.d/dns-sync.sh https://gist.github.com/matthiassb/9c8162d2564777a70e3ae3cbee7d2e95/raw/b204a9faa2b4c8d58df283ddc356086333e43408/dns-sync.sh
+    [[ ! -f /etc/init.d/dns-sync.sh && -f "$WSL_APPS_ROOT/dns-sync.sh" ]] &&
+      sudo cp -vf "$WSL_APPS_ROOT/dns-sync.sh" /etc/init.d/dns-sync.sh
+    sudo chmod +x /etc/init.d/dns-sync.sh
+  fi
+  [[ ! -f /etc/init.d/dns-sync.sh ]] && return 1
+
+  # [[ -L /etc/resolv.conf ]] && unlink /etc/resolv.conf
+  # [[ -f /etc/resolv.conf ]] && rm -f /etc/resolv.conf
+  # To put it back, do this
+  # ln -s /run/resolvconf/resolv.conf /etc/resolv.conf
+  if sudo service dns-sync.sh status 2>/dev/null | grep -q 'dns-sync is not running'; then
+    sudo service dns-sync.sh start
+  fi
+}
+
+createSshKey() {
+  if [[ "$(type puttygen 2>&1 >/dev/null | wc -l)" -ne 0 ]]; then
+    sudo apt-get update
+    sudo apt-get -qq install putty-tools
+  fi
+
+  type puttygen >/dev/null || return 1
+
+  local ssh_folder="$HOME/.ssh"
+  [[ ! -d "$ssh_folder" ]] && {
+    mkdir -p "$ssh_folder"
+    chmod 700 "$ssh_folder"
+  }
+  # If ssh key already generated on WSL, just use a temporary folder
+  if [[ -f "$HOME/.ssh/id_rsa" ]]; then
+    ssh_folder=$(mktemp -d)
+  fi
+  [[ -z "$ssh_folder" || ! -d "$ssh_folder" ]] && return 1
+
+  puttygen -t rsa -b 4096 -o "$ssh_folder/id_rsa.ppk" -O private --new-passphrase /dev/null
+  puttygen "$ssh_folder/id_rsa.ppk" -o "$ssh_folder/id_rsa" -O private-openssh
+  puttygen "$ssh_folder/id_rsa.ppk" -o "$ssh_folder/id_rsa.pub" -O public-openssh
+  [[ -f "$ssh_folder/id_rsa.ppk" && -f "$ssh_folder/id_rsa" && -f "$ssh_folder/id_rsa.pub" ]] &&
+    cp -f "$ssh_folder/id_rsa.ppk" "$ssh_folder/id_rsa" "$ssh_folder/id_rsa.pub" "$WSL_HOME/.ssh/"
+
+  # Clean if temporary folder has been used
+  [[ "$HOME/.ssh" != "$ssh_folder" ]] && rm -rf "$ssh_folder"
+}
+
+setupVpn
+createSshKey
