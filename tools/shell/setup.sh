@@ -92,34 +92,65 @@ EOM
 
   # For PortableApps on Windows
   if [[ -n "$APPS_ROOT" ]]; then
-    # Check zsh
-    type zsh &>/dev/null && {
-      # Install oh-my-zsh
-      if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-        RUNZSH=no CHSH=no zsh -c "$("$SETUP_TOOLS_ROOT/shell/bin/download_tarball.sh" -o - "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh")"
-        if [[ -f "$HOME/.zshrc.pre-oh-my-zsh" ]]; then
-          cat "$HOME/.zshrc.pre-oh-my-zsh" >>"$HOME/.zshrc" && rm -f "$HOME/.zshrc.pre-oh-my-zsh"
-          sed -ri -e 's/^ZSH_THEME=.*$/ZSH_THEME="common-env"/' "$HOME/.zshrc"
+    # Install Bash-it
+    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.bash-it)" != "0" ]]; then
+      if [[ ! -d "$HOME/.bash-it" ]]; then
+        git clone 'https://github.com/Bash-it/bash-it.git' "$HOME/.bash-it"
+        "$HOME/.bash-it/install.sh" --silent
+        if [[ -f "$HOME/.bashrc.bak" ]]; then
+          local bash_theme="$(git --no-pager config -f "$HOME/.common_env.ini" --get bash-it.theme)"
+          # [[ -z "$bash_theme" ]] && bash_theme="common-env"
+          echo >>"$HOME/.bashrc"
+          cat "$HOME/.bashrc.bak" >>"$HOME/.bashrc" && rm -f "$HOME/.bashrc.bak"
+          sed -ri -e "s/^export BASH_IT_THEME=.*$/export BASH_IT_THEME=\"$bash_theme\"/" "$HOME/.bashrc"
         fi
       fi
+      # if [[ -d "$HOME/.bash-it" ]]; then
+      #   type bash-it &>/dev/null || source "$HOME/"
+      # fi
+    fi
 
-      if [[ -d "$HOME/.oh-my-zsh" ]]; then
-        if [[ ! -f "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" || \
-          "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" -nt "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ]]; then
-          cp -vf "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme"
+    # Check zsh
+    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.oh-my-zsh)" != "0" ]]; then
+      type zsh &>/dev/null && {
+        # Install oh-my-zsh
+        if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+          RUNZSH=no CHSH=no zsh -c "$("$SETUP_TOOLS_ROOT/shell/bin/download_tarball.sh" -o - "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh")"
+          if [[ -f "$HOME/.zshrc.pre-oh-my-zsh" ]]; then
+            # Update zshrc
+            echo >>"$HOME/.zshrc"
+            cat "$HOME/.zshrc.pre-oh-my-zsh" >>"$HOME/.zshrc" && rm -f "$HOME/.zshrc.pre-oh-my-zsh"
+            # Set theme
+            local zsh_theme="$(git --no-pager config -f "$HOME/.common_env.ini" --get oh-my-zsh.theme)"
+            [[ -z "$zsh_theme" ]] && zsh_theme="common-env"
+            sed -ri -e "s/^ZSH_THEME=.*$/ZSH_THEME=\"$zsh_theme\"/" "$HOME/.zshrc"
+            # Set plugins
+            local plugins="$(git --no-pager config -f "$HOME/.common_env.ini" --get oh-my-zsh.plugins)"
+            sed -ri -e "s/^plugins=.*$/plugins=\($plugins\)/" "$HOME/.zshrc"
+          fi
         fi
-      fi
-    }
+
+        if [[ -d "$HOME/.oh-my-zsh" ]]; then
+          # Update common-env theme
+          if [[ ! -f "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" || \
+            "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" -nt "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ]]; then
+            cp -vf "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme"
+          fi
+        fi
+      }
+    fi
 
     # Check tmux
-    type tmux &>/dev/null && {
-      # Install oh-my-tmux
-      if [[ ! -d "$HOME/.oh-my-tmux" ]]; then
-        git clone https://github.com/gpakosz/.tmux.git "$HOME/.oh-my-tmux"
-        ln -svf "$HOME/.oh-my-tmux/.tmux.conf" "$HOME/.tmux.conf"
-        cp -vf "$HOME/.oh-my-tmux/.tmux.conf.local" "$HOME/"
-      fi
-    }
+    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.tmux)" != "0" ]]; then
+      type tmux &>/dev/null && {
+        # Install oh-my-tmux
+        if [[ ! -d "$HOME/.oh-my-tmux" ]]; then
+          git clone 'https://github.com/gpakosz/.tmux.git' "$HOME/.oh-my-tmux"
+          ln -svf "$HOME/.oh-my-tmux/.tmux.conf" "$HOME/.tmux.conf"
+          cp -vf "$HOME/.oh-my-tmux/.tmux.conf.local" "$HOME/"
+        fi
+      }
+    fi
   fi
 
   return 0

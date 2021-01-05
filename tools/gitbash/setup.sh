@@ -83,6 +83,8 @@ function setup_gitbash() {
     download_tarball -o "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon4.ico" "https://raw.githubusercontent.com/zsh-users/zsh/master/Src/zsh.ico"
   [[ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon5.ico" ]] &&
     download_tarball -o "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon5.ico" "https://icon-icons.com/downloadimage.php?id=131831&root=2148/ICO/128/&file=tmux_icon_131831.ico"
+  [[ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon6.ico" ]] &&
+    cp -vf "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon5.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon6.ico"
 
   # Enable long path
   [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
