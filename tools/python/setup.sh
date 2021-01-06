@@ -13,8 +13,13 @@ function setup_python() {
   local python_version="3.8.2"
   local python_bin="$python_path/python.exe"
 
+  # if python and pip already locally installed
+  if [[ -f '/usr/bin/python' && -f '/usr/bin/pip' ]]; then
+    python_bin='/usr/bin/python'
   # if the current python version is present, but not installed in APPS_ROOT
-  if type python &>/dev/null && [ "$(python --version | cut -d' ' -f2 | tr -d '[:space:]')" = "$python_version" ] && [ "$(which python | grep -vE "$APPS_ROOT")" ]; then
+  elif type python &>/dev/null &&
+    [ "$(python --version | cut -d' ' -f2 | tr -d '[:space:]')" = "$python_version" ] &&
+    [ "$(which python | grep -vE "$APPS_ROOT")" ]; then
     python_bin=$(which python)
   else
     export PYTHONUSERBASE="$python_winpath"
@@ -28,7 +33,7 @@ function setup_python() {
     mkdir -vp "$python_path"
     local tarball="python-${python_version}-amd64.exe"
     download_tarball "https://www.python.org/ftp/python/$python_version/$tarball"
-    [[ $? -ne 0 ]] && echo "Unable to get the installer" && return $ERROR
+    [[ $? -ne 0 ]] && echo "Unable to get the installer" && return "$ERROR"
     # Need to eval in case there is space character in the path, but the return code is always 0
     # Need to install for all user https://stackoverflow.com/questions/61641280/python3-8-venv-returned-exit-status-101/62207756#62207756
     local start=$(date +%s)
@@ -48,21 +53,29 @@ function setup_python() {
   [[ ! -f "$python_bin" ]] && echo "Error: python binary is not installed" && return $ERROR
   ! "$python_bin" -m pip --version &>/dev/null && echo "Error: pip is not installed" >&2 && return $ERROR
 
+  # Create venv
   # to be checked why putting $python_version in grep does not work
-  if [[ $("$SETUP_TOOLS_ROOT/shell/bin/pythonvenv.sh" list | grep -cE "^3.8.2$") -eq 0 ]]; then
-    "$SETUP_TOOLS_ROOT/shell/bin/pythonvenv.sh" create "$python_bin" || (echo "Error, unable to set python virtual env." && return $ERROR)
+  if [[ $("$SETUP_TOOLS_ROOT/shell/bin/pythonvenv.sh" list | grep -cE "^3.[7-9]") -eq 0 ]]; then
+    "$SETUP_TOOLS_ROOT/shell/bin/pythonvenv.sh" create "$python_bin" || {
+      echo "Error, unable to set python virtual env." && return "$ERROR"
+    }
   fi
 
-  for py in "$python_bin" "$APPS_ROOT/home/.venv/$python_version/Scripts/python.exe"; do
+  for py in "$python_bin" "$APPS_ROOT/home/.venv/3/bin/python" "$APPS_ROOT/home/.venv/$python_version/Scripts/python.exe"; do
     if [[ -f "$py" ]]; then
+      echoColor 36 "Checking $py..."
+      # ! "$py" -m autopep8 --version &>/dev/null && "$py" -m pip install --upgrade wheel pip pylint autopep8
+      "$py" -m pip install --upgrade wheel pip pylint autopep8
+
       # "$py" -m pip config set global.index-url "https://pypi.python.org/simple/"
       # "$py" -m pip config set global.find-links "https://pypi.python.org/simple/ https://pypi.org/simple/"
       # "$py" -m pip config set global.download-cache "$WINDOWS_APPS_ROOT\\PortableApps\\Common\\python\\cache" --> does not seem to be taken into account, more based on %APPDATA%
-      "$py" -m pip install --upgrade wheel
-      "$py" -m pip install --upgrade pip
-      # Keep in mind the --user that can be used, eg. Python extension in VSCode
-      "$py" -m pip install --upgrade pylint   #--user
-      "$py" -m pip install --upgrade autopep8 #--user
+
+      # "$py" -m pip install --upgrade wheel
+      # "$py" -m pip install --upgrade pip
+      # # Keep in mind the --user that can be used, eg. Python extension in VSCode
+      # "$py" -m pip install --upgrade pylint   #--user
+      # "$py" -m pip install --upgrade autopep8 #--user
     fi
   done
   set +x

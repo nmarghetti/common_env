@@ -48,8 +48,8 @@ cd "$SETUP_ROOT"
 SETUP_SILENT=0
 SETUP_SKIP_DEFAULT=0
 DEFAULT_APPS="shell git"
-# DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash pacman portableapps python"
-DEFAULT_WIN_APPS="$DEFAULT_APPS gitbash portableapps python"
+# DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS pacman portableapps python"
+DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS portableapps python"
 DEFAULT_APPS_GREP=$(echo "$DEFAULT_WIN_APPS" | tr ' ' '|')
 APPS=
 
@@ -177,6 +177,10 @@ if [[ -n "$APPS_ROOT" ]]; then
     APPS_ROOT="$(get_path_to_posix "$APPS_ROOT")"
     [[ $? -ne 0 ]] || [[ ! -d "$APPS_ROOT" ]] && echo "APPS_ROOT='$APPS_ROOT' does not exist" && exit 1
   fi
+
+  # https://www.joshkel.com/2018/01/18/symlinks-in-windows/
+  # Ensure to have proper symlinks
+  echo "$MSYS" | grep -q 'winsymlinks:nativestrict' || export MSYS="$MSYS winsymlinks:nativestrict"
 
   export APPDATA="$APPS_ROOT/AppData/Roaming"
   export LOCALAPPDATA="$APPS_ROOT/AppData/Local"

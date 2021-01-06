@@ -208,7 +208,7 @@ You can define those environment variables to customize git:
    - [SuperPutty](https://github.com/jimradford/superputty)
    - [Cmder](https://cmder.net/): [ConEmu](https://conemu.github.io/), [Clink](https://mridgers.github.io/clink/)
    - [MobaXterm](https://mobaxterm.mobatek.net/)
-   - [tmux](https://github.com/tmux/tmux/): [config](https://github.com/gpakosz/.tmux)
+   - [tmux](https://github.com/tmux/tmux/): [info](https://github.com/rothgar/awesome-tmux), [config](https://github.com/gpakosz/.tmux)
 
 1. **Other**
 

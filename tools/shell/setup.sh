@@ -141,6 +141,9 @@ EOM
     fi
 
     # Check tmux
+    # https://github.com/rothgar/awesome-tmux
+    # http://marklodato.github.io/2013/10/31/autostart-tmux-on-ssh.html
+    # https://awesomeopensource.com/project/samoshkin/tmux-config
     if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.tmux)" != "0" ]]; then
       type tmux &>/dev/null && {
         # Install oh-my-tmux

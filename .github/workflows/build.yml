@@ -56,6 +56,7 @@ jobs:
           source tools/shell/source/system.sh
           echo "  * Current system: $(system_get_os)"
           echo "  * Current host system: $(system_get_os_host)"
+          echo "  * Current shell path: $(system_get_current_shell_path)"
           echo "  * Current shell: $(system_get_current_shell)"
           echo "  * Installed shells:"
           system_get_shells
@@ -68,6 +69,7 @@ jobs:
           source tools/shell/source/system.sh
           echo "  * Current system: $(system_get_os)"
           echo "  * Current host system: $(system_get_os_host)"
+          echo "  * Current shell path: $(system_get_current_shell_path)"
           echo "  * Current shell: $(system_get_current_shell)"
           echo "  * Installed shells:"
           system_get_shells

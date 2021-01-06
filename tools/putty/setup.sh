@@ -25,7 +25,7 @@ function setup_putty() {
       curl -sSfL -o "$putty_path/dns-sync.sh" 'https://gist.github.com/matthiassb/9c8162d2564777a70e3ae3cbee7d2e95/raw/b204a9faa2b4c8d58df283ddc356086333e43408/dns-sync.sh'
     export WSL_HOME="//mnt$(get_path_to_posix "$HOME")" &&
       export WSL_APPS_ROOT="//mnt$(get_path_to_posix "$APPS_ROOT")" &&
-      cat "$SETUP_TOOLS_ROOT/putty/wsl_puttygen.sh" | WSLENV=WSL_HOME:WSL_APPS_ROOT:/p wsl
+      WSLENV=WSL_HOME:WSL_APPS_ROOT:/p wsl <"$SETUP_TOOLS_ROOT/putty/wsl_puttygen.sh"
   fi
 
   if [[ ! -f "$HOME/.ssh/id_rsa.ppk" ]] && [[ -f "$HOME/.ssh/id_rsa" ]]; then
