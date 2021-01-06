@@ -31,6 +31,7 @@ system_get_os_host() {
 system_get_current_shell_path() {
   [[ -e "/proc/$$/exe" ]] && readlink "/proc/$$/exe" && return 0
   ps -p $$ | tr '[:space:]' '\n' | grep 'sh' | head -1 && return 0
+  which "$SHELL" && return 0
   echo "$SHELL"
 }
 

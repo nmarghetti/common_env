@@ -34,5 +34,8 @@ if not exist "%APPS_ROOT%\PortableApps\CommonFiles\python\python.exe" goto :no_p
 REM PATH to python venv 3.8
 if exist "%HOME%\.venv\3.8.2\Scripts" set PATH=%HOME%\.venv\3.8.2;%HOME%\.venv\3.8.2\Scripts;%PATH%
 
+REM PATH to python venv 3 (/usr/bin/python)
+if exist "%HOME%\.venv\3\bin" set PATH=%HOME%\.venv\3\bin;%PATH%
+
 REM PATH to git
 set PATH=%APPS_ROOT%\PortableApps\PortableGit\bin;%PATH%
