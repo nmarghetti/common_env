@@ -48,9 +48,14 @@ msys_ln() {
   done
   # Let the default ln do the job if not symlink
   [[ "$type" != "/D" ]] && return 1
+  # Let the default ln do the job if more than 2 args
+  [[ "$#" -gt 2 ]] && return 1
   source="$1"
   [[ -z "$source" ]] && echo "Missing source link" && return 1
   dest="$2"
+  # if dest has an ending /, dest adds the filename of source to itself
+  [[ -n "$dest" && "$dest" = "${dest%/}/" ]] && dest="${dest}$(basename "$source")"
+  # if not dest, lets take the same name as source
   [[ -z "$dest" ]] && dest="$(basename "$source")"
   source=$(msys_ln_check_path "$source")
   dest=$(msys_ln_check_path "$dest")

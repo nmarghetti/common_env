@@ -140,6 +140,9 @@ else
 fi
 if [ -d "$APPS_ROOT/PortableApps" ]; then
   common_env_log "Setup portable apps config"
+  # https://www.joshkel.com/2018/01/18/symlinks-in-windows/
+  # Ensure to have proper symlinks
+  echo "$MSYS" | grep -q 'winsymlinks:nativestrict' || export MSYS="$MSYS winsymlinks:nativestrict"
   common_env_check() {
     "$(system_get_current_shell_path)" "$COMMON_ENV_SHELLRC_ROOT/check_common_env.sh"
   }
