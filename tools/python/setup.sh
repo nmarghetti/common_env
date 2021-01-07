@@ -61,11 +61,14 @@ function setup_python() {
     }
   fi
 
+  local python_modules=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all python3.modules 2>/dev/null)
   for py in "$python_bin" "$APPS_ROOT/home/.venv/3/bin/python" "$APPS_ROOT/home/.venv/$python_version/Scripts/python.exe"; do
     if [[ -f "$py" ]]; then
+      [[ "$py" = "/usr/bin/python" ]] && continue
       echoColor 36 "Checking $py..."
       # ! "$py" -m autopep8 --version &>/dev/null && "$py" -m pip install --upgrade wheel pip pylint autopep8
-      "$py" -m pip install --upgrade wheel pip pylint autopep8
+      "$py" -m pip install --upgrade wheel pip setuptools
+      [[ -n "$python_modules" ]] && "$py" -m pip install --upgrade $(echo "$python_modules")
 
       # "$py" -m pip config set global.index-url "https://pypi.python.org/simple/"
       # "$py" -m pip config set global.find-links "https://pypi.python.org/simple/ https://pypi.org/simple/"
