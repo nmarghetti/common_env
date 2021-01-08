@@ -41,12 +41,12 @@ function setup_gitbash() {
     done
   fi
 
-  # Install wget
-  if [[ ! -f "$git_path/usr/bin/wget.exe" ]]; then
-    echoColor 36 "Adding wget..."
-    download_tarball -o "$git_path/usr/bin/wget.exe" "https://eternallybored.org/misc/wget/1.20.3/64/wget.exe"
-    [[ $? -ne 0 ]] && echo "Unable to retrieve wget" && return $ERROR
-  fi
+  # # Install wget
+  # if [[ ! -f "$git_path/usr/bin/wget.exe" ]]; then
+  #   echoColor 36 "Adding wget..."
+  #   download_tarball -o "$git_path/usr/bin/wget.exe" "https://eternallybored.org/misc/wget/1.20.3/64/wget.exe"
+  #   [[ $? -ne 0 ]] && echo "Unable to retrieve wget" && return $ERROR
+  # fi
 
   # Install rsync, zstd
   local extra_tools=(
