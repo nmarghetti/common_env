@@ -48,8 +48,7 @@ cd "$SETUP_ROOT"
 SETUP_SILENT=0
 SETUP_SKIP_DEFAULT=0
 DEFAULT_APPS="shell git"
-# DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS pacman portableapps python"
-DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS portableapps python"
+DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS portableapps"
 DEFAULT_APPS_GREP=$(echo "$DEFAULT_WIN_APPS" | tr ' ' '|')
 APPS=
 

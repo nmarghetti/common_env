@@ -22,9 +22,9 @@ setupVpn() {
 }
 
 createSshKey() {
-  if [[ "$(type puttygen 2>&1 >/dev/null | wc -l)" -ne 0 ]]; then
+  if [[ "$(type puttygen sshpass git 2>&1 >/dev/null | wc -l)" -ne 0 ]]; then
     sudo apt-get update
-    sudo apt-get -qq install putty-tools
+    sudo apt-get -qq install putty-tools sshpass git
   fi
 
   type puttygen >/dev/null || return 1
@@ -46,9 +46,17 @@ createSshKey() {
   [[ -f "$ssh_folder/id_rsa.ppk" && -f "$ssh_folder/id_rsa" && -f "$ssh_folder/id_rsa.pub" ]] &&
     cp -f "$ssh_folder/id_rsa.ppk" "$ssh_folder/id_rsa" "$ssh_folder/id_rsa.pub" "$WSL_HOME/.ssh/"
 
+  if [[ -n "WSL_REMOTE_MACHINE" ]]; then
+    local pass_file=$(git --no-pager config -f "$WSL_HOME/.common_env.ini" --get putty.pass-file | sed -re "s#%APPS_ROOT%#$WSL_APPS_ROOT#g")
+    local pass_size=$(stat -c%s "$pass_file" 2>/dev/null)
+    [[ "${pass_size:-0}" -gt 0 ]] && sshpass -f "$pass_file" ssh-copy-id -i "$ssh_folder/id_rsa" -o StrictHostKeyChecking=no "$WSL_USER@$WSL_REMOTE_MACHINE"
+  fi
+
   # Clean if temporary folder has been used
   [[ "$HOME/.ssh" != "$ssh_folder" ]] && rm -rf "$ssh_folder"
 }
 
 setupVpn
 createSshKey
+
+exit 0
