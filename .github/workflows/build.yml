@@ -132,6 +132,7 @@ jobs:
         run: |
           echo "Setup everything"
           bash ./scripts/setup.sh -s
+          git config color.ui always
       # Display ~/.bash_profile
       - name: Display ~/.bash_profile
         run: cat "$HOME/.bash_profile" | nl -ba
@@ -179,14 +180,12 @@ jobs:
       # Runs on the system default shell
       - name: Quick git check
         run: |
-          git debugo
           git st
           git lga20
       # Check Git
       - name: Check Git
         shell: bash
         run: |
-          git debugo
           git config --global user.name runner
           bash ./tools/git/test_git.sh
       # Check update
@@ -231,6 +230,5 @@ jobs:
         if: runner.os == 'Linux' || runner.os == 'macOs'
         shell: zsh -e -o pipefail {0}
         run: |
-          git debugo
           git st
           git lga20

@@ -9,7 +9,7 @@
 # or also the negative: nobold, nodim, noul, noblink, noreverse, noitalic, or nostrike
 
 [color]
-  ui = true
+  ui = auto
 
 [color "status"]
   added = bold yellow
@@ -46,7 +46,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.0.12'
+  cv = ! echo 'gitconfig 2.1.0'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -404,9 +404,8 @@
   versionmajor = ! git --version | cut -d' ' -f3 | cut -d'.' -f1
   versionmajor2 = ! test $(git versionmajor) -ge 2
 
-  # Tools to display full git command, more complex than expected !!!
+  # Tools to display details about given git command
   # It is too colorize the output on Linux, macOS, Windows, on different terminal (tty or not)
-  # TODO: to optimize, each display takes too much time !!!
   cmd = ! "f(){ \
       cd -- ${GIT_PREFIX:-.}; \
       if [ \"$GIT_CMD_NOECHO\" = \"1\" ]; then \
@@ -414,92 +413,13 @@
       elif [ \"$GIT_CMD_NOCOLOR\" = \"1\" ]; then \
         echo \"------~~~=<[ git $@ ]>=~~~------\"; \
       else \
-        git echocolor 32 \"git $@\"; \
+        printf \"\\e[32m%s\\e[0m\\n\" \"git $*\"; \
       fi; \
-      if [ ! \"$(git echocmd)\" = \"echo\" ]; then \
-        color='-c color.ui=always'; \
-      fi; \
-      [ ! \"$GIT_CMD_DRY\" = \"1\" ] && git $color \"$@\"; \
+      [ ! \"$GIT_CMD_DRY\" = \"1\" ] && git \"$@\"; \
     } ; f" # echo with cmd color (green) and run cmd
   echoi = ! "f(){ \
-      git echocolor 39 \"$@\"; \
+      IFS=, printf \"\\e[39m%s\\e[0m\\n\" \"$*\"; \
     } ; f" # echo with info color (default)
   echoe = ! "f(){ \
-      git echocolor 31 \"$@\"; \
+      printf \"\\e[31m%s\\e[0m\\n\" \"$*\"; \
     } ; f" # echo with error color (red)
-  debugo = ! git cmd cecho && echo && git cmd echocmd && echo # echo debug info about the echo used
-  cecho = ! "f(){ \
-      val=$(echo -en 'x' 2>&1); \
-      if [ $? -eq 0 ] && [ \"$val\" = \"x\" ]; then \
-        echo echo | tr -d '\n'; \
-        return; \
-      fi; \
-      if [ \"$(uname -s)\" = \"Darwin\" ]; then \
-        val=$(gecho -en 'x' 2>&1); \
-        if [ $? -eq 0 ] && [ \"$val\" = \"x\" ]; then \
-          echo gecho | tr -d '\n'; \
-          return; \
-        fi; \
-        return; \
-      fi; \
-      echo echo | tr -d '\n'; \
-    }; f" # command to use for echo (can be gecho for Mac)
-  decho = ! "f() { \
-      ECHO=$(git cecho); \
-      if [ -n \"$ECHO\" ]; then \
-        echo $ECHO | tr -d '\n'; \
-        return; \
-      fi; \
-      echo echo | tr -d '\n';\
-    }; f" # get the default echo command
-  echo = ! "f() { echo \"$@\" >&2 ;}; f" # simply echo what is given
-  echotty = ! "f() { \
-      color=$1; \
-      shift; \
-      ECHO=$(git decho); \
-      SED=sed; \
-      [ "$(echo $ECHO | cut -b 1)" = "g" ] && SED=gsed; \
-      param=\"$@\"; `# Worst trick even to allow to display ' around format for git log commands`; \
-      param=\"$(echo \"$@\" | $SED -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
-      $ECHO -e "\\\\e[${color}m$param\\\\e[0m" >&2; \
-    }; f" # echo given arguments with given color for tty terminal
-  echobash = ! "f() { \
-      color=$1; \
-      shift; \
-      ECHO=$(git decho); \
-      SED=sed; \
-      [ "$(echo $ECHO | cut -b 1)" = "g" ] && SED=gsed; \
-      param=\"$@\"; `# Worst trick even to allow to display ' around format for git log commands`; \
-      param=\"$(echo \"$@\" | $SED -re \"s#%C\\(green\\)%ad%#'%C\\(green\\)%ad%#g\" -e \"s#%ar\\)%Creset#%ar\\)%Creset'#g\")\"; \
-      bash -c \"$ECHO -e \\\"\\e[${color}m$param\\e[0m\\\" >&2\"; \
-    }; f" # echo given arguments with given color using bash
-  echocmd = ! "f() { \
-      ECHO=$(git cecho); \
-      if [ -z \"$ECHO\" ]; then \
-        echo echo | tr -d '\n'; \
-        return; \
-      fi; \
-      val=$(tty 2>/dev/null); \
-      case \"$val\" in \
-        \"not a tty\") \
-          $ECHO echobash | tr -d '\n'; \
-          return; \
-        ;; \
-        /dev/*) \
-          $ECHO echotty | tr -d '\n'; \
-          return; \
-        ;; \
-        *) \
-          $ECHO echo | tr -d '\n'; \
-          return; \
-        ;; \
-      esac; \
-    }; f" # gives the echo command to use based on the current terminal info
-  echocolor = ! "f() { \
-      color=$1; shift; \
-      cmd=\"$(git echocmd)\"; \
-      if [ ! \"$cmd\" = \"echo\" ]; then \
-        cmd=\"$cmd $color\"; \
-      fi; \
-      git $cmd \"$@\"; \
-    }; f" # echo given info with given color

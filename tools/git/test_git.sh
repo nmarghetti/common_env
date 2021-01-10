@@ -28,7 +28,7 @@ showRepoFiles() {
 }
 
 # export GIT_TRACE=1 # to have git trace
-export GIT_CMD_NOCOLOR=1
+# export GIT_CMD_NOCOLOR=1
 export TMPDIR=$(mktemp -d)
 echo "Create tmp directory: $TMPDIR"
 export MAIN=$TMPDIR/main
@@ -38,68 +38,68 @@ export MODULE=$TMPDIR/module
 export MODULE_OTHER=$TMPDIR/module_other
 
 echoStep "Initialize main repository"
-mkdir -p "$MAIN" && cd "$MAIN" && git cmd init && git br
-echo "Read the README" >README.md && git a README.md && echo "More to come" >>README.md && touch tmp && echo "tmp" >|.gitignore
-git ss && git sa && git add-update && git ci "Initial commit" && git lg
-echo "Ignore tmp" >>README.md && git st && git add-all && git ci 'Update' && git st && git lg
-git rs 1 && git st && git rst README.md && git au && git commit-amend
-git co -b develop && git co master && git lga
+mkdir -p "$MAIN" && cd "$MAIN" && git -c color.ui=always cmd init && git -c color.ui=always br
+echo "Read the README" >README.md && git -c color.ui=always a README.md && echo "More to come" >>README.md && touch tmp && echo "tmp" >|.gitignore
+git -c color.ui=always ss && git -c color.ui=always sa && git -c color.ui=always add-update && git -c color.ui=always ci "Initial commit" && git -c color.ui=always lg
+echo "Ignore tmp" >>README.md && git -c color.ui=always st && git -c color.ui=always add-all && git -c color.ui=always ci 'Update' && git -c color.ui=always st && git -c color.ui=always lg
+git -c color.ui=always rs 1 && git -c color.ui=always st && git -c color.ui=always rst README.md && git -c color.ui=always au && git -c color.ui=always commit-amend
+git -c color.ui=always co -b develop && git -c color.ui=always co master && git -c color.ui=always lga
 
 echoStep "Initialize fork repository"
-mkdir -p "$FORK" && cd "$FORK" && git cmd init && git cmd remote add origin "$MAIN" && git f && git branch-checkout-default
-git branch-checkout origin/develop && git branch-all && git log-all
+mkdir -p "$FORK" && cd "$FORK" && git -c color.ui=always cmd init && git -c color.ui=always cmd remote add origin "$MAIN" && git -c color.ui=always f && git -c color.ui=always branch-checkout-default
+git -c color.ui=always branch-checkout origin/develop && git -c color.ui=always branch-all && git -c color.ui=always log-all
 
 echoStep "Initialize submodule"
-mkdir -p "$MODULE" && cd "$MODULE" && git cmd init && echo "Tooling" >README.md && git add-all && git ci "Tooling initial commit" && git lg
+mkdir -p "$MODULE" && cd "$MODULE" && git -c color.ui=always cmd init && echo "Tooling" >README.md && git -c color.ui=always add-all && git -c color.ui=always ci "Tooling initial commit" && git -c color.ui=always lg
 
 echoStep "Initialize other submodule"
-mkdir -p "$MODULE_OTHER" && cd "$MODULE_OTHER" && git cmd init && echo "Security" >README.md && git add-all && git ci "Security initial commit" && git lg
+mkdir -p "$MODULE_OTHER" && cd "$MODULE_OTHER" && git -c color.ui=always cmd init && echo "Security" >README.md && git -c color.ui=always add-all && git -c color.ui=always ci "Security initial commit" && git -c color.ui=always lg
 
 echoStep "Add the module and create branch develop to main repository"
-cd "$MAIN" && git cmd submodule add -- "$MODULE" tooling && git cmd submodule add -- "$MODULE_OTHER" security && git s && git ci 'Add submodules' && git lga
+cd "$MAIN" && git -c color.ui=always cmd submodule add -- "$MODULE" tooling && git -c color.ui=always cmd submodule add -- "$MODULE_OTHER" security && git -c color.ui=always s && git -c color.ui=always ci 'Add submodules' && git -c color.ui=always lga
 
 echoStep "Clone a local repository"
-git clones "$FORK" "$LOCAL" && cd "$LOCAL" && git upstream "$MAIN" && git fetch-upstream && git brn "feature_login" && git bra && git lga
-git pull upstream master && git lga && showRepoFiles && git submodule-update && showRepoFiles
+git -c color.ui=always clones "$FORK" "$LOCAL" && cd "$LOCAL" && git -c color.ui=always upstream "$MAIN" && git -c color.ui=always fetch-upstream && git -c color.ui=always brn "feature_login" && git -c color.ui=always bra && git -c color.ui=always lga
+git -c color.ui=always pull upstream master && git -c color.ui=always lga && showRepoFiles && git -c color.ui=always submodule-update && showRepoFiles
 
 echoStep "Add commit in Tooling submodule"
-cd "$MODULE" && echo "Some tool" >|tool.sh && git aa && git ci 'Add tool' && git lga
+cd "$MODULE" && echo "Some tool" >|tool.sh && git -c color.ui=always aa && git -c color.ui=always ci 'Add tool' && git -c color.ui=always lga
 
 echoStep "Play with submodules in local repository"
-cd "$LOCAL" && cd tooling && echo "something" >|some_file && git aa && git ci 'Add some file'
+cd "$LOCAL" && cd tooling && echo "something" >|some_file && git -c color.ui=always aa && git -c color.ui=always ci 'Add some file'
 cd "$LOCAL" && echo 'something' >>security/README.md
-git s && git df && git submodule-update && git s && git submodule-reset security && git s
+git -c color.ui=always s && git -c color.ui=always df && git -c color.ui=always submodule-update && git -c color.ui=always s && git -c color.ui=always submodule-reset security && git -c color.ui=always s
 
 echoStep "Play more with submodules in local repository"
-cd "$LOCAL" && cd tooling && echo "something" >|some_file && git aa && git ci 'Add some file'
+cd "$LOCAL" && cd tooling && echo "something" >|some_file && git -c color.ui=always aa && git -c color.ui=always ci 'Add some file'
 cd "$LOCAL" && echo 'something' >>security/README.md
-git s && git df && git submodule-update security && git s && git submodule-reset && git s
+git -c color.ui=always s && git -c color.ui=always df && git -c color.ui=always submodule-update security && git -c color.ui=always s && git -c color.ui=always submodule-reset && git -c color.ui=always s
 
 echoStep "Upgrade submodules with changes in local repository"
-cd "$LOCAL" && cd tooling && echo "something" >|some_file && git aa && git ci 'Add some file'
+cd "$LOCAL" && cd tooling && echo "something" >|some_file && git -c color.ui=always aa && git -c color.ui=always ci 'Add some file'
 cd "$LOCAL" && echo 'something' >>security/README.md
-git s && git df && git submodule-upgrade security && git submodule-upgrade && git s && showRepoFiles && git df && git lga
+git -c color.ui=always s && git -c color.ui=always df && git -c color.ui=always submodule-upgrade security && git -c color.ui=always submodule-upgrade && git -c color.ui=always s && showRepoFiles && git -c color.ui=always df && git -c color.ui=always lga
 
 echoStep "Clean upgrade of submodules in local repository"
-cd "$LOCAL" && git submodule-reset && git s && git submodule-upgrade && git s && git df && git add-update && git ci "Update submodules" && git lga
+cd "$LOCAL" && git -c color.ui=always submodule-reset && git -c color.ui=always s && git -c color.ui=always submodule-upgrade && git -c color.ui=always s && git -c color.ui=always df && git -c color.ui=always add-update && git -c color.ui=always ci "Update submodules" && git -c color.ui=always lga
 
 echoStep "Play with logs"
-git log-local-default-origin && git log-local-default-upstream
+git -c color.ui=always log-local-default-origin && git -c color.ui=always log-local-default-upstream
 
 echoStep "Play with diffs"
-git dfsdlu && git dfdlu && git dfsdl && git dfdl
+git -c color.ui=always dfsdlu && git -c color.ui=always dfdlu && git -c color.ui=always dfsdl && git -c color.ui=always dfdl
 
 echoStep "Add and reset commits"
-echo 'info' >info.txt && git aa && git ci 'Add info' && echo 'data' >data.txt && git aa && git ci 'Add data' && git lga
-git reset-commit-last 2 && git s && git reset-repo && git s && git aa && git ci 'Add info and data' && git s && git lga
-git remove-commit-last 1 && git lga
+echo 'info' >info.txt && git -c color.ui=always aa && git -c color.ui=always ci 'Add info' && echo 'data' >data.txt && git -c color.ui=always aa && git -c color.ui=always ci 'Add data' && git -c color.ui=always lga
+git -c color.ui=always reset-commit-last 2 && git -c color.ui=always s && git -c color.ui=always reset-repo && git -c color.ui=always s && git -c color.ui=always aa && git -c color.ui=always ci 'Add info and data' && git -c color.ui=always s && git -c color.ui=always lga
+git -c color.ui=always remove-commit-last 1 && git -c color.ui=always lga
 
 echoStep "Add executable file"
-touch script.sh && git aa && git ci 'Add script.sh' && git ls && ls -Al
-git chmodx && git s && git df && git aca && git ls && ls -Al && git lga
+touch script.sh && git -c color.ui=always aa && git -c color.ui=always ci 'Add script.sh' && git -c color.ui=always ls && ls -Al
+git -c color.ui=always chmodx && git -c color.ui=always s && git -c color.ui=always df && git -c color.ui=always aca && git -c color.ui=always ls && ls -Al && git -c color.ui=always lga
 
 echoStep "List all files"
-git ls . && git lsr && git lso
+git -c color.ui=always ls . && git -c color.ui=always lsr && git -c color.ui=always lso
 
 # Clean folder
 rm -rf "$TMPDIR"
