@@ -1,0 +1,129 @@
+terminal:
+  searchOptions: {}
+  colorScheme:
+    name: Material
+    foreground: '#eceff1'
+    background: 'rgba(38, 50, 56, 1)'
+    selection: null
+    cursor: '#FFCC00'
+    colors:
+      - '#000000'
+      - '#D62341'
+      - '#9ECE58'
+      - '#FAED70'
+      - '#396FE2'
+      - '#BB80B3'
+      - '#2DDAFD'
+      - '#d0d0d0'
+      - 'rgba(255, 255, 255, 0.2)'
+      - '#FF5370'
+      - '#C3E88D'
+      - '#FFCB6B'
+      - '#82AAFF'
+      - '#C792EA'
+      - '#89DDFF'
+      - '#ffffff'
+  ligatures: false
+  background: theme
+  cursor: beam
+  environment: {}
+  profile: git-bash
+  profiles:
+    - name: Git Bash
+      shell: custom
+      sessionOptions:
+        command: '%WINDOWS_APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe'
+        args:
+          - '--init-file'
+          - '%WINDOWS_APPS_ROOT%\home\.bashrc'
+        env: {}
+        cwd: '%WINDOWS_APPS_ROOT%\home'
+    - name: Git zsh
+      shell: custom
+      sessionOptions:
+        command: '%WINDOWS_APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe'
+        args:
+          - '--init-file'
+          - '%WINDOWS_APPS_ROOT%\home\.bashrc'
+          - '-c'
+          - exec zsh
+        env: {}
+        cwd: '%WINDOWS_APPS_ROOT%\home'
+      color: ''
+  copyOnSelect: true
+  workingDirectory: '%WINDOWS_APPS_ROOT%\home'
+  showDefaultProfiles: true
+hotkeys:
+  shell: {}
+  profile:
+    git-bash:
+      - - Ctrl-Alt-1
+    git-zsh:
+      - - Ctrl-Alt-2
+    wsl-/-bash-on-windows:
+      - - Ctrl-Alt-3
+    cygwin:
+      - - Ctrl-Alt-4
+    powershell:
+      - - Ctrl-Alt-5
+    cmd-(clink):
+      - - Ctrl-Alt-6
+    cmd-(stock):
+      - - Ctrl-Alt-7
+  new-tab:
+    - - Ctrl-T
+  close-pane:
+    - - Ctrl-W
+  toggle-last-tab:
+    - - Ctrl-Tab
+  next-tab:
+    - - Ctrl-Shift-Right
+  previous-tab:
+    - - Ctrl-Shift-Left
+serial: {}
+ssh:
+  connections:
+    - name: remote_machine
+      group: null
+      host: remote_machine
+      port: 22
+      user: remote_user
+      algorithms:
+        hmac:
+          - hmac-sha2-256
+          - hmac-sha2-512
+          - hmac-sha1
+        kex:
+          - curve25519-sha256@libssh.org
+          - curve25519-sha256
+          - ecdh-sha2-nistp256
+          - ecdh-sha2-nistp384
+          - ecdh-sha2-nistp521
+          - diffie-hellman-group-exchange-sha256
+          - diffie-hellman-group14-sha256
+          - diffie-hellman-group16-sha512
+          - diffie-hellman-group18-sha512
+          - diffie-hellman-group14-sha1
+        cipher:
+          - aes128-ctr
+          - aes192-ctr
+          - aes256-ctr
+          - aes128-gcm
+          - aes128-gcm@openssh.com
+          - aes256-gcm
+          - aes256-gcm@openssh.com
+        serverHostKey:
+          - ssh-ed25519
+          - ecdsa-sha2-nistp256
+          - ecdsa-sha2-nistp384
+          - ecdsa-sha2-nistp521
+          - ssh-rsa
+      scripts: []
+      auth: publicKey
+      privateKey: '%WINDOWS_APPS_ROOT%\home\.ssh\id_rsa'
+appearance:
+  vibrancyType: blur
+  opacity: 1
+  theme: Compact
+  tabsLocation: top
+  vibrancy: false
