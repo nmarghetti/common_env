@@ -35,7 +35,7 @@ if "%1" == "git" (
   if exist "%PORTABLEAPPS_GIT%\usr\bin\zsh.exe" (
     : Either run zsh through bash.exe
     echo Starting zsh through cmd ^(no configurable mouse copy/paste^)
-    "%PORTABLEAPPS_GIT%\bin\bash.exe" --init-file "%HOME%\.bashrc" -c zsh
+    "%PORTABLEAPPS_GIT%\bin\bash.exe" --init-file "%HOME%\.bashrc" -c 'exec zsh'
     goto Done
   )
   echo zsh is not installed

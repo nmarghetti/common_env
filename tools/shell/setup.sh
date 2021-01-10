@@ -102,7 +102,10 @@ EOM
           # [[ -z "$bash_theme" ]] && bash_theme="common-env"
           echo >>"$HOME/.bashrc"
           cat "$HOME/.bashrc.bak" >>"$HOME/.bashrc" && rm -f "$HOME/.bashrc.bak"
-          sed -ri -e "s/^export BASH_IT_THEME=.*$/export BASH_IT_THEME=\"$bash_theme\"/" "$HOME/.bashrc"
+          sed -ri \
+            -e "s/^export BASH_IT_THEME=.*$/export BASH_IT_THEME=\"$bash_theme\"/" \
+            -e 's#^source "\$BASH_IT".*$#[ "$OSTYPE" != "cygwin" ] \&\& source "$BASH_IT"/bash_it.sh#' \
+            "$HOME/.bashrc"
         fi
       fi
       # if [[ -d "$HOME/.bash-it" ]]; then
