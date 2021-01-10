@@ -17,7 +17,9 @@ if "%COMMON_ENV_INSTALL_APPS_ROOT%" == "" (
 ) else (
   set SETUP_PATH=%COMMON_ENV_INSTALL_APPS_ROOT%
 )
+set APPS_LINK=https://download3.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_17.1.1.paf.exe?20190321
 set APPS_EXE=PortableApps.exe
+set APP_GIT_LINK=https://github.com/git-for-windows/git/releases/download/v2.30.0.windows.1/PortableGit-2.30.0-64-bit.7z.exe
 set APP_GIT_EXE=PortableGit.exe
 
 
@@ -95,7 +97,7 @@ if not exist PortableApps (
     echo     * Leave the selected language, you can change it later
     echo     * Select 'Select a custom location...' and leave the selected one
     echo     * At the end untick 'Run PortableApps.com Platform'
-    "%DOWNLOAD%" %APPS_EXE% "https://download3.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_17.1.1.paf.exe?20190321"
+    "%DOWNLOAD%" %APPS_EXE% "%APPS_LINK%"
     if errorlevel 1 (
       echo "Error while trying to download PortableApps... Try to manually download and save as %APPS_EXE% from https://portableapps.com/download"
       DEL %APPS_EXE%
@@ -126,9 +128,9 @@ if not exist PortableApps\PortableGit (
     %APP_GIT_EXE% -o PortableApps\PortableGit -y
   ) else (
     echo Downloading Git for Windows...
-    "%DOWNLOAD%" %APP_GIT_EXE% "https://github.com/git-for-windows/git/releases/download/v2.30.0.windows.1/PortableGit-2.30.0-64-bit.7z.exe"
+    "%DOWNLOAD%" %APP_GIT_EXE% "%APP_GIT_LINK%"
     if errorlevel 1 (
-      echo "Error while trying to download Git for Windows... Try to manually download the 64-bit Git for Windows PORTABLE and save as %APP_GIT_EXE% from https://github.com/git-for-windows/git/releases/download/v2.30.0.windows.1/PortableGit-2.30.0-64-bit.7z.exe or https://git-scm.com/download/win"
+      echo "Error while trying to download Git for Windows... Try to manually download the 64-bit Git for Windows PORTABLE and save as %APP_GIT_EXE% from %APP_GIT_LINK% or https://git-scm.com/download/win"
       DEL %APP_GIT_EXE%
       pause
       exit 1
@@ -136,7 +138,7 @@ if not exist PortableApps\PortableGit (
       echo Installing Git for Windows...
       %APP_GIT_EXE% -o PortableApps\PortableGit -y
       if errorlevel 1 (
-        echo "Error while installing Git for Windows... Try to manually download the 64-bit Git for Windows PORTABLE and save as %APP_GIT_EXE% from https://github.com/git-for-windows/git/releases/download/v2.30.0.windows.1/PortableGit-2.30.0-64-bit.7z.exe or https://git-scm.com/download/win"
+        echo "Error while installing Git for Windows... Try to manually download the 64-bit Git for Windows PORTABLE and save as %APP_GIT_EXE% from %APP_GIT_LINK% or https://git-scm.com/download/win"
         DEL %APP_GIT_EXE%
         pause
         exit 1
