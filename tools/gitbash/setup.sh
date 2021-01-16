@@ -39,6 +39,8 @@ function setup_gitbash() {
         cp -vf "$cacert" "$bundle"
       fi
     done
+    # touch "$HOME/.npmrc"
+    # grep -Ee '^cafile=' "$HOME/.npmrc" || echo "cafile=/usr/ssl/certs/ca-bundle.crt" >>"$HOME/.npmrc"
   fi
 
   # # Install wget

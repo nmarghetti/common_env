@@ -28,7 +28,8 @@ export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system
 # set -o
 # shopt
 
-# Get some function to get some shell system information
+# Get some functions to get some shell system information
+# shellcheck source=./system.sh
 source "${COMMON_ENV_SHELLRC_ROOT}/system.sh"
 current_shell="$(system_get_current_shell)"
 
@@ -42,10 +43,15 @@ fi
 
 common_env_log "Setup common config"
 
+# Get some functions to manipulate paths
+# shellcheck source=./path.sh
+source "${COMMON_ENV_SHELLRC_ROOT}/path.sh"
+
 # If host system is Windows
 if [ "$(system_get_os_host)" = "Windows" ]; then
   alias rrsource='COMMON_ENV_FORCE_CHECK=1 rsource'
   # Get some function to convert Windows path
+  # shellcheck source=./path_windows.sh
   source "${COMMON_ENV_SHELLRC_ROOT}/path_windows.sh"
 fi
 
@@ -67,8 +73,6 @@ if [ "$current_shell" = "bash" ]; then
 
     [ ! "$OSTYPE" = "cygwin" ] && export PS4=$'+ \t\t''\e[33m\s@\v ${BASH_SOURCE}#\e[35m${LINENO} \e[34m${FUNCNAME[0]:+${FUNCNAME[0]}() }''\e[36m\t\e[0m\n'
   fi
-
-  source "${COMMON_ENV_SHELLRC_ROOT}/path.sh"
 
   alias esource='echo "$HOME/.bashrc"'
   alias vsource='vi "$HOME/.bashrc"'
@@ -95,8 +99,6 @@ elif [ "$current_shell" = "zsh" ]; then
     fi
   fi
 
-  source "${COMMON_ENV_SHELLRC_ROOT}/path.zsh"
-
   alias vsource='vi "$HOME/.zshrc"'
   alias rsource='source "$HOME/.zshrc"'
   alias venv='vi "$HOME/.zshenv"'
@@ -106,6 +108,7 @@ fi
 # Add some tools in ~/bin if not there yet
 if [ ! -e "${HOME}/bin/toolupdatelink" ]; then
   mkdir -p "${HOME}/bin"
+  # shellcheck source=../bin/sourcetool
   source "$(dirname "${COMMON_ENV_SHELLRC_ROOT}")/bin/sourcetool" "${HOME}/bin"
 fi
 
@@ -122,8 +125,10 @@ alias common_env_nodebug_full='export COMMON_ENV_FULL_DEBUG=0'
 
 # Python env management
 _python_venv_set() {
-  local activate="$(pythonvenv set "$@" 2>/dev/null)"
+  local activate
+  activate="$(pythonvenv set "$@" 2>/dev/null)"
   # Weird way to ensure file exist with ls as zsh does not like full path starting with / on Windows
+  # shellcheck disable=SC1090
   ls "$activate" &>/dev/null && source "$activate" && type python
 }
 alias pylist='pythonvenv list'
@@ -134,10 +139,11 @@ alias pyunset='deactivate 2>/dev/null'
 
 # ********** BEGIN - Specific for Windows platform with PortableApps **********
 if [ -z "$APPS_ROOT" ]; then
-  export APPS_ROOT=$(cd && cd .. && pwd)
+  APPS_ROOT=$(cd && cd .. && pwd)
 else
-  export APPS_ROOT=$(cd "$APPS_ROOT" && pwd)
+  APPS_ROOT=$(cd "$APPS_ROOT" && pwd)
 fi
+export APPS_ROOT
 if [ -d "$APPS_ROOT/PortableApps" ]; then
   common_env_log "Setup portable apps config"
   # https://www.joshkel.com/2018/01/18/symlinks-in-windows/
@@ -147,27 +153,30 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     "$(system_get_current_shell_path)" "$COMMON_ENV_SHELLRC_ROOT/check_common_env.sh"
   }
   export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
-  export WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
-  export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
-  export WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
-  export WINDOWS_APPS_COMMON="$(get_path_to_windows_back "$APPS_COMMON")"
+  WIN_APPS_ROOT="$(get_path_to_windows "$APPS_ROOT")"
+  export WIN_APPS_ROOT
+  WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
+  export WIN_APPS_COMMON
+  WINDOWS_APPS_ROOT="$(get_path_to_windows_back "$APPS_ROOT")"
+  export WINDOWS_APPS_ROOT
+  WINDOWS_APPS_COMMON="$(get_path_to_windows_back "$APPS_COMMON")"
+  export WINDOWS_APPS_COMMON
   # export MSYS_SHELL=$APPS_COMMON/msys64/msys2_shell.cmd
 
   # pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
   # pathAppend "$APPS_COMMON/msys64/usr/bin" 2>/dev/null
   pathAppend "/mingw64/bin" 2>/dev/null
-  pathPrepend "$APPS_COMMON/cmake/bin" 2>/dev/null
-  pathPrepend "$APPS_COMMON/make/bin" 2>/dev/null
-  pathPrepend "$APPS_COMMON/node" 2>/dev/null
-  pathPrepend "$APPS_COMMON/gradle/bin" 2>/dev/null
+  pathPrepend "$APPS_COMMON/cmake/bin" \
+    "$APPS_COMMON/make/bin" \
+    "$APPS_COMMON/node" \
+    "$APPS_COMMON/gradle/bin" \
+    "$APPS_COMMON/python/Python38/Scripts" \
+    "$APPS_COMMON/python/Scripts" \
+    "$APPS_COMMON/python" 2>/dev/null
   [ -f "$WIN_APPS_COMMON/python/python.exe" ] && export PYTHONUSERBASE="$WINDOWS_APPS_COMMON\\python"
-  pathPrepend "$APPS_COMMON/python/Python38/Scripts" 2>/dev/null
-  pathPrepend "$APPS_COMMON/python/Scripts" 2>/dev/null
-  pathPrepend "$APPS_COMMON/python" 2>/dev/null
   # Do not change bash or git in case of cygwin as it already has it
   if [ ! "$OSTYPE" = "cygwin" ]; then
-    pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/cmd"
-    pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/bin"
+    pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/cmd" "${APPS_ROOT}/PortableApps/PortableGit/bin"
   fi
   pathPrepend "${HOME}/bin"
 
@@ -264,11 +273,12 @@ fi
 common_env_log "Adding some alias"
 
 # Function to update git repo
+# shellcheck source=./check_update.sh
 source "${COMMON_ENV_SHELLRC_ROOT}/check_update.sh"
 
 # Common alias
 alias common_env_outdate_check='touch -t "$(date --date="2 days ago" +%Y%m%d%H%M.%S)" "$HOME/.common_env_check"'
-alias vvsource="vi '$COMMON_ENV_SHELLRC_ROOT/.bashrc'"
+alias vvsource="vi '$COMMON_ENV_SHELLRC'"
 alias vvgit="vi '$COMMON_ENV_SHELLRC_ROOT/../../git/.gitconfig'"
 alias vgit='vi "$HOME/.gitconfig"'
 alias gitv='vi .git/config'
@@ -302,6 +312,7 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
   type rgit &>/dev/null && rgit
 
   # Refresh tool links
+  # shellcheck source=../bin/sourcetool
   source "${COMMON_ENV_SHELLRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
 fi
 
