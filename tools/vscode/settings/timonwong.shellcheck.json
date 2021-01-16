@@ -1,0 +1,4 @@
+{
+  "shellcheck.exclude": ["2039"],
+  "shellcheck.customArgs": ["-x"]
+}

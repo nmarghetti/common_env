@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. ../../tools/shell/source/path.sh
+
+cleanup() {
+  [ -d "$TMP_DIR" ] && rm -rf "$TMP_DIR"
+}
+
+error() {
+  printf "%s\n" "$*"
+  exit 1
+}
+
+set -ex
+
+type pathAdd >/dev/null || error "[$LINENO] 'pathAdd' is not defined"
+
+TMP_DIR=$(mktemp -d)
+
+SOME_PATH=/bin:/usr/bin:/bin:/opt/bin:::/bin
+pathAdd %SOME_PATH /bin
+expect=/usr/bin:/opt/bin:/bin
+[ "$SOME_PATH" = "$expect" ] || error "[$LINENO] '$SOME_PATH' != '$expect'"
+
+SOME_PATH=/bin:/usr/bin:/bin:/opt/bin:::/bin
+pathAdd prepend %SOME_PATH /bin
+expect=/bin:/usr/bin:/opt/bin
+[ "$SOME_PATH" = "$expect" ] || error "[$LINENO] '$SOME_PATH' != '$expect'"
+
+DIR_WITH_SPACE="$TMP_DIR/some path with space"
+mkdir -p "$DIR_WITH_SPACE"
+pathAdd %SOME_PATH "$DIR_WITH_SPACE/"
+expect="/bin:/usr/bin:/opt/bin:$DIR_WITH_SPACE"
+[ "$SOME_PATH" = "$expect" ] || error "[$LINENO] '$SOME_PATH' != '$expect'"

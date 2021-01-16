@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. ../../tools/shell/source/path.sh
+
+error() {
+  printf "%s\n" "$*"
+  exit 1
+}
+
+set -ex
+
+type pathRm >/dev/null || error "[$LINENO] 'pathRm' is not defined"
+
+SOME_PATH=/bin:/usr/bin:/bin:/opt/bin:::/bin
+pathRm %SOME_PATH /bin
+expect=/usr/bin:/opt/bin
+[ "$SOME_PATH" = "$expect" ] || error "[$LINENO] '$SOME_PATH' != '$expect'"
+
+SOME_PATH=/bin:/usr/bin:/bin:/opt/bin:::/bin
+pathRm %SOME_PATH /bin /usr/bin
+expect=/opt/bin
+[ "$SOME_PATH" = "$expect" ] || error "[$LINENO] '$SOME_PATH' != '$expect'"
+
+SOME_PATH=/bin:/usr/bin:/bin:/opt/bin:::/bin
+pathRm %SOME_PATH /bin /usr/bin /opt/bin
+[ -z "$SOME_PATH" ] || error "[$LINENO] '$SOME_PATH' is not empty"
+
+SOME_PATH="/bin:/some path with space:/bin:/opt/bin:::/bin"
+pathRm %SOME_PATH /bin/ "/some path with space/"
+expect=/opt/bin
+[ "$SOME_PATH" = "$expect" ] || error "[$LINENO] '$SOME_PATH' != '$expect'"
