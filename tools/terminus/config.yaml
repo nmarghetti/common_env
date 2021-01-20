@@ -70,6 +70,8 @@ hotkeys:
       - - Ctrl-Alt-6
     cmd-(stock):
       - - Ctrl-Alt-7
+  paste:
+    - - Ctrl-V
   new-tab:
     - - Ctrl-T
   close-pane:
