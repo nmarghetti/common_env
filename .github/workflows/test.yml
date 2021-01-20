@@ -19,10 +19,28 @@ jobs:
         with:
           fetch-depth: 1
           submodules: false
-      # Unit tests with bash
-      - name: Bash unit tests
-        shell: bash
+      # Install zsh on Linux
+      - name: Install zsh on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get install zsh
+      # Install zsh on Mac
+      - name: Install zsh on Mac
+        if: runner.os == 'macOs'
+        run: brew install zsh
+      # Retrieve urchin
+      - name: Retrieve urchin
         run: |
           wget -q https://raw.githubusercontent.com/tlevine/urchin/v0.0.6/urchin
           chmod +x ./urchin
+      # Unit tests with bash
+      - name: Bash unit tests
+        run: |
           ./urchin -s bash ./test
+      # Unit tests with bash
+      - name: Zsh unit tests
+        run: |
+          ./urchin -s zsh ./test
+      # Unit tests with dash
+      - name: Dash unit tests
+        run: |
+          ./urchin -s dash ./test
