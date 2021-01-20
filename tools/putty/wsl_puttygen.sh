@@ -46,10 +46,23 @@ createSshKey() {
   [[ -f "$ssh_folder/id_rsa.ppk" && -f "$ssh_folder/id_rsa" && -f "$ssh_folder/id_rsa.pub" ]] &&
     cp -f "$ssh_folder/id_rsa.ppk" "$ssh_folder/id_rsa" "$ssh_folder/id_rsa.pub" "$WSL_HOME/.ssh/"
 
-  if [[ -n "WSL_REMOTE_MACHINE" ]]; then
-    local pass_file=$(git --no-pager config -f "$WSL_HOME/.common_env.ini" --get putty.pass-file | sed -re "s#%APPS_ROOT%#$WSL_APPS_ROOT#g")
-    local pass_size=$(stat -c%s "$pass_file" 2>/dev/null)
-    [[ "${pass_size:-0}" -gt 0 ]] && sshpass -f "$pass_file" ssh-copy-id -i "$ssh_folder/id_rsa" -o StrictHostKeyChecking=no "$WSL_USER@$WSL_REMOTE_MACHINE"
+  if [[ -n "$WSL_REMOTE_MACHINE" ]]; then
+    # It might take some time for dns-sync.sh to be up
+    local nb
+    for nb in $(seq 4); do
+      if ping -c 1 -w "$nb" "$WSL_REMOTE_MACHINE" >/dev/null 2>&1; then
+        break
+      fi
+      echo "$WSL_REMOTE_MACHINE not reacheable"
+      sleep "$nb"
+    done
+    if ping -c 1 -w 1 "$WSL_REMOTE_MACHINE"; then
+      local pass_file
+      pass_file=$(git --no-pager config -f "$WSL_HOME/.common_env.ini" --get putty.pass-file | sed -re "s#%APPS_ROOT%#$WSL_APPS_ROOT#g")
+      local pass_size
+      pass_size=$(stat -c%s "$pass_file" 2>/dev/null)
+      [[ "${pass_size:-0}" -gt 0 ]] && sshpass -f "$pass_file" ssh-copy-id -i "$ssh_folder/id_rsa" -o StrictHostKeyChecking=no "$WSL_USER@$WSL_REMOTE_MACHINE"
+    fi
   fi
 
   # Clean if temporary folder has been used

@@ -43,20 +43,26 @@ function setup_putty() {
       echo -e "\nCreate and deploy the SSH key on machine '$remote_machine'..."
 
       # Try to generate the ssh key and ppk with WSL
-      [[ ! -f "$putty_path/dns-sync.sh" ]] &&
-        curl -sSfL -o "$putty_path/dns-sync.sh" 'https://gist.github.com/matthiassb/9c8162d2564777a70e3ae3cbee7d2e95/raw/b204a9faa2b4c8d58df283ddc356086333e43408/dns-sync.sh'
-      export WSL_USER="${USER:-${USERNAME}}" &&
-        export WSL_HOME="//mnt$(get_path_to_posix "$HOME")" &&
-        export WSL_APPS_ROOT="//mnt$(get_path_to_posix "$APPS_ROOT")" &&
-        export WSL_REMOTE_MACHINE="$remote_machine" &&
-        WSLENV=WSL_USER:WSL_HOME:WSL_APPS_ROOT:WSL_REMOTE_MACHINE:/p wsl <"$SETUP_TOOLS_ROOT/putty/wsl_puttygen.sh"
+      if type wsl &>/dev/null; then
+        [[ ! -f "$putty_path/dns-sync.sh" ]] &&
+          curl -sSfL -o "$putty_path/dns-sync.sh" 'https://gist.github.com/matthiassb/9c8162d2564777a70e3ae3cbee7d2e95/raw/b204a9faa2b4c8d58df283ddc356086333e43408/dns-sync.sh'
+        export WSL_USER="${USER:-${USERNAME}}" &&
+          export WSL_HOME="//mnt$(get_path_to_posix "$HOME")" &&
+          export WSL_APPS_ROOT="//mnt$(get_path_to_posix "$APPS_ROOT")" &&
+          export WSL_REMOTE_MACHINE="$remote_machine" &&
+          echo "Try to generate and deploy SSH keys with WSL..." &&
+          WSLENV=WSL_USER:WSL_HOME:WSL_APPS_ROOT:WSL_REMOTE_MACHINE:/p wsl <"$SETUP_TOOLS_ROOT/putty/wsl_puttygen.sh"
+      fi
 
       # Try with sshpass
       local pass_file="$(git --no-pager config -f "$HOME/.common_env.ini" --get putty.pass-file 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")"
       local pass_size=$(stat -c%s "$pass_file" 2>/dev/null)
-      [[ "${pass_size:-0}" -gt 0 ]] && type sshpass &>/dev/null && sshpass -vf "$pass_file" ssh-copy-id -i "$HOME/.ssh/id_rsa" -o StrictHostKeyChecking=no "$remote_machine"
+      [[ "${pass_size:-0}" -gt 0 ]] && type sshpass &>/dev/null &&
+        echo "Try to deploy SSH key with sshpass..." &&
+        sshpass -vf "$pass_file" ssh-copy-id -i "$HOME/.ssh/id_rsa" -o StrictHostKeyChecking=no "$remote_machine"
 
       # ssh-keyscan $remote_machine 2>/dev/null >"$HOME/.ssh/known_hosts"
+      echo "Deploy SSH key with ssh-copy-id..."
       ssh-copy-id -i "$HOME/.ssh/id_rsa" -o StrictHostKeyChecking=no "$remote_machine"
     }
   fi
