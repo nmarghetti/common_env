@@ -4,7 +4,8 @@
 pathRm() {
   local pathVar
   pathVar=PATH
-  if [ "${1::1}" = "%" ]; then
+  # if [ "${1::1}" = "%" ]; then
+  if [ "$(printf '%s' "$1" | command cut -b 1)" = "%" ]; then
     pathVar=${1#%}
     shift
   fi
@@ -12,7 +13,8 @@ pathRm() {
 
   local paths
   local location
-  paths=${!pathVar}
+  # paths=${!pathVar}
+  eval "paths=\${$pathVar}"
   for location in "$@"; do
     paths=$(printf "%s" "${paths}" | command tr ':' '\n' | command grep -vE -e "^${location%/}/?\$" -e '^$' | command tr '\n' ':')
   done
@@ -32,7 +34,8 @@ pathAdd() {
 
   local pathVar
   pathVar=PATH
-  if [ "${1::1}" = "%" ]; then
+  # if [ "${1::1}" = "%" ]; then
+  if [ "$(printf '%s' "$1" | cut -b 1)" = "%" ]; then
     pathVar=${1#%}
     shift
   fi
@@ -43,11 +46,12 @@ pathAdd() {
 
   local paths
   local location
-  paths=${!pathVar}
+  # paths=${!pathVar}
+  eval "paths=\${$pathVar}"
   for location in "$@"; do
     location="${location%/}"
     if [ ! -d "$location" ]; then
-      echo "Unable to add path that does not exist: '$location'" >&2
+      printf "Unable to add path that does not exist: '%s'" "$location" >&2
     elif [ $prepend -eq 1 ]; then
       paths="$location:$paths"
     else

@@ -8,11 +8,12 @@ COMMON_ENV_SHELLRC_ROOT=$(dirname "$(readlink -f "${COMMON_ENV_SHELLRC}")")
 
 common_env_log() {
   if [ "$COMMON_ENV_DEBUG" = "1" ]; then
-    local now="$(date +%H:%M:%S)"
+    local now
+    now="$(date +%H:%M:%S)"
     tput sc
     printf "%*s" "$COLUMNS" "$now" >&2
     tput rc
-    printf "$now $@\n" >&2
+    printf "%s %s\n" "$now" "$*" >&2
   fi
 }
 
