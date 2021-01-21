@@ -13,11 +13,12 @@ Usage: download_tarball [option] url
   options:
     -i: ignore ssl certificate check (not secure)
     -c: ca certificate path
+    -k <cookie>: cookie to pass, eg. 'Cookie: key=value; other=something'
     -v: verbose
     -e: extract the tarball
     -o <filename>: output tarball filename (guest from last part of url if empty) or '-' to write it to stdout
     -d <path>: directory where to extract
-    -m <dirname>: directory name where files are extracted, if specified move all files from there back to extract directory
+    -m <dirname>: directory name (can be regexp) where files are extracted, if specified move all files from there back to extract directory
     -t <type>: type of tarball: zip, tgz, zst, exe (automatically guest by extension)
     -p <path>: path to the command to use to download, eg. wget, /usr/bin/curl, etc.
     -h: display this help message
@@ -39,13 +40,15 @@ download_tarball() {
   local tarball_type
   local downloader=
   local verbose=
+  local cookie
   [[ "$DOWNLOAD_NO_SSL_CHECK" == "1" ]] && ssl_check=0
   # reset getopts - check https://man.cx/getopts(1)
   OPTIND=1
-  while getopts "hviec:d:m:o:t:p:" opt; do
+  while getopts "hviec:d:k:m:o:t:p:" opt; do
     case "$opt" in
     i) ssl_check=0 ;;
     c) cacert=$OPTARG ;;
+    k) cookie=$OPTARG ;;
     e) extract=1 ;;
     o) tarball=$OPTARG ;;
     d) directory=$OPTARG ;;
@@ -87,6 +90,10 @@ download_tarball() {
       [curl]="$verbose --progress-bar -L"
       [wget]="$verbose --progress=bar:force"
     )
+    if [[ -n "$cookie" ]]; then
+      downloader_option[curl]="${downloader_option[curl]} -H '$cookie'"
+      downloader_option[wget]="${downloader_option[wget]} --header '$cookie'"
+    fi
     if [[ "$tarball" = "-" ]]; then
       downloader_option[wget]="${downloader_option[wget]} -O -"
       unset tarball
@@ -170,9 +177,17 @@ download_tarball() {
       esac
       eval "$cmd" | awk 'BEGIN {ORS="."; limit=40; for(c=0; c<limit*2;c++){back=back"\b"; space=space" ";} } {print "."; if (NR % limit == 0) printf back space back }' || err=1
       echo
-      [[ -n "$extracted_directory" ]] && (
-        cd "$directory" && cd "$extracted_directory" && mv * ../ && cd .. && rmdir "$extracted_directory"
-      )
+      if [[ -n "$extracted_directory" ]]; then
+        local subdir="$directory/$extracted_directory"
+        if [ ! -d "$subdir" ]; then
+          subdir="$directory/$(command ls -1 "$directory" | grep -Ee "$extracted_directory")"
+          # Ensure there is only one folder matching
+          test "$(echo "$subdir" | wc -l)" -eq 1 || subdir=""
+        fi
+        (
+          cd "$subdir" && mv ./* ../ && cd .. && rmdir "$extracted_directory"
+        )
+      fi
     fi
     rm -f "$tarball"
     [[ $err -eq 1 ]] && echo -e "\nError, unable to extract the archive." && return 1
@@ -181,4 +196,4 @@ download_tarball() {
   return 0
 }
 
-[[ "$0" == "$BASH_SOURCE" ]] && download_tarball "$@"
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && download_tarball "$@"

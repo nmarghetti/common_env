@@ -20,6 +20,12 @@ if exist "%APPS_ROOT%\PortableApps\CommonFiles\node\node.exe" set PATH=%APPS_ROO
 REM PATH to python venv 2.7
 if exist "%HOME%\.venv\2.7.17\Scripts" set PATH=%HOME%\.venv\2.7.17;%HOME%\.venv\2.7.17\Scripts;%PATH%
 
+REM PATH to java
+if not exist "%APPS_ROOT%\PortableApps\CommonFiles\java\bin\java.exe" goto :no_java
+  set PATH=%APPS_ROOT%\PortableApps\CommonFiles\java\bin;%PATH%
+  set JAVA_HOME=%APPS_ROOT%\PortableApps\CommonFiles\java
+:no_java
+
 REM PATH to python 3.8
 :: using () make the variable not being updated in the parent batch, so lets us a goto
 ::if exist "%APPS_ROOT%\PortableApps\CommonFiles\python\python.exe" (
