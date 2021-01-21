@@ -167,13 +167,19 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   # pathAppend "$APPS_COMMON/msys64/mingw64/bin" 2>/dev/null
   # pathAppend "$APPS_COMMON/msys64/usr/bin" 2>/dev/null
   pathAppend "/mingw64/bin" 2>/dev/null
-  pathPrepend "$APPS_COMMON/cmake/bin" \
+  pathPrepend \
+    "$APPS_COMMON/cmake/bin" \
     "$APPS_COMMON/make/bin" \
+    "$APPS_ROOT/PortableApps/elastic/elasticsearch/bin" \
+    "$APPS_ROOT/PortableApps/elastic/logstash/bin" \
+    "$APPS_ROOT/PortableApps/elastic/kibana/bin" \
+    "$APPS_COMMON/java/bin" \
     "$APPS_COMMON/node" \
     "$APPS_COMMON/gradle/bin" \
     "$APPS_COMMON/python/Python38/Scripts" \
     "$APPS_COMMON/python/Scripts" \
-    "$APPS_COMMON/python" 2>/dev/null
+    "$APPS_COMMON/python" \
+    2>/dev/null
   [ -f "$WIN_APPS_COMMON/python/python.exe" ] && export PYTHONUSERBASE="$WINDOWS_APPS_COMMON\\python"
   # Do not change bash or git in case of cygwin as it already has it
   if [ ! "$OSTYPE" = "cygwin" ]; then

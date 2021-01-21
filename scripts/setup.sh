@@ -58,6 +58,7 @@ usage() {
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
+  echo "    java: install java jdk 15.0.2" 1>&2
   echo "    vscode: install latest Visual Studio Code" 1>&2
   echo "    pycharm: install latest PyCharm community" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
@@ -70,6 +71,7 @@ usage() {
   echo "    nvm: install nvm which is a nodejs version manager" 1>&2
   echo "    gradle: install Gradle 6.7.1" 1>&2
   echo "    cygwin: install Cygwin" 1>&2
+  echo "    elastic: install Elasticsearch, Logstash and Kibana (you would need to install java also)" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
   echo "In any case it will setup some shell and git config, and (only on Windows) install python 3.8.2" 1>&2
@@ -88,10 +90,9 @@ check_dir_var() {
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-  shell | git | gitbash | pacman | portableapps | python)
-    APPS="$APPS $1"
-    ;;
-  pacman | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | terminus | autohotkey | cygwin | node | nvm | gradle | xampp)
+  shell | git | gitbash | pacman | portableapps | python | \
+    java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | terminus | autohotkey | \
+    cygwin | node | nvm | gradle | xampp | elastic)
     APPS="$APPS $1"
     ;;
   # cpp)

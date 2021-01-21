@@ -112,9 +112,11 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Terminus** (~300M)
 - **Python** (2.7)
 - **Python** (3.8) (~50M)
+- **Java SDK** (15) (~300M)
 - **Node.js** (~65M)
 - **nvm** (~120K)
 - **Gradle** (~110M)
+- **Elastic ELK stack (Elasticsearch, Logstash, Kibana)** (~1.7G)
 - **Cygwin**
 - **XAMPP**
 
