@@ -1,6 +1,6 @@
 {
   "python.venvPath": "${env:HOME}/.venv",
-  "python.pythonPath": "${env:HOME}/.venv/3.8.2/Scripts/python.exe",
+  "python.pythonPath": "${env:HOME}/.venv/3/bin/python.exe",
   "python.formatting.provider": "autopep8",
   "python.formatting.autopep8Args": [
     "--indent-size=2",
