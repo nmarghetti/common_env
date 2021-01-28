@@ -19,7 +19,7 @@ function setup_python() {
   # if the current python version is present, but not installed in APPS_ROOT
   elif type python &>/dev/null &&
     [ "$(python --version | cut -d' ' -f2 | tr -d '[:space:]')" = "$python_version" ] &&
-    [ "$(which python | grep -vE "$APPS_ROOT")" ]; then
+    which python | grep -qvE "$APPS_ROOT"; then
     python_bin=$(which python)
   else
     export PYTHONUSERBASE="$python_winpath"
@@ -40,7 +40,7 @@ function setup_python() {
     eval "./$tarball -quiet -passive InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"
     local end=$(date +%s)
     # it the install took less than 3s, it probably has failed, ask for reinstall
-    if [[ $(expr $end - $start) -le 3 ]]; then
+    if [[ $((end - start)) -le 3 ]]; then
       read -rp 'The python installation failed, maybe a previous installation needs to be removed first, do you want to try ? (Y/n)' answer
       if [[ -z "$answer" ]] || [[ "$answer" =~ ^[yY]$ ]]; then
         eval "./$tarball -uninstall InstallAllUsers=0 TargetDir=\"$python_winpath\" AssociateFiles=0 CompileAll=0 PrependPath=0 Shortcuts=0 Include_doc=0 Include_debug=0 Include_dev=0 Include_launcher=0 InstallLauncherAllUsers=0 Include_lib=1 Include_pip=1 Include_symbols=0 Include_tcltk=0 Include_test=0 Include_tools=0"
