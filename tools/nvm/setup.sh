@@ -6,8 +6,8 @@ function setup_nvm() {
 
   # Install nvm
   if [[ ! -e "$nvm_path" ]]; then
-    download_tarball -o - 'https://raw.githubusercontent.com/nmarghetti/nvm/develop/install.sh' |
-      NVM_VERSION_TO_INSTALL=develop NVM_INSTALL_GITHUB_USER=nmarghetti METHOD=script bash
+    download_tarball -o - 'https://raw.githubusercontent.com/nmarghetti/nvm/master/install.sh' |
+      NVM_INSTALL_VERSION=master NVM_INSTALL_GITHUB_REPO=nmarghetti/nvm bash
   fi
   [[ ! -e "$nvm_path" ]] && echo "Binary file not installed" && return "$ERROR"
 
