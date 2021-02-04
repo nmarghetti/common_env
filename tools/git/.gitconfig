@@ -46,10 +46,11 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.1'
+  cv = ! echo 'gitconfig 2.1.2'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
+  root = ! git cmd rev-parse --show-toplevel
 
   # DISPLAY ALIAS
   dry = ! GIT_CMD_DRY=1 git # Only display the command for the given alias, do not run it (eg. type "git dry mg" --> it displays "git merge --no-edit")
