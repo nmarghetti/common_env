@@ -1,6 +1,11 @@
 #! /usr/bin/env bash
 
-function setup_vscode() {
+download_vscode() {
+  mkdir -vp "$1"
+  download_tarball -e -o "VSCode.zip" -d "$1" "https://go.microsoft.com/fwlink/?Linkid=850641"
+}
+
+setup_vscode() {
   local ERROR=$SETUP_ERROR_CONTINUE
   local VSCode="$APPS_ROOT/PortableApps/VSCode"
   local VSCodeData="$APPS_ROOT/PortableApps/VSCodeLauncher/data"
@@ -8,11 +13,10 @@ function setup_vscode() {
 
   # Install VSCode
   if [ ! -f "$VSCode/Code.exe" ]; then
-    mkdir -vp "$VSCode"
-    download_tarball -e -o "VSCode.zip" -d "$VSCode" "https://go.microsoft.com/fwlink/?Linkid=850641"
+    download_vscode "$VSCode"
   fi
 
-  [[ ! -f "$VSCode/Code.exe" ]] && echo "Binary file not installed" && return $ERROR
+  [[ ! -f "$VSCode/Code.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
   # Setup VSCode user settings
   local setting_path="$VSCodeData/user-data/User/settings.json"
@@ -31,6 +35,7 @@ EOM
   fi
   # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeLauncher" "$APPS_ROOT/PortableApps/"
+  rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeUpgrader" "$APPS_ROOT/PortableApps/"
 
   # Install extensions
   echo "Checking extensions..."
@@ -128,4 +133,12 @@ EOM
 
   [ $changed_settings_ssl -eq 1 ] && sed -i -re 's/"http.proxyStrictSSL": false/"http.proxyStrictSSL": true/' "$setting_path"
   rm -f "$tmp_log"
+}
+
+upgrade_vscode() {
+  local ERROR=$SETUP_ERROR_CONTINUE
+  local VSCode="$APPS_ROOT/PortableApps/VSCode"
+  tasklist //FI "IMAGENAME eq Code.exe" | grep -q Code.exe && echo "Please close all instances of VSCode before upgrading it" && return "$ERROR"
+  rm -rf "$VSCode"
+  download_vscode "$VSCode"
 }

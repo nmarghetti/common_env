@@ -123,6 +123,7 @@ jobs:
           echo "  * Create python venv"
           pythonvenv list
           pycreate
+          echo "  * List env"
           pylist
           echo "  * Check git"
           git st
@@ -170,8 +171,10 @@ jobs:
           echo "  * Create python venv"
           pythonvenv list
           pycreate
+          echo "  * List env"
           pylist
-          source "$(pythonvenv set $(pylist | head -1))"
+          echo "  * Set env"
+          echo "$(pythonvenv set $(pylist | head -1))"
           pyset $(pylist | head -1)
           echo "  * Check current python"
           type python

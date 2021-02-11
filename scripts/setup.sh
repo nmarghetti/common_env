@@ -1,30 +1,35 @@
 #! /usr/bin/env bash
 
+# shellcheck disable=SC2009
+# SC2009: Consider using pgrep instead of grepping ps output.
+
 # Crazy stuff to check about bash there:
 # https://github.com/niieani/bash-oo-framework
 # https://github.com/reduardo7/bashx
 # https://github.com/mnorin/bash-scripts
 # https://github.com/mnorin/bash-scripts/tree/master/objects
 
-# Check it is ran with bash
-if [[ "$(ps -p $$ | grep -c bash)" -eq 0 ]]; then
-  echo "Please run with: bash $0" >&2
+exit_error() {
+  echo "$*" >&2
   exit 1
-fi
+}
 
-[[ "$(echo "$BASH_VERSION" | cut -b 1)" -lt 4 ]] && echo "Please use bash 4 or above" && exit 1
+# Check it is ran with bash
+ps -p $$ | grep -qc bash || exit_error "Please run with: bash $0"
+
+[[ "$(echo "$BASH_VERSION" | cut -b 1)" -lt 4 ]] && exit_error "Please use bash 4 or above"
 
 export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
 [[ "$COMMON_ENV_FULL_DEBUG" == "1" ]] && eval "$COMMON_ENV_DEBUG_CMD"
 
 if [[ "$(uname -s)" = "Darwin" ]]; then
   echo "Setup for MAC"
+  # shellcheck source=../tools/mac/setup_mac.sh
   source "$(dirname "$0")/../tools/mac/setup_mac.sh"
 fi
 
 # Check 'readlink -f' is available
-readlink -f "$0" &>/dev/null
-[[ $? -ne 0 ]] && echo "Unable to use 'readlink -f', exiting." && exit 1
+readlink -f "$0" &>/dev/null || exit_error "Unable to use 'readlink -f', exiting."
 
 SCRIPT=${BASH_SOURCE[0]}
 if [[ -z "$SCRIPT" ]] || [[ "$SCRIPT" = "bash" ]]; then
@@ -38,12 +43,12 @@ SETUP_TOOLS_ROOT="$SETUP_ROOT/tools"
 
 # Tweak debug mode
 [[ "$(basename "$0")" == "bashdb" ]] && {
-  export APPS_ROOT=$(readlink -f "$(dirname "$SETUP_ROOT")/../..")
+  APPS_ROOT=$(readlink -f "$(dirname "$SETUP_ROOT")/../..")
+  export APPS_ROOT
   export HOME=$APPS_ROOT/home
 }
 
-cd "$SETUP_ROOT"
-[[ $? -ne 0 ]] && echo "Unable to go to the parent directory of $SCRIPT_NAME ($SETUP_ROOT)" && exit 1
+cd "$SETUP_ROOT" || exit_error "Unable to go to the parent directory of $SCRIPT_NAME ($SETUP_ROOT)"
 
 SETUP_SILENT=0
 SETUP_SKIP_DEFAULT=0
@@ -51,11 +56,13 @@ DEFAULT_APPS="shell git"
 DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS portableapps"
 DEFAULT_APPS_GREP=$(echo "$DEFAULT_WIN_APPS" | tr ' ' '|')
 APPS=
+UPGRADE_APPS=0
 
 usage() {
-  echo "Usage: $SCRIPT_NAME [-s|--silent] [app [app...]]" 1>&2
+  echo "Usage: $SCRIPT_NAME [-s|--silent] [-u|--upgrade] [app [app...]]" 1>&2
   echo "  Options:" 1>&2
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
+  echo "    -u,--upgrade: when possible, it will upgrade the apps" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
   echo "    java: install java jdk 15.0.2" 1>&2
@@ -104,6 +111,10 @@ while [[ $# -gt 0 ]]; do
   -k | --skip-default-apps)
     SETUP_SKIP_DEFAULT=1
     ;;
+  -u | --update)
+    UPGRADE_APPS=1
+    SETUP_SKIP_DEFAULT=1
+    ;;
   -h | --help)
     usage
     exit 0
@@ -133,25 +144,25 @@ fi
 # Ensure to have default apps (except if skipped)
 [[ "$SETUP_SKIP_DEFAULT" -eq 0 ]] && APPS="$DEFAULT_APPS $(echo "$APPS" | tr ' ' '\n' | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')"
 
-SETUP_ERROR_CONTINUE=100
-SETUP_ERROR_STOP=101
+export SETUP_ERROR_CONTINUE=100
+export SETUP_ERROR_STOP=101
 
 function echoColor() {
   color=$1
   shift
-  echo -e "\033[${color}m$@\033[0m"
+  echo -e "\033[${color}m$*\033[0m"
 }
 
 function echoSection() {
-  echoColor 33 "Setup for $@..."
+  echoColor 33 "Setup for $*..."
 }
 
 function echoSectionDone() {
-  echoColor 33 "Setup for $@ done.\n"
+  echoColor 33 "Setup for $* done.\n"
 }
 
 function echoSectionError() {
-  echoColor 31 "Setup for $@ failed !!!\n"
+  echoColor 31 "Setup for $* failed !!!\n"
 }
 
 # check $HOME
@@ -168,15 +179,17 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # get functions to check the system
+# shellcheck source=../tools/shell/source/system.sh
 source "$SETUP_TOOLS_ROOT/shell/source/system.sh"
 
 if [[ -n "$APPS_ROOT" ]]; then
+  # shellcheck source=../tools/shell/source/path_windows.sh
   source "$SETUP_TOOLS_ROOT/shell/source/path_windows.sh"
 
   # Ensure to get APPS_ROOT as posix path if not
   if [[ "$(echo "$APPS_ROOT" | grep -c ':')" -ne 0 ]]; then
     APPS_ROOT="$(get_path_to_posix "$APPS_ROOT")"
-    [[ $? -ne 0 ]] || [[ ! -d "$APPS_ROOT" ]] && echo "APPS_ROOT='$APPS_ROOT' does not exist" && exit 1
+    [[ ! -d "$APPS_ROOT" ]] && exit_error "APPS_ROOT='$APPS_ROOT' does not exist"
   fi
 
   # https://www.joshkel.com/2018/01/18/symlinks-in-windows/
@@ -213,7 +226,7 @@ if [[ -n "$path_with_space" ]]; then
     echo "    $path: '${!path}'"
   done
   answer='y'
-  if [[ $SETUP_SILENT -eq 0 ]] && !([[ -n "$APPS_ROOT" ]] && [[ -f "$APPS_ROOT/home/.gitconfig" ]]); then
+  if [[ $SETUP_SILENT -eq 0 ]] && ! { [[ -n "$APPS_ROOT" ]] && [[ -f "$APPS_ROOT/home/.gitconfig" ]]; }; then
     answer='n'
     read -rep "Are you sure you want to proceed (y/N) ? " -i $answer answer
   fi
@@ -221,22 +234,28 @@ if [[ -n "$path_with_space" ]]; then
 fi
 
 # Get functions to download tarball
+# shellcheck source=../tools/shell/bin/download_tarball.sh
 source "$SETUP_TOOLS_ROOT/$tool/shell/bin/download_tarball.sh"
 
-# Install the selected apps
+# Install or update the selected apps
 for tool in $APPS; do
   if [[ -f "$SETUP_TOOLS_ROOT/$tool/setup.sh" ]]; then
-    echoSection $tool
+    echoSection "$tool"
     source "$SETUP_TOOLS_ROOT/$tool/setup.sh"
-    "setup_$tool"
+    if [ "$UPGRADE_APPS" -eq 1 ]; then
+      if type "upgrade_$tool" &>/dev/null; then
+        "upgrade_$tool"
+      fi
+    else
+      "setup_$tool"
+    fi
     ret=$?
     if [[ $ret -eq 0 ]]; then
-      echoSectionDone $tool
+      echoSectionDone "$tool"
     else
       echoSectionError "$tool (code $ret)"
       case $ret in
-      $SETUP_ERROR_CONTINUE) ;;
-
+      "$SETUP_ERROR_CONTINUE") ;;
       *)
         exit $ret
         ;;
@@ -251,15 +270,20 @@ if [[ -d "$custom_tool_folder" ]]; then
     if [[ -f "$custom_tool_folder/$tool/setup.sh" ]]; then
       echoSection "$tool"
       source "$custom_tool_folder/$tool/setup.sh"
-      "setup_$tool"
+      if [ "$UPGRADE_APPS" -eq 1 ]; then
+        if type "upgrade_$tool" &>/dev/null; then
+          "upgrade_$tool"
+        fi
+      else
+        "setup_$tool"
+      fi
       ret=$?
       if [[ $ret -eq 0 ]]; then
         echoSectionDone "$tool"
       else
         echoSectionError "$tool (code $ret)"
         case $ret in
-        $SETUP_ERROR_CONTINUE) ;;
-
+        "$SETUP_ERROR_CONTINUE") ;;
         *)
           exit $ret
           ;;
@@ -284,6 +308,8 @@ echo "$SETUP_ROOT" >"$HOME/.common_env_path"
 echo -e "Setup done.\n"
 shellrc=.bashrc
 [[ "$(basename "$(system_get_default_shell)")" = "zsh" ]] && shellrc=.zshrc
-echoColor 33 "Please run the following command to complete:"
-echo "source '$HOME/$shellrc'"
-echo
+if [ "$UPGRADE_APPS" -eq 0 ]; then
+  echoColor 33 "Please run the following command to complete:"
+  echo "source '$HOME/$shellrc'"
+  echo
+fi
