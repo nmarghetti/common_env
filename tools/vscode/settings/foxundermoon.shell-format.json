@@ -2,5 +2,6 @@
   "[shellscript]": {
     "editor.defaultFormatter": "foxundermoon.shell-format",
     "editor.formatOnSave": true
-  }
+  },
+  "shellformat.flag": "-i 2 -ci"
 }
