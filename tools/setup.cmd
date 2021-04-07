@@ -204,7 +204,7 @@ REM Setup
 cd "%APPS_ROOT%"
 echo ---------------- Start setup with bash ------------------
 REM First light install with pacman package manager
-find "  app = pacman" setup.ini >nul 2>&1 && (
+findstr /B /R /C:"[\t ]*app[\t ]*=[\t ]*pacman" setup.ini >nul 2>&1 && (
   if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
     echo First installation, first install pacman package manager
     start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" pacman
