@@ -5,12 +5,13 @@ function setup_mobaxterm() {
 
   moba_path="$APPS_ROOT/PortableApps/MobaXterm"
   # Install MobaXterm
-  # Move from previous installation
-  [[ -f "$moba_path/MobaXterm_Personal_20.2.exe" ]] && mv "$moba_path/MobaXterm_Personal_20.2.exe" "$moba_path/MobaXterm_Personal.exe"
   if [[ ! -f "$moba_path/MobaXterm_Personal.exe" ]]; then
     mkdir -vp "$moba_path"
-    download_tarball -e -o "MobaXterm.zip" -d "$moba_path" "https://download.mobatek.net/2022020030522248/MobaXterm_Portable_v20.6.zip"
-    [[ "$?" -eq 0 ]] && mv "$moba_path/MobaXterm_Personal_20.6.exe" "$moba_path/MobaXterm_Personal.exe"
+    # Ensure to remove from previous installation
+    rm -f "$moba_path/MobaXterm_Personal_"*'.exe'
+    if download_tarball -e -o "MobaXterm.zip" -d "$moba_path" "https://download.mobatek.net/2022020030522248/MobaXterm_Portable_v20.6.zip"; then
+      mv "$moba_path/MobaXterm_Personal_"*'.exe' "$moba_path/MobaXterm_Personal.exe"
+    fi
   fi
   [[ ! -f "$moba_path/MobaXterm_Personal.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
