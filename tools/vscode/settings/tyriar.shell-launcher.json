@@ -38,7 +38,7 @@
       "label": "Cmder powershell"
     },
     {
-      "shell": "bash.exe",
+      "shell": "%WINDOWS_APPS_ROOT%\\PortableApps\\PortableGit\\usr\\bin\\bash.exe",
       "args": ["--init-file", "${env:HOME}\\.bashrc"],
       "label": "Git_bash"
     },
