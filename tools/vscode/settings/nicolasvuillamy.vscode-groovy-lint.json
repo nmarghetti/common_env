@@ -1,0 +1,6 @@
+{
+  "[groovy]": {
+    "editor.defaultFormatter": "NicolasVuillamy.vscode-groovy-lint",
+    "editor.formatOnSave": true
+  }
+}
