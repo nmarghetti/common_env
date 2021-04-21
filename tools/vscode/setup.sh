@@ -39,9 +39,11 @@ EOM
 
   # Install extensions
   echo "Checking extensions..."
-  local tmp_log=$(mktemp)
+  local tmp_log
+  tmp_log=$(mktemp)
   # Get extensions already installed in VSCode
-  local installed_extensions=$(cat <<<$("$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --list-extensions))
+  local installed_extensions
+  installed_extensions="$("$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --list-extensions)"
   local extension
   # Get all default extensions
   declare -A extensions
@@ -76,17 +78,20 @@ EOM
     [ -z "$extension" ] && continue
     echoColor 36 "Checking extension $extension_name..."
     # Install extension if not already installed
-    echo ${installed_extensions[@]} | tr ' ' '\n' | grep -iE "^$extension_name$" &>/dev/null && continue
+    grep -qiE "^$extension_name$" <<<"$installed_extensions" && continue
     if [ $certificate_error -eq 1 ]; then
-      [ ! "$(echo "$extension" | tr '.' '\n' | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')" = "vsix" ] && echo "Skipping '$extension' due to certificate error" && continue
+      [ ! "$(echo "$extension" | tr '.' '\n' | tail -1 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')" = "vsix" ] &&
+        echo "Skipping '$extension' due to certificate error" && continue
     fi
-    (set -o pipefail && "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --install-extension "$extension" 2>&1 | tee "$tmp_log")
-    if [[ $? -ne 0 ]] && [[ "$extension_name" == "$extension" ]] && grep -c "unable to get local issuer certificate" "$tmp_log" &>/dev/null; then
+    if ! (set -o pipefail && "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" \
+      --install-extension "$extension" 2>&1 | tee "$tmp_log") &&
+      [[ "$extension_name" == "$extension" ]] &&
+      grep -c "unable to get local issuer certificate" "$tmp_log" &>/dev/null; then
       certificate_error=1
       if grep -c "http.proxyStrictSSL" "$setting_path" &>/dev/null; then
         sed -i -re 's/"http.proxyStrictSSL": true/"http.proxyStrictSSL": false/' "$setting_path" && changed_settings_ssl=1
-        "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --install-extension "$extension"
-        [ $? -eq 0 ] && certificate_error=0 && continue
+        "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --install-extension "$extension" &&
+          certificate_error=0 && continue
       fi
       echo "It seems that you have problems with your ssl certificate, you can try to temporarily set the VSCode settings http.proxyStrictSSL to false"
     fi
@@ -98,12 +103,14 @@ EOM
 
   # Set VSCode settings with all installed extension
   echo "Configuring settings..."
-  local custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension-settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
-  installed_extensions=$(cat <<<$("$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --list-extensions))
+  local custom_settings
+  custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension-settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
+  installed_extensions="$("$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --list-extensions)"
   # Always remember to double backslash anytime you manipulate the settings content: ... | sed -re 's#\\#\\\\#g'
   local common_settings="$SETUP_TOOLS_ROOT/vscode/settings/settings.json"
   [[ -n "$custom_settings" ]] && [[ -f "$custom_settings/settings.json" ]] && common_settings="$custom_settings/settings.json"
-  local settings_content="$(echo -e "\n  // VSCode")\n$(sed '1d;$d' "$common_settings" | sed -re 's#\\#\\\\#g'),"
+  local settings_content
+  settings_content="$(echo -e "\n  // VSCode")\n$(sed '1d;$d' "$common_settings" | sed -re 's#\\#\\\\#g'),"
 
   local lextension
   local extra_settings_content
@@ -118,10 +125,12 @@ EOM
     fi
   done
   # Update settings
-  local settings="$(cat "$setting_path")"
+  local settings
+  settings="$(cat "$setting_path")"
   echo "$settings" | awk -f "$SETUP_TOOLS_ROOT/shell/bin/generated_content.awk" -v action=replace -v content="$settings_content" >|"$setting_path"
-  sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" -e "s#%WINDOWS_APPS_ROOT%#$(echo $WINDOWS_APPS_ROOT | sed -re 's#\\#\\\\\\\\#g')#g" "$setting_path"
-  local remote_machine="$(git --no-pager config -f "$HOME/.common_env.ini" --get putty.remote-machine 2>/dev/null)"
+  sed -ri -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" -e "s#%WINDOWS_APPS_ROOT%#$(echo "$WINDOWS_APPS_ROOT" | sed -re 's#\\#\\\\\\\\#g')#g" "$setting_path"
+  local remote_machine
+  remote_machine="$(git --no-pager config -f "$HOME/.common_env.ini" --get putty.remote-machine 2>/dev/null)"
   [[ -z "$remote_machine" ]] && remote_machine="remote_machine"
   sed -ri -e "s#%REMOTE_MACHINE%#$remote_machine#g" "$setting_path"
 
