@@ -20,7 +20,7 @@ setup_vscode() {
 
   # Setup VSCode user settings
   local setting_path="$VSCodeData/user-data/User/settings.json"
-  if [[ ! -f "$setting_path" || "$(wc -l <<<"$setting_path")" -le 3 ]]; then
+  if [[ ! -f "$setting_path" || "$(wc -l <"$setting_path")" -le 3 ]]; then
     mkdir -vp "$VSCodeData/user-data/User" "$VSCodeData/extensions"
     echo "Create $setting_path"
     cat >"$setting_path" <<EOM
