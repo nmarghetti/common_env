@@ -7,9 +7,9 @@ function setup_cmder() {
   # Install cmder
   if [[ ! -f "$cmder_path/Cmder.exe" ]]; then
     mkdir -vp "$cmder_path"
-    download_tarball -e -d "$cmder_path" "https://github.com/cmderdev/cmder/releases/download/v1.3.14/cmder_mini.zip"
+    download_tarball -e -d "$cmder_path" "https://github.com/cmderdev/cmder/releases/download/v1.3.18/cmder_mini.zip"
   fi
-  [[ ! -f "$cmder_path/Cmder.exe" ]] && echo "Binary file not installed" && return $ERROR
+  [[ ! -f "$cmder_path/Cmder.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
   # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/cmder/CmderLauncher" "$APPS_ROOT/PortableApps/"
@@ -19,7 +19,8 @@ function setup_cmder() {
 
   if [[ ! -f "$APPS_ROOT/PortableApps/cmder/vendor/conemu-maximus5/ConEmu.xml" ]]; then
     cp -vf "$SETUP_TOOLS_ROOT/cmder/ConEmu.xml" "$APPS_ROOT/PortableApps/cmder/config/user-ConEmu.xml"
-    local remote_machine=$(powershell -Command "Get-ItemPropertyValue -path HKCU:\Software\SimonTatham\PuTTY\Sessions\remote -name HostName" 2>/dev/null)
+    local remote_machine
+    remote_machine=$(powershell -Command "Get-ItemPropertyValue -path HKCU:\Software\SimonTatham\PuTTY\Sessions\remote -name HostName" 2>/dev/null)
     local machine_name=$remote_machine
     # Keep only machine name if not IP
     [[ ! "$machine_name" =~ ^[0-9.]+$ ]] && machine_name=${machine_name%%.*}
