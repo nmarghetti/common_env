@@ -65,7 +65,7 @@ usage() {
   echo "    -u,--upgrade: when possible, it will upgrade the apps" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
-  echo "    java: install java jdk 15.0.2" 1>&2
+  echo "    java: install java jdk 8, 11 or 16 (16 by default)" 1>&2
   echo "    vscode: install latest Visual Studio Code" 1>&2
   echo "    pycharm: install latest PyCharm community" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
@@ -97,32 +97,32 @@ check_dir_var() {
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-  shell | git | gitbash | pacman | portableapps | python | \
-    java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | terminus | autohotkey | \
-    cygwin | node | nvm | gradle | xampp | elastic)
-    APPS="$APPS $1"
-    ;;
-  # cpp)
-  #   APPS="$APPS make cmake msys2"
-  #   ;;
-  -s | --silent)
-    SETUP_SILENT=1
-    ;;
-  -k | --skip-default-apps)
-    SETUP_SKIP_DEFAULT=1
-    ;;
-  -u | --update)
-    UPGRADE_APPS=1
-    SETUP_SKIP_DEFAULT=1
-    ;;
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  *)
-    usage
-    exit 1
-    ;;
+    shell | git | gitbash | pacman | portableapps | python | \
+      java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | terminus | autohotkey | \
+      cygwin | node | nvm | gradle | xampp | elastic)
+      APPS="$APPS $1"
+      ;;
+    # cpp)
+    #   APPS="$APPS make cmake msys2"
+    #   ;;
+    -s | --silent)
+      SETUP_SILENT=1
+      ;;
+    -k | --skip-default-apps)
+      SETUP_SKIP_DEFAULT=1
+      ;;
+    -u | --update)
+      UPGRADE_APPS=1
+      SETUP_SKIP_DEFAULT=1
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
   esac
   shift
 done
@@ -255,10 +255,10 @@ for tool in $APPS; do
     else
       echoSectionError "$tool (code $ret)"
       case $ret in
-      "$SETUP_ERROR_CONTINUE") ;;
-      *)
-        exit $ret
-        ;;
+        "$SETUP_ERROR_CONTINUE") ;;
+        *)
+          exit $ret
+          ;;
       esac
     fi
   fi
@@ -283,10 +283,10 @@ if [[ -d "$custom_tool_folder" ]]; then
       else
         echoSectionError "$tool (code $ret)"
         case $ret in
-        "$SETUP_ERROR_CONTINUE") ;;
-        *)
-          exit $ret
-          ;;
+          "$SETUP_ERROR_CONTINUE") ;;
+          *)
+            exit $ret
+            ;;
         esac
       fi
     fi
