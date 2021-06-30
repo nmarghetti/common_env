@@ -9,9 +9,17 @@ function setup_gitbash() {
     [[ ! -f "$HOME/$file" || "$SETUP_TOOLS_ROOT/gitbash/$file" -nt "$HOME/$file" ]] && cp -vf "$SETUP_TOOLS_ROOT/gitbash/$file" "$HOME/"
   done
 
+  # https://stackoverflow.com/questions/25730041/updating-file-permissions-with-git-bash-on-windows-7
+  # To allow to have file permission and make chmod working, replace in /etc/fstab
+  # none / cygdrive binary,posix=0,noacl,user 0 0
+  # none /tmp usertemp binary,posix=0,noacl 0 0
+  # by
+  # none / cygdrive binary,posix=0,user 0 0
+  # none /tmp usertemp binary,posix=0 0 0
+
   # Install Git for Windows
   if [[ ! -f "$git_path/bin/git.exe" ]]; then
-    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.30.0.windows.1/PortableGit-2.30.0-64-bit.7z.exe"
+    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.32.0.windows.1/PortableGit-2.32.0-64-bit.7z.exe"
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return $ERROR
 
