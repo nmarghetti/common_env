@@ -264,9 +264,9 @@ for tool in $APPS; do
   fi
 done
 
-custom_tool_folder=$(git --no-pager config -f "$APPS_ROOT/setup.ini" --get install.custom-app-folder 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
+custom_tool_folder=$(git --no-pager config -f "$HOME/.common_env.ini" --get install.custom-app-folder 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
 if [[ -d "$custom_tool_folder" ]]; then
-  for tool in $(git --no-pager config -f "$APPS_ROOT/setup.ini" --get-all install.custom-app); do
+  for tool in $(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.custom-app); do
     if [[ -f "$custom_tool_folder/$tool/setup.sh" ]]; then
       echoSection "$tool"
       source "$custom_tool_folder/$tool/setup.sh"

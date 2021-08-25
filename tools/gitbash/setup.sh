@@ -38,7 +38,7 @@ function setup_gitbash() {
   sed -i -re "s#^db_home:.*#db_home: $(echo "$HOME" | sed -re 's/ /%_/g')#" /etc/nsswitch.conf
 
   # Install ca certificate if provided
-  local cacert=$(git --no-pager config -f "$APPS_ROOT/setup.ini" --get install.cacert 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
+  local cacert=$(git --no-pager config -f "$HOME/.common_env.ini" --get install.cacert 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
   if [[ -f "$cacert" ]]; then
     local bundle
     for bundle in /mingw64/ssl/certs/ca-bundle.crt /usr/ssl/certs/ca-bundle.crt; do

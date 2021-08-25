@@ -17,6 +17,11 @@ if "%COMMON_ENV_INSTALL_APPS_ROOT%" == "" (
 ) else (
   set SETUP_PATH=%COMMON_ENV_INSTALL_APPS_ROOT%
 )
+if "%COMMON_ENV_INSTALL_SETUP_INI%" == "" (
+  set SETUP_INI=setup.ini
+) else (
+  set SETUP_INI=%COMMON_ENV_INSTALL_SETUP_INI%
+)
 set APPS_LINK=https://download3.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_17.1.1.paf.exe?20190321
 set APPS_EXE=PortableApps.exe
 set APP_GIT_LINK=https://github.com/git-for-windows/git/releases/download/v2.32.0.windows.1/PortableGit-2.32.0-64-bit.7z.exe
@@ -61,8 +66,13 @@ if %CHECK_FOR_DOWNLOAD%==1 (
 )
 
 REM Try to download setup.ini if not present
-if not exist setup.ini (
-  "%DOWNLOAD%" setup.ini "https://raw.githubusercontent.com/nmarghetti/common_env/%COMMON_ENV_BRANCH%/tools/setup.ini"
+if not exist "%SETUP_INI%" (
+  set download_setup_ini=false
+  if "%SETUP_INI%" == "setup.ini" set download_setup_ini=true
+  if "%SETUP_INI%" == "setup_test.ini" set download_setup_ini=true
+  if "%download_setup_ini%" == "true" (
+    "%DOWNLOAD%" "%SETUP_INI%" "https://raw.githubusercontent.com/nmarghetti/common_env/%COMMON_ENV_BRANCH%/tools/%SETUP_INI%"
+  )
 )
 
 REM Install PortableApps
@@ -172,8 +182,8 @@ if not exist "%LOCALAPPDATA%" (
 
 REM Copy setup.ini if present
 cd "%APPS_ROOT%"
-if exist setup.ini (
-  copy setup.ini "%HOME%\.common_env.ini"
+if exist "%SETUP_INI%" (
+  copy "%SETUP_INI%" "%HOME%\.common_env.ini"
 )
 
 REM Clone common_env
@@ -204,7 +214,7 @@ REM Setup
 cd "%APPS_ROOT%"
 echo ---------------- Start setup with bash ------------------
 REM First light install with pacman package manager
-findstr /B /R /C:"[\t ]*app[\t ]*=[\t ]*pacman" setup.ini >nul 2>&1 && (
+findstr /B /R /C:"[\t ]*app[\t ]*=[\t ]*pacman" %SETUP_INI% >nul 2>&1 && (
   if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
     echo First installation, first install pacman package manager
     start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" pacman
@@ -218,7 +228,7 @@ findstr /B /R /C:"[\t ]*app[\t ]*=[\t ]*pacman" setup.ini >nul 2>&1 && (
 )
 "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh"
 
-if not errorlevel 1 (
+if "%errorlevel%" == "0" (
   echo Installation completed
   echo You can now execute Start.exe
   echo From there you can :
@@ -228,6 +238,10 @@ if not errorlevel 1 (
   echo You can also install many application from PortableApps:
   echo     * Apps -^> Get More Apps... -^> By Category
   echo Enjoy ;^)
+) else (
+  echo There seems to have a problem with the installation
+  echo If you have an error like "1 [main] bash (21176) shared_info::initialize: size of shared memory region changed from 56248 to 49080"
+  echo Open Task Manager, kill gpgagent.exe and dirmngr.exe and rerun the installation
 )
 
 pause
