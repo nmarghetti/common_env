@@ -22,7 +22,7 @@ if "%COMMON_ENV_INSTALL_SETUP_INI%" == "" (
 ) else (
   set SETUP_INI=%COMMON_ENV_INSTALL_SETUP_INI%
 )
-set APPS_LINK=https://download3.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_17.1.1.paf.exe?20190321
+set APPS_LINK=https://download3.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_18.0.1.paf.exe?20190321
 set APPS_EXE=PortableApps.exe
 set APP_GIT_LINK=https://github.com/git-for-windows/git/releases/download/v2.32.0.windows.1/PortableGit-2.32.0-64-bit.7z.exe
 set APP_GIT_EXE=PortableGit.exe

@@ -21,7 +21,7 @@ function setup_gitbash() {
   if [[ ! -f "$git_path/bin/git.exe" ]]; then
     download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.32.0.windows.1/PortableGit-2.32.0-64-bit.7z.exe"
   fi
-  [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return $ERROR
+  [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
   # Add custom ln to allow to have ln working with symlinks
   # Unfortunately it does not seem to work with executable files
@@ -37,19 +37,8 @@ function setup_gitbash() {
   # Replace db_home: env windows cygwin desc
   sed -i -re "s#^db_home:.*#db_home: $(echo "$HOME" | sed -re 's/ /%_/g')#" /etc/nsswitch.conf
 
-  # Install ca certificate if provided
-  local cacert=$(git --no-pager config -f "$HOME/.common_env.ini" --get install.cacert 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
-  if [[ -f "$cacert" ]]; then
-    local bundle
-    for bundle in /mingw64/ssl/certs/ca-bundle.crt /usr/ssl/certs/ca-bundle.crt; do
-      if [[ ! -f "$bundle" ]] || ! cmp --silent "$cacert" "$bundle"; then
-        [[ -f "$bundle" && ! -f "$bundle.backup" ]] && mv "$bundle" "$bundle.backup"
-        cp -vf "$cacert" "$bundle"
-      fi
-    done
-    # touch "$HOME/.npmrc"
-    # grep -Ee '^cafile=' "$HOME/.npmrc" || echo "cafile=/usr/ssl/certs/ca-bundle.crt" >>"$HOME/.npmrc"
-  fi
+  # Update certificates
+  "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh
 
   # # Install wget
   # if [[ ! -f "$git_path/usr/bin/wget.exe" ]]; then
@@ -79,7 +68,7 @@ function setup_gitbash() {
     if [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${toolfile}" ]]; then
       echoColor 36 "Adding ${tool}..."
       download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/" "http://repo.msys2.org/msys/x86_64/$tarball"
-      [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${toolfile}" ]] && echo "Error while installing ${tool}..." && return $ERROR
+      [[ ! -f "$APPS_ROOT/PortableApps/PortableGit/usr/bin/${toolfile}" ]] && echo "Error while installing ${tool}..." && return "$ERROR"
     fi
   done
 
