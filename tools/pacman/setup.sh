@@ -29,6 +29,10 @@ function setup_pacman() {
 
     # Install bash and exit to avoid errors due to replacing current bash
     pacman -Sv --noconfirm --overwrite='*' bash man
+
+    # Update certificates
+    "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh
+
     echo "Exit install to avoid errors due to bash that has been updated. Please rerun installation."
     exit 0
   fi
@@ -46,11 +50,13 @@ function setup_pacman() {
       fi
     done
     if [[ -n "$packages" ]]; then
-      pacman -Sv --noconfirm --overwrite='*' $packages
-      [[ $? -ne 0 ]] && return "$ERROR"
+      pacman -Sv --noconfirm --overwrite='*' $packages || return "$ERROR"
 
       # Clean packages
       pacman -Sccv --noconfirm
+
+      # Update certificates in case it changes
+      "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh
     fi
   fi
 
