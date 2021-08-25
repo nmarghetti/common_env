@@ -2,6 +2,8 @@
 
 REM Change this to point to your local path
 set COMMON_ENV_INSTALL_APPS_ROOT=.
+REM Change this to point to your custom setup ini files (eg. setup_test.ini)
+set COMMON_ENV_INSTALL_SETUP_INI=setup.ini
 
 set CHECK_FOR_DOWNLOAD=1
 if exist wget.exe (
@@ -35,8 +37,8 @@ if "%COMMON_ENV_INSTALL_APPS_ROOT%" EQU "." (
   )
   setup.cmd
 ) else (
-  if not exist setup.ini (
-    copy "%COMMON_ENV_INSTALL_APPS_ROOT%\Documents\dev\common_env\tools\setup.ini" setup.ini
+  if not exist %COMMON_ENV_INSTALL_SETUP_INI% (
+    copy "%COMMON_ENV_INSTALL_APPS_ROOT%\Documents\dev\common_env\tools\setup.ini" %COMMON_ENV_INSTALL_SETUP_INI%
   )
   "%COMMON_ENV_INSTALL_APPS_ROOT%\Documents\dev\common_env\tools\setup.cmd"
 )

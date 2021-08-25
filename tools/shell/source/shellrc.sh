@@ -188,7 +188,8 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   pathPrepend "${HOME}/bin"
 
   # https://github.com/cypress-io/cypress/issues/1401#issuecomment-393591520
-  export NODE_EXTRA_CA_CERTS=/mingw64/ssl/certs/ca-bundle.crt
+  export NODE_EXTRA_CA_CERTS='/mingw64/ssl/certs/ca-bundle.crt'
+  # export YARN_CA_FILE_PATH="$WIN_APPS_ROOT/PortableApps/PortableGit/mingw64/ssl/certs/ca-bundle.crt"
 
   # Ensure terminal output are UTF8 https://www.debian.org/doc/manuals/fr/debian-fr-howto/ch3.html
   export LC_ALL=C.UTF-8
@@ -202,39 +203,39 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   if [ "$current_shell" = "bash" ] && [ ! -f "$HOME/.oh-my-bashrc" ]; then
     # If shell is in interactive mode
     case $- in
-    *i*)
-      # Git Prompt
-      # For more information; check thoses files:
-      # ${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh
-      # ${APPS_ROOT}/PortableApps/PortableGit/mingw64/share/git/completion/git-prompt.sh
-      export GIT_PS1_SHOWDIRTYSTATE=1
-      export GIT_PS1_SHOWSTASHSTATE=1
-      export GIT_PS1_SHOWUPSTREAM="auto"
-      if [ ! "$(type -t __git_ps1)" = "function" ]; then
-        common_env_log "Setup git prompt"
-        source "${APPS_ROOT}/PortableApps/PortableGit/mingw64/share/git/completion/git-prompt.sh"
-      fi
-      common_env_build_prompt() {
-        local RET_VAL=$?
-        local date_color="34"
-        [ "$RET_VAL" -ne 0 ] && date_color="31"
-        local title="$(echo -e "\e]0;${TITLEPREFIX:-$OSTYPE}:$PWD\a")"
-        local date="$(echo -e "\e[${date_color}m$(date +%H:%M:%S)")"
-        local host="$(echo -e "\e[32m${USER:-$USERNAME}@${HOSTNAME}")"
-        local system="$(echo -e "\e[35m${OSTYPE}-$(basename "$BASH")@$(echo "$BASH_VERSION" | cut -d. -f-2)")"
-        local git_version="$(echo -e "\e[36mgit@$(git --version | sed -re "s#^[^0-9]*([0-9\.]+).*#\1#" | cut -d. -f-3)")"
-        local git_info=""
-        if [ ! "$1" = "no_git" ]; then
-          git_info=" $(echo -e "\e[36m$(__git_ps1)")"
+      *i*)
+        # Git Prompt
+        # For more information; check thoses files:
+        # ${APPS_ROOT}/PortableApps/PortableGit/etc/profile.d/git-prompt.sh
+        # ${APPS_ROOT}/PortableApps/PortableGit/mingw64/share/git/completion/git-prompt.sh
+        export GIT_PS1_SHOWDIRTYSTATE=1
+        export GIT_PS1_SHOWSTASHSTATE=1
+        export GIT_PS1_SHOWUPSTREAM="auto"
+        if [ ! "$(type -t __git_ps1)" = "function" ]; then
+          common_env_log "Setup git prompt"
+          source "${APPS_ROOT}/PortableApps/PortableGit/mingw64/share/git/completion/git-prompt.sh"
         fi
-        echo -en "${title}${date} ${host} ${system} ${git_version} \e[33m${PWD}${git_info}"
-        return "$RET_VAL"
-      }
-      # It is taking too much time
-      # export PS1='`common_env_build_prompt`\n\[`[[ $? -eq 0 ]] && echo "\e[32m" || echo "\e[31m"`\]$\[\e[0m\] '
-      # https://wiki.archlinux.org/index.php/Bash/Prompt_customization
-      export PS1='\[\e]0;${TITLEPREFIX:-$OSTYPE}:$PWD\a\]\[`[[ $? -eq 0 ]] && echo "\e[34m" || echo "\e[31m"`\]\t \[\e[32m\]\u@\h \[\e[35m\]$OSTYPE-\s@\v \[\e[36m\]git@`git --version | sed -re "s#^[^0-9]*([0-9\.]+).*#\1#" | cut -d. -f-3` \[\e[33m\]\w\n\[\e[0m\]$ '
-      ;;
+        common_env_build_prompt() {
+          local RET_VAL=$?
+          local date_color="34"
+          [ "$RET_VAL" -ne 0 ] && date_color="31"
+          local title="$(echo -e "\e]0;${TITLEPREFIX:-$OSTYPE}:$PWD\a")"
+          local date="$(echo -e "\e[${date_color}m$(date +%H:%M:%S)")"
+          local host="$(echo -e "\e[32m${USER:-$USERNAME}@${HOSTNAME}")"
+          local system="$(echo -e "\e[35m${OSTYPE}-$(basename "$BASH")@$(echo "$BASH_VERSION" | cut -d. -f-2)")"
+          local git_version="$(echo -e "\e[36mgit@$(git --version | sed -re "s#^[^0-9]*([0-9\.]+).*#\1#" | cut -d. -f-3)")"
+          local git_info=""
+          if [ ! "$1" = "no_git" ]; then
+            git_info=" $(echo -e "\e[36m$(__git_ps1)")"
+          fi
+          echo -en "${title}${date} ${host} ${system} ${git_version} \e[33m${PWD}${git_info}"
+          return "$RET_VAL"
+        }
+        # It is taking too much time
+        # export PS1='`common_env_build_prompt`\n\[`[[ $? -eq 0 ]] && echo "\e[32m" || echo "\e[31m"`\]$\[\e[0m\] '
+        # https://wiki.archlinux.org/index.php/Bash/Prompt_customization
+        export PS1='\[\e]0;${TITLEPREFIX:-$OSTYPE}:$PWD\a\]\[`[[ $? -eq 0 ]] && echo "\e[34m" || echo "\e[31m"`\]\t \[\e[32m\]\u@\h \[\e[35m\]$OSTYPE-\s@\v \[\e[36m\]git@`git --version | sed -re "s#^[^0-9]*([0-9\.]+).*#\1#" | cut -d. -f-3` \[\e[33m\]\w\n\[\e[0m\]$ '
+        ;;
     esac
 
     prompt_nogit() {

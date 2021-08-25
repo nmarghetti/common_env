@@ -46,32 +46,32 @@ download_tarball() {
   OPTIND=1
   while getopts "hviec:d:k:m:o:t:p:" opt; do
     case "$opt" in
-    i) ssl_check=0 ;;
-    c) cacert=$OPTARG ;;
-    k) cookie=$OPTARG ;;
-    e) extract=1 ;;
-    o) tarball=$OPTARG ;;
-    d) directory=$OPTARG ;;
-    m) extracted_directory=$OPTARG ;;
-    p) downloader=$OPTARG ;;
-    v) verbose="-v" ;;
-    t)
-      case "$OPTARG" in
-      zip | tgz | zst | exe) tarball_type=$OPTARG ;;
-      *)
-        download_tarball_usage "Error: unsupported tarball type: '$tarball_type'."
+      i) ssl_check=0 ;;
+      c) cacert=$OPTARG ;;
+      k) cookie=$OPTARG ;;
+      e) extract=1 ;;
+      o) tarball=$OPTARG ;;
+      d) directory=$OPTARG ;;
+      m) extracted_directory=$OPTARG ;;
+      p) downloader=$OPTARG ;;
+      v) verbose="-v" ;;
+      t)
+        case "$OPTARG" in
+          zip | tgz | zst | exe) tarball_type=$OPTARG ;;
+          *)
+            download_tarball_usage "Error: unsupported tarball type: '$tarball_type'."
+            return 2
+            ;;
+        esac
+        ;;
+      h)
+        download_tarball_usage
+        return 0
+        ;;
+      \? | *)
+        download_tarball_usage
         return 2
         ;;
-      esac
-      ;;
-    h)
-      download_tarball_usage
-      return 0
-      ;;
-    \? | *)
-      download_tarball_usage
-      return 2
-      ;;
     esac
   done
   shift $(expr $OPTIND - 1)
@@ -151,15 +151,15 @@ download_tarball() {
     # Get tarball type
     [[ -z "$tarball_type" ]] && {
       case "${tarball#*.}" in
-      *exe) tarball_type="exe" ;;
-      *zip) tarball_type="zip" ;;
-      *tar\.gz) tarball_type="tgz" ;;
-      *tar\.xz) tarball_type="txz" ;;
-      *zst) tarball_type="zst" ;;
-      *)
-        echo "Error: unable to find the type of tarball with the extension: '${tarball#*.}'"
-        return 1
-        ;;
+        *exe) tarball_type="exe" ;;
+        *zip) tarball_type="zip" ;;
+        *tar\.gz) tarball_type="tgz" ;;
+        *tar\.xz) tarball_type="txz" ;;
+        *zst) tarball_type="zst" ;;
+        *)
+          echo "Error: unable to find the type of tarball with the extension: '${tarball#*.}'"
+          return 1
+          ;;
       esac
     }
 
@@ -170,10 +170,10 @@ download_tarball() {
       "$tarball" || err=1
     else
       case "$tarball_type" in
-      zip) cmd="unzip '$tarball' -d '${directory%/}/'" ;;
-      tgz) cmd="tar -xvf '$tarball' -C '${directory%/}/'" ;;
-      txz) cmd="tar -xvJf '$tarball' -C '${directory%/}/'" ;;
-      zst) cmd="tar -I zstd -xvf '$tarball' -C '${directory%/}/'" ;;
+        zip) cmd="unzip '$tarball' -d '${directory%/}/'" ;;
+        tgz) cmd="tar -xvf '$tarball' -C '${directory%/}/'" ;;
+        txz) cmd="tar -xvJf '$tarball' -C '${directory%/}/'" ;;
+        zst) cmd="tar -I zstd -xvf '$tarball' -C '${directory%/}/'" ;;
       esac
       eval "$cmd" | awk 'BEGIN {ORS="."; limit=40; for(c=0; c<limit*2;c++){back=back"\b"; space=space" ";} } {print "."; if (NR % limit == 0) printf back space back }' || err=1
       echo
