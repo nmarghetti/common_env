@@ -76,6 +76,7 @@ usage() {
   echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2
   echo "    node: install NodeJs 12.20.0" 1>&2
   echo "    nvm: install nvm which is a nodejs version manager" 1>&2
+  echo "    insomnia: install Insomnia REST client 2021.5.0" 1>&2
   echo "    gradle: install Gradle 6.7.1" 1>&2
   echo "    cygwin: install Cygwin" 1>&2
   echo "    elastic: install Elasticsearch, Logstash and Kibana (you would need to install java also)" 1>&2
@@ -99,7 +100,7 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | terminus | autohotkey | \
-      cygwin | node | nvm | gradle | xampp | elastic)
+      cygwin | node | nvm | insomnia | gradle | xampp | elastic)
       APPS="$APPS $1"
       ;;
     # cpp)
