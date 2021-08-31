@@ -109,7 +109,7 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Cmder** (~30M)
 - **MobaXterm** (~13M)
 - **SuperPuTTY** (~2M)
-- **Terminus** (~300M)
+- **Tabby** (~300M)
 - **Python** (2.7)
 - **Python** (3.8) (~50M)
 - **Java SDK** (15) (~300M)
@@ -213,7 +213,7 @@ You can define those environment variables to customize git:
    - [MobaXterm](https://mobaxterm.mobatek.net/)
    - [tmux](https://github.com/tmux/tmux/): [info](https://github.com/rothgar/awesome-tmux), [config](https://github.com/gpakosz/.tmux)
    - [mintty](https://mintty.github.io/): [doc](https://mintty.github.io/mintty.1.html)
-   - [Terminus](https://eugeny.github.io/terminus/)
+   - [Tabby](https://tabby.sh/)
 
 1. **Other**
 

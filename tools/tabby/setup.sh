@@ -1,25 +1,25 @@
 #! /usr/bin/env bash
 
-function setup_terminus() {
+function setup_tabby() {
   local ERROR=$SETUP_ERROR_CONTINUE
-  local terminus_path="$APPS_ROOT/PortableApps/Terminus"
+  local tabby_path="$APPS_ROOT/PortableApps/Tabby"
 
   # Install NodeJs
-  if [[ ! -f "$terminus_path/Terminus.exe" ]]; then
-    local version=$(git ls-remote --refs --tags --quiet --sort='-version:refname' https://github.com/Eugeny/terminus.git | head -1 | sed -re 's#^.*refs/tags/(.*)$#\1#')
+  if [[ ! -f "$tabby_path/Tabby.exe" ]]; then
+    local version=$(git ls-remote --refs --tags --quiet --sort='-version:refname' https://github.com/Eugeny/tabby.git | head -1 | sed -re 's#^.*refs/tags/(.*)$#\1#')
     version="${version:-v1.0.126}"
 
-    mkdir -vp "$terminus_path"
-    download_tarball -e -d "$terminus_path" "https://github.com/Eugeny/terminus/releases/download/${version}/terminus-${version:1}-portable.zip"
+    mkdir -vp "$tabby_path"
+    download_tarball -e -d "$tabby_path" "https://github.com/Eugeny/tabby/releases/download/${version}/tabby-${version:1}-portable.zip"
 
-    [[ ! -f "$terminus_path/Terminus.exe" ]] && return "$ERROR"
+    [[ ! -f "$tabby_path/Tabby.exe" ]] && return "$ERROR"
   fi
 
   echo "APPS_ROOT = $APPS_ROOT"
   echo "WINDOWS_APPS_ROOT = $WINDOWS_APPS_ROOT"
-  mkdir -vp "$terminus_path/data"
-  if [[ ! -f "$terminus_path/data/config.yaml" ]]; then
-    cp -v "$SETUP_TOOLS_ROOT/terminus/config.yaml" "$terminus_path/data/config.yaml"
+  mkdir -vp "$tabby_path/data"
+  if [[ ! -f "$tabby_path/data/config.yaml" ]]; then
+    cp -v "$SETUP_TOOLS_ROOT/tabby/config.yaml" "$tabby_path/data/config.yaml"
     local remote_machine=$(powershell -Command "Get-ItemPropertyValue -path HKCU:\Software\SimonTatham\PuTTY\Sessions\remote -name HostName" 2>/dev/null)
     local machine_name="$remote_machine"
     # Keep only machine name if not IP
@@ -30,10 +30,10 @@ function setup_terminus() {
       -e "s/user: remote_user/user: ${USER:-${USERNAME}}/" \
       -e "s#%APPS_ROOT%#$WIN_APPS_ROOT#g" \
       -e "s#%WINDOWS_APPS_ROOT%#$(echo $WINDOWS_APPS_ROOT | sed -re 's#\\#\\\\#g')#g" \
-      "$terminus_path/data/config.yaml"
+      "$tabby_path/data/config.yaml"
   fi
 
-  rsync -vau "$SETUP_TOOLS_ROOT/terminus/Terminus" "$APPS_ROOT/PortableApps/"
+  rsync -vau "$SETUP_TOOLS_ROOT/tabby/Tabby" "$APPS_ROOT/PortableApps/"
 
   return 0
 }

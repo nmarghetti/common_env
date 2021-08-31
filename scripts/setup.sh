@@ -72,7 +72,7 @@ usage() {
   echo "    mobaxterm: install MobaXterm 20.6" 1>&2
   echo "    putty: install PuTTY 0.73" 1>&2
   echo "    superputty: install SuperPuTTY 1.4.0.9" 1>&2
-  echo "    terminus: install Terminus" 1>&2
+  echo "    tabby: install Tabby" 1>&2
   echo "    autohotkey: install AutoHotkey >=1.1.32" 1>&2
   echo "    node: install NodeJs 12.20.0" 1>&2
   echo "    nvm: install nvm which is a nodejs version manager" 1>&2
@@ -99,7 +99,7 @@ check_dir_var() {
 while [[ $# -gt 0 ]]; do
   case $1 in
     shell | git | gitbash | pacman | portableapps | python | \
-      java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | terminus | autohotkey | \
+      java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
       cygwin | node | nvm | insomnia | gradle | xampp | elastic)
       APPS="$APPS $1"
       ;;
