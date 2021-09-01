@@ -5,7 +5,7 @@
     "esbenp.prettier-vscode",
     "redhat.vscode-yaml",
     "davidanson.vscode-markdownlint",
-    "alanwalk.markdown-toc",
+    "huntertran.auto-markdown-toc",
     "shd101wyy.markdown-preview-enhanced",
     "foxundermoon.shell-format"
   ]
