@@ -82,6 +82,7 @@ usage() {
   echo "    elastic: install Elasticsearch, Logstash and Kibana (you would need to install java also)" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
+  echo "    wsl: configure WSL" 1>&2
   echo "In any case it will setup some shell and git config, and (only on Windows) install python 3.8.2" 1>&2
 }
 
@@ -100,7 +101,7 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
-      cygwin | node | nvm | insomnia | gradle | xampp | elastic)
+      cygwin | node | nvm | insomnia | gradle | xampp | elastic | wsl)
       APPS="$APPS $1"
       ;;
     # cpp)
