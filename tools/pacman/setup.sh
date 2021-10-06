@@ -24,6 +24,9 @@ function setup_pacman() {
     grep -q '/etc/pacman.d/gnupg/gpg.conf' /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkp://keyserver.ubuntu.com" >>/etc/pacman.d/gnupg/gpg.conf
     pacman-key --refresh-keys
 
+    # In case of error with keys you can tell pacman not to check keys, update /etc/pacman.conf and set:
+    # SigLevel = Never
+
     pacman -Tv
     pacman -Syuv --overwrite='*'
 
