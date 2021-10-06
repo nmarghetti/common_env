@@ -31,6 +31,7 @@
   autocrlf = input
   whitespace = trailing-space,-space-before-tab,tab-in-indent,cr-at-eol
   longpaths = true
+  editor = vim
 
 [i18n]
   logOutputEncoding = utf-8
@@ -46,7 +47,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.2'
+  cv = ! echo 'gitconfig 2.1.3'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -231,6 +232,8 @@
   ptfu   = ! git ptf upstream # force push tags to upstream
   pushf  = ! git p --force # force push (useful when using git ca)
   pf     = ! git pushf
+  pusho  = ! git p --set-upstream origin $(git brcurrent) # push new branch to origin
+  po     = ! git pusho
   pushu  = ! git p upstream $(git brcurrent) # push to upstream
   pu     = ! git pushu
   pushuf = ! git p --force upstream $(git brcurrent) # force push to upstream
