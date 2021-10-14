@@ -13,10 +13,9 @@ declare -A tasks=(
 
 for task in "${!tasks[@]}"; do
   for code in ${tasks[$task]}; do
-    sed -r -e 's/encoding="UTF-8"/encoding="UTF-16"/' -e "s/%CISCO_CODE%/$code/g" -e "s/%DATE%/$(date +'%Y-%m-%dT%H:%M:%S.%N')/g" -e "s/%USERDOMAIN%/$USERDOMAIN/g" -e "s/%USERNAME%/$USERNAME/g" -e "s#%WINDOWS_APPS_ROOT%#$(echo "$WINDOWS_APPS_ROOT" | sed -re 's#\\#\\\\#g')#g" ./tasks/"$task".xml | unix2dos | iconv -f utf-8 -t utf-16 >|"$tmp_dir"/"$task"_"$code".xml
+    sed -r -e 's/encoding="UTF-8"/encoding="UTF-16"/' -e "s/%CISCO_CODE%/$code/g" -e "s/%DATE%/$(date +'%Y-%m-%dT%H:%M:%S.%N')/g" -e "s/%USERDOMAIN%/$USERDOMAIN/g" -e "s/%USERNAME%/$USERNAME/g" -e "s#%WINDOWS_SETUP_TOOLS_ROOT%#$(echo "$WINDOWS_SETUP_TOOLS_ROOT" | sed -re 's#\\#\\\\#g')#g" ./tasks/"$task".xml | unix2dos | iconv -f utf-8 -t utf-16 >|"$tmp_dir"/"$task"_"$code".xml
   done
 done
-
 powershell.exe -ExecutionPolicy RemoteSigned -Command ./import_tasks.ps1 "$tmp_dir" "$USERDOMAIN" "$USERNAME" "\\wsl\\"
 
 rm -rf "$tmp_dir"

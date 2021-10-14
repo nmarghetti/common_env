@@ -40,8 +40,8 @@
   <Actions Context="Author">
     <Exec>
       <Command>powershell.exe</Command>
-      <Arguments>-NonInteractive -ExecutionPolicy Bypass -File %WINDOWS_APPS_ROOT%\Documents\dev\common_env\tools\wsl\setCiscoVpnMetric.ps1</Arguments>
-      <WorkingDirectory>%WINDOWS_APPS_ROOT%\Documents\dev\common_env\tools\wsl</WorkingDirectory>
+      <Arguments>-NonInteractive -ExecutionPolicy Bypass -File %WINDOWS_SETUP_TOOLS_ROOT%\wsl\setCiscoVpnMetric.ps1</Arguments>
+      <WorkingDirectory>%WINDOWS_SETUP_TOOLS_ROOT%\wsl</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>
