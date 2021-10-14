@@ -4,14 +4,13 @@ function Test-Admin {
   $currentUser = New-Object Security.Principal.WindowsPrincipal $([Security.Principal.WindowsIdentity]::GetCurrent())
   $currentUser.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)
 }
-if ((Test-Admin) -eq $false)
-{
+if ((Test-Admin) -eq $false) {
   if ($elevated) {
     # tried to elevate, did not work, aborting
   } else {
     try {
-    $process = Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -file "{0}" -elevated' -f ($myinvocation.MyCommand.Definition))
-    [Environment]::Exit($process.ExitCode)
+      $process = Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -file "{0}" -elevated' -f ($myinvocation.MyCommand.Definition))
+      [Environment]::Exit($process.ExitCode)
     }
     catch {
       Write-Host $_
@@ -32,5 +31,5 @@ Write-Output "`nCurrent Cisco metric:"
 Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Get-NetIPInterface
 Start-Sleep -Seconds 1
 Write-Output ""
-.\setDns.ps1
+Invoke-Expression "$PSScriptRoot\setDns.ps1"
 [Environment]::Exit(0)
