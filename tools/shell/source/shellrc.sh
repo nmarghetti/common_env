@@ -213,6 +213,7 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     "$APPS_ROOT/PortableApps/elastic/kibana/bin" \
     "$APPS_COMMON/java/bin" \
     "$APPS_COMMON/node" \
+    "$APPS_COMMON/gcloud/bin" \
     "$APPS_COMMON/gradle/bin" \
     "$APPS_COMMON/python/Python38/Scripts" \
     "$APPS_COMMON/python/Scripts" \
@@ -237,6 +238,7 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   alias tsource="source '${COMMON_ENV_SHELLRC_ROOT}/../bin/sourcetool' '${HOME}/bin'"
   alias cddev="cd '${APPS_ROOT}/Documents/dev'"
   alias cdenv="cd '${APPS_ROOT}/Documents/dev/common_env'"
+  type gcloud >/dev/null 2>&1 && alias gcloud='gcloud.cmd'
 
   if [ "$current_shell" = "bash" ] && [ ! -f "$HOME/.oh-my-bashrc" ]; then
     # If shell is in interactive mode
