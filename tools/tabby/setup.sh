@@ -15,8 +15,6 @@ function setup_tabby() {
     [[ ! -f "$tabby_path/Tabby.exe" ]] && return "$ERROR"
   fi
 
-  echo "APPS_ROOT = $APPS_ROOT"
-  echo "WINDOWS_APPS_ROOT = $WINDOWS_APPS_ROOT"
   mkdir -vp "$tabby_path/data"
   if [[ ! -f "$tabby_path/data/config.yaml" ]]; then
     cp -v "$SETUP_TOOLS_ROOT/tabby/config.yaml" "$tabby_path/data/config.yaml"

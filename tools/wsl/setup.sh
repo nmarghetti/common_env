@@ -6,7 +6,7 @@ function setup_wsl() {
   type wsl &>/dev/null || return "$ERROR"
 
   # Setup wsl Ubuntu
-  if wsl --list | iconv -f utf-16le -t utf-8 | dos2unix | grep -qE '^Ubuntu$'; then
+  if wsl --list | iconv -f utf-16le -t utf-8 | dos2unix | grep -qE '^Ubuntu(\s*\([^\)]+\))?\s*$'; then
     export WSL_USER="${USER:-${USERNAME}}" &&
       WSL_APPS_ROOT="$(cygpath -w "$APPS_ROOT")" &&
       export WSL_APPS_ROOT &&
