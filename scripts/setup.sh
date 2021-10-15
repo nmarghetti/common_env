@@ -85,6 +85,7 @@ usage() {
   echo "    gradle: install Gradle 6.7.1" 1>&2
   echo "    cygwin: install Cygwin" 1>&2
   echo "    elastic: install Elasticsearch, Logstash and Kibana (you would need to install java also)" 1>&2
+  echo "    gcloud: install google cloug sdk" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
   echo "    wsl: configure WSL" 1>&2
@@ -106,7 +107,7 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
-      cygwin | node | nvm | insomnia | gradle | xampp | elastic | wsl | intellijidea)
+      cygwin | node | nvm | insomnia | gradle | xampp | elastic | wsl | intellijidea | gcloud)
       APPS="$APPS $1"
       ;;
     # cpp)

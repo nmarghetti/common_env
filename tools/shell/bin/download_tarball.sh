@@ -185,7 +185,7 @@ download_tarball() {
           test "$(echo "$subdir" | wc -l)" -eq 1 || subdir=""
         fi
         (
-          cd "$subdir" && mv ./* ../ && cd .. && rmdir "$extracted_directory"
+          cd "$subdir" && mv $(command ls -1A) ../ && cd .. && rmdir "$extracted_directory"
         )
       fi
     fi
