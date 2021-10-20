@@ -9,7 +9,7 @@ if ((Test-Admin) -eq $false) {
     # tried to elevate, did not work, aborting
   } else {
     try {
-      $process = Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -file "{0}" -elevated' -f ($myinvocation.MyCommand.Definition))
+      $process = Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -file "{0}" -elevated {1}' -f ($myinvocation.MyCommand.Definition, ($args -join ' ')))
       [Environment]::Exit($process.ExitCode)
     }
     catch {
@@ -18,6 +18,9 @@ if ((Test-Admin) -eq $false) {
   }
   [Environment]::Exit(1)
 }
+
+# Go to the folder of the script
+Set-Location $PSScriptRoot
 
 # Command to run
 # https://gist.github.com/pyther/b7c03579a5ea55fe431561b502ec1ba8
@@ -31,5 +34,5 @@ Write-Output "`nCurrent Cisco metric:"
 Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Get-NetIPInterface
 Start-Sleep -Seconds 1
 Write-Output ""
-Invoke-Expression "$PSScriptRoot\setDns.ps1"
+.\setDns.ps1
 [Environment]::Exit(0)

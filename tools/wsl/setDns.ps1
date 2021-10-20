@@ -11,11 +11,18 @@ function set-DnsWsl($distro) {
   # else {
   #   wsl.exe -d $distro -u root /opt/wsl_dns.py
   # }
-  wsl.exe -d $distro -u root /opt/wsl_dns.py
+  wsl.exe -d $distro -u root sh -c "if [ -f /opt/wsl_dns.py ]; then /opt/wsl_dns.py; else echo '/opt/wsl_dns.py does not exist'; fi"
 }
 
-Write-Output "Setting WSL Ubuntu DNS..."
-set-DnsWsl Ubuntu
+[System.Console]::OutputEncoding = [System.Text.Encoding]::Unicode
+$distributions = (wsl.exe --list --quiet | Select-String -Encoding unicode -Pattern '^Ubuntu' | Out-String).Split("`n")
+foreach($distribution in $distributions) {
+  $distribution = $distribution.Trim()
+  if ($distribution -match '^Ubuntu') {
+    Write-Output ("`nSetting WSL {0} DNS..." -f $distribution)
+    set-DnsWsl $distribution
+  }
+}
 # set-DnsWsl Legacy
 Start-Sleep -Seconds 1
 [Environment]::Exit(0)

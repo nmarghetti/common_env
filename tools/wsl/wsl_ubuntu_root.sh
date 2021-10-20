@@ -12,6 +12,12 @@ exit_error() {
   exit 1
 }
 
+echoColor() {
+  color=$1
+  shift
+  echo -e "\033[${color}m$*\033[0m"
+}
+
 test -z "$WSL_USER" && exit_error "No user given"
 
 # Create the user if it does not exist
@@ -25,6 +31,12 @@ grep -qEe "^$WSL_USER:" /etc/passwd || exit_error "Unable to find user '$WSL_USE
 
 # Set user as sudoer without asking password to call sudo command
 test ! -f /etc/sudoers.d/"$WSL_USER" && echo "create sudoer file" && echo "$WSL_USER ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/"$WSL_USER" && chmod 0440 /etc/sudoers.d/"$WSL_USER"
+
+# Add ownership to /etc/resolv.conf and regenerate it if it is a link
+if [ -L /etc/resolv.conf ]; then
+  rm -f /etc/resolv.conf
+  touch /etc/resolv.conf
+fi
 sudo chown "$WSL_USER":root /etc/resolv.conf
 
 # Configure WSL not to automatically generate /etc/resolv.conf
@@ -57,5 +69,9 @@ EOF
 EOF
 fi
 
-apt-get update -y
-apt-get upgrade -y
+# Upgrade the system if not done during the last 24h
+if [ ! -f "/var/lib/apt/periodic/update-success-stamp" ] || [ "$(("$(date +%s)" - "$(date -r "/var/lib/apt/periodic/update-success-stamp" +%s)"))" -ge 86400 ]; then
+  echo "Upgrading the system..."
+  apt-get update -y
+  apt-get upgrade -y
+fi

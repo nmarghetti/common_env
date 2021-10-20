@@ -119,6 +119,7 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Elastic ELK stack (Elasticsearch, Logstash, Kibana)** (~1.7G)
 - **Cygwin**
 - **XAMPP**
+- **WSL** (Install and configure Ubuntu-20.04)
 
 You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):
 
