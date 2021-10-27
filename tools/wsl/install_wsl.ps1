@@ -74,7 +74,7 @@ if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '
 
 # Set encoding for the current session as ASCII to communicate with wsl
 [System.Console]::OutputEncoding = [System.Text.Encoding]::ASCII
-if (wsl.exe -d Ubuntu -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft.*wsl2' -Quiet) {
+if (wsl.exe -d Ubuntu-20.04 -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft.*wsl2' -Quiet) {
   Write-Output 'Ubuntu-20.04 properly setup with WSL version 2'
 } elseif (wsl.exe -d Ubuntu -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft' -Quiet) {
   Write-Output 'Ubuntu-20.04 is setup with WSL version 1 only'

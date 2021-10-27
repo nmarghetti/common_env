@@ -28,10 +28,10 @@ Set-Location $PSScriptRoot
 Write-Output "Current Cisco metric:"
 Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Get-NetIPInterface
 Write-Output "`nSetting Cisco metric..."
-Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Set-NetIPInterface -InterfaceMetric 6000
+Get-NetAdapter | Where-Object InterfaceDescription -Match "Cisco AnyConnect" | Set-NetIPInterface -InterfaceMetric 6000
 Start-Sleep -Seconds 1
 Write-Output "`nCurrent Cisco metric:"
-Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Get-NetIPInterface
+Get-NetAdapter | Where-Object InterfaceDescription -Match "Cisco AnyConnect" | Get-NetIPInterface
 Start-Sleep -Seconds 1
 Write-Output ""
 .\setDns.ps1
