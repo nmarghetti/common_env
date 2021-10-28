@@ -14,6 +14,8 @@ function create_env() {
   local pythonbin="python"
   # python 3 is used with python3 under macOS
   [ "$(uname -s)" = "Darwin" ] && which python3 &>/dev/null && pythonbin="python3"
+  # same for Linux or WSL
+  [ "$(uname -s)" = "Linux" ] && which python3 &>/dev/null && pythonbin="python3"
   if which "$1" &>/dev/null; then
     pythonbin=$(which "$1")
     shift

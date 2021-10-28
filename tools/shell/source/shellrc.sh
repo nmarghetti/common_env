@@ -73,6 +73,44 @@ if [ "$current_shell" = "bash" ]; then
     bind '"\e[1;3C"':forward-word          # Alt-Right
 
     [ ! "$OSTYPE" = "cygwin" ] && export PS4=$'+ \t\t''\e[33m\s@\v ${BASH_SOURCE}#\e[35m${LINENO} \e[34m${FUNCNAME[0]:+${FUNCNAME[0]}() }''\e[36m\t\e[0m\n'
+
+    if [ "$OSTYPE" = "linux-gnu" ]; then
+      case "$(uname -r | tr '[:upper:]' '[:lower:]')" in
+        *microsoft-standard-wsl2)
+          os_is_wsl=1
+          os_is_wsl2=1
+          ;;
+        *microsoft)
+          os_is_wsl=1
+          ;;
+      esac
+      # Customization for WSL
+      if [ "$os_is_wsl" = "1" ]; then
+        case "$TERM" in
+          xterm-color | *-256color | screen) color_prompt=yes ;;
+        esac
+        if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+          debian_chroot=$(cat /etc/debian_chroot)
+        fi
+        if [ "$color_prompt" = yes ]; then
+          PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;33m\]@\[\033[01;35m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\[\033[01;36m\]`__git_ps1`\[\033[00m\]\n\$ '
+        else
+          PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w`__git_ps1`\n\$ '
+        fi
+        case "$TERM" in
+          xterm* | rxvt*)
+            if [ "$os_is_wsl2" = "1" ]; then
+              PS1="\[\e]0;${debian_chroot:+($debian_chroot)}WSL2 - \u on \h: \w\a\]$PS1"
+            else
+              PS1="\[\e]0;${debian_chroot:+($debian_chroot)}WSL - \u on \h: \w\a\]$PS1"
+            fi
+            ;;
+          *) ;;
+
+        esac
+        unset color_prompt os_is_wsl os_is_wsl2
+      fi
+    fi
   fi
 
   alias esource='echo "$HOME/.bashrc"'
