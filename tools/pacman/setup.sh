@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+# To search for a package
+# pacman -Ss package
 function setup_pacman() {
   local ERROR=$SETUP_ERROR_STOP
   # Install pacman
