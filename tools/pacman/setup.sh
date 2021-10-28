@@ -55,6 +55,9 @@ function setup_pacman() {
       fi
     done
     if [[ -n "$packages" ]]; then
+      # Refresh the keys
+      pacman-key --refresh-keys
+
       pacman -Sv --noconfirm --overwrite='*' $packages || return "$ERROR"
 
       # Clean packages
