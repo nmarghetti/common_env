@@ -3,19 +3,19 @@
 system_get_os() {
   local os=
   case "$(uname -s)" in
-  Linux)
-    os="Linux"
-    ;;
-  Darwin)
-    os="Mac"
-    ;;
-  MSYS_NT* | MINGW64_NT* | CYGWIN_NT*)
-    os="Windows"
-    ;;
-  *)
-    echo "Unknown"
-    return 1
-    ;;
+    Linux)
+      os="Linux"
+      ;;
+    Darwin)
+      os="Mac"
+      ;;
+    MSYS_NT* | MINGW64_NT* | CYGWIN_NT*)
+      os="Windows"
+      ;;
+    *)
+      echo "Unknown"
+      return 1
+      ;;
   esac
   echo $os
 }
@@ -50,18 +50,18 @@ system_get_default_shell() {
 system_display_shell_info() {
   local shell="$(system_get_current_shell)"
   case "$shell" in
-  bash | zsh)
-    if [ "$1" = "eval" ]; then
-      for val in "$(set | grep -aE "^$(basename "$shell" | tr '[:lower:]' '[:upper:]')" | cut -d= -f1)"; do
-        [ -n "$val" ] && echo "$val=${!val}"
-      done
-    else
-      set | grep -aE "^$(basename "$shell" | tr '[:lower:]' '[:upper:]')"
-    fi
-    ;;
-  *)
-    echo "Unsupported shell: '$shell'"
-    ;;
+    bash | zsh)
+      if [ "$1" = "eval" ]; then
+        for val in "$(set | grep -aE "^$(basename "$shell" | tr '[:lower:]' '[:upper:]')" | cut -d= -f1)"; do
+          [ -n "$val" ] && echo "$val=${!val}"
+        done
+      else
+        set | grep -aE "^$(basename "$shell" | tr '[:lower:]' '[:upper:]')"
+      fi
+      ;;
+    *)
+      echo "Unsupported shell: '$shell'"
+      ;;
   esac
 }
 
@@ -76,9 +76,15 @@ system_get_shells() {
 system_ping() {
   local ping_option
   case "$(system_get_os_host)" in
-  Windows) ping_option='-n 1 -w 1' ;;
-  Linux) ping_option='-c 1 -w 1' ;;
-  Mac) ping_option='-c 1 -t 1' ;;
+    Windows)
+      if [ "$(uname -s)" = "Linux" ]; then
+        ping_option='-c 1 -w 1'
+      else
+        ping_option='-n 1 -w 1'
+      fi
+      ;;
+    Linux) ping_option='-c 1 -w 1' ;;
+    Mac) ping_option='-c 1 -t 1' ;;
   esac
   ping $ping_option "$@"
 }
