@@ -50,13 +50,15 @@ function setup_wsl() {
       local custom_settings
       custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all wsl.settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
       # Run custom root script
-      test -f "$custom_settings/root.sh" &&
-        echoColor 36 "Running custom root script '$custom_settings/root.sh'..." &&
-        WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d $distribution -u root <"$custom_settings/root.sh"
+      if test -f "$custom_settings/root.sh" &&
+        echoColor 36 "Running custom root script '$custom_settings/root.sh'..."; then
+        WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d $distribution -u root <"$custom_settings/root.sh" || return "$ERROR"
+      fi
       # Run custom user script
-      test -f "$custom_settings/user.sh" &&
-        echoColor 36 "Running custom user script '$custom_settings/user.sh'..." &&
-        WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d $distribution -u "$WSL_USER" <"$custom_settings/user.sh"
+      if test -f "$custom_settings/user.sh" &&
+        echoColor 36 "Running custom user script '$custom_settings/user.sh'..."; then
+        WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d $distribution -u "$WSL_USER" <"$custom_settings/user.sh" || return "$ERROR"
+      fi
     }
   else
     echo "Unable to find $distribution distribution"
