@@ -57,12 +57,16 @@ DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS portableapps"
 DEFAULT_APPS_GREP=$(echo "$DEFAULT_WIN_APPS" | tr ' ' '|')
 APPS=
 UPGRADE_APPS=0
+APP_SELECTED=0
+EXTRA_APP_SELECTED=0
+EXTRA_APPS=
 
 usage() {
-  echo "Usage: $SCRIPT_NAME [-s|--silent] [-u|--upgrade] [app [app...]]" 1>&2
+  echo "Usage: $SCRIPT_NAME [-s|--silent] [-u|--upgrade] [app [app...]] [-e app[,app...]]" 1>&2
   echo "  Options:" 1>&2
   echo "    -s,--silent: do not ask for answer, automatically take the affirmative" 1>&2
   echo "    -u,--upgrade: when possible, it will upgrade the apps" 1>&2
+  echo "    -e,--extra-apps: install only given extra app" 1>&2
   echo "  Possible apps:" 1>&2
   echo "    python2: install python 2.7.17 and sets a virtual env" 1>&2
   echo "    java: install java jdk 8, 11 or 16 (16 by default)" 1>&2
@@ -112,6 +116,13 @@ while [[ $# -gt 0 ]]; do
       ;;
     -k | --skip-default-apps)
       SETUP_SKIP_DEFAULT=1
+      APP_SELECTED=1
+      ;;
+    -e | --extra-apps)
+      SETUP_SKIP_DEFAULT=1
+      EXTRA_APP_SELECTED=1
+      shift
+      EXTRA_APPS="$(echo "$1" | tr ',' ' ')"
       ;;
     -u | --update)
       UPGRADE_APPS=1
@@ -241,6 +252,10 @@ source "$SETUP_TOOLS_ROOT/$tool/shell/bin/download_tarball.sh"
 
 # Install or update the selected apps
 for tool in $APPS; do
+  # Skip apps if extra selected but no other
+  if [ "$EXTRA_APP_SELECTED" -eq 1 ] && [ "$APP_SELECTED" -ne 1 ]; then
+    continue
+  fi
   if [[ -f "$SETUP_TOOLS_ROOT/$tool/setup.sh" ]]; then
     echoSection "$tool"
     source "$SETUP_TOOLS_ROOT/$tool/setup.sh"
@@ -268,7 +283,14 @@ done
 
 custom_tool_folder=$(git --no-pager config -f "$HOME/.common_env.ini" --get install.custom-app-folder 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
 if [[ -d "$custom_tool_folder" ]]; then
-  for tool in $(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.custom-app); do
+  if [ -z "$EXTRA_APPS" ]; then
+    EXTRA_APPS=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.custom-app)
+  fi
+  for tool in $EXTRA_APPS; do
+    # Skip extra apps if not selected while default ones are
+    if [ "$APP_SELECTED" -eq 1 ] && [ "$EXTRA_APP_SELECTED" -ne 1 ]; then
+      continue
+    fi
     if [[ -f "$custom_tool_folder/$tool/setup.sh" ]]; then
       echoSection "$tool"
       source "$custom_tool_folder/$tool/setup.sh"
