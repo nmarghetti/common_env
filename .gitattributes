@@ -11,6 +11,9 @@
 *.zsh text eol=lf
 sourcetool text eol=lf
 
+# Ensure python scripts use LF line endings
+*.py text eol=lf
+
 # Ensure batch scripts use CRLF line endings
 *.cmd text eol=crlf
 *.ps1 text eol=crlf
