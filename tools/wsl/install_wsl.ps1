@@ -9,6 +9,10 @@ if ((Test-Admin) -eq $false) {
     # tried to elevate, did not work, aborting
   } else {
     try {
+      # Ensure to have the right to run script
+      if ((Get-ExecutionPolicy -Scope CurrentUser) -ne "RemoteSigned") {
+        Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList '-noprofile -Command "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force"'
+      }
       $process = Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -file "{0}" -elevated {1}' -f ($myinvocation.MyCommand.Definition, ($args -join ' ')))
       [Environment]::Exit($process.ExitCode)
     }
