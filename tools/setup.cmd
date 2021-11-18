@@ -216,8 +216,10 @@ echo ---------------- Start setup with bash ------------------
 REM First light install with pacman package manager
 findstr /B /R /C:"[\t ]*app[\t ]*=[\t ]*pacman" %SETUP_INI% >nul 2>&1 && (
   if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
-    echo First installation, first install pacman package manager
-    start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" pacman
+    echo First ensure to configure gitbash
+    start "Configure gitbash" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" gitbash
+    echo Install pacman package manager
+    start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
     if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
       echo Pacman package installer not installed. Exiting...
       pause

@@ -26,6 +26,10 @@ function setup_pacman() {
     grep -q '/etc/pacman.d/gnupg/gpg.conf' /etc/pacman.d/gnupg/gpg.conf || echo "keyserver hkp://keyserver.ubuntu.com" >>/etc/pacman.d/gnupg/gpg.conf
     pacman-key --refresh-keys
 
+    # Kill remaining process that would disturb the installation
+    tasklist //FI "IMAGENAME eq gpg-agent.exe" //FO TABLE | grep gpg-agent.exe | awk '{print $2}' | xargs --no-run-if-empty taskkill //F //PID
+    tasklist //FI "IMAGENAME eq dirmngr.exe" //FO TABLE | grep dirmngr.exe | awk '{print $2}' | xargs --no-run-if-empty taskkill //F //PID
+
     # In case of error with keys you can tell pacman not to check keys, update /etc/pacman.conf and set:
     # SigLevel = Never
 
