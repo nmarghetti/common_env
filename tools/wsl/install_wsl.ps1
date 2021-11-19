@@ -52,7 +52,8 @@ try {
   [Environment]::Exit(1)
 }
 
-if (wsl.exe --set-default-version 2 | Select-String -Quiet -Encoding unicode 'requires an update to its kernel') {
+# if (wsl.exe --set-default-version 2 | Select-String -Quiet -Encoding unicode 'requires an update to its kernel') {
+if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu-20.04$')) {
   Write-Output 'Updating WSL kernel...'
   curl.exe -o wsl_update_x64.msi 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi'
   if ((Start-Process -Wait -PassThru -FilePath msiexec -ArgumentList ('/i', 'wsl_update_x64.msi', '/passive')).ExitCode -ne 0) {
