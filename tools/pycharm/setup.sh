@@ -6,7 +6,7 @@ function setup_pycharm() {
   local pycharm_path="$APPS_ROOT/PortableApps/PyCharm"
   local win_pycharm_path=$(get_path_to_windows_back "$pycharm_path")
 
-  # Install NodeJs
+  # Install PyCharm
   if [[ ! -f "$pycharm_path/bin/pycharm64.exe" ]]; then
     mkdir -vp "$pycharm_path"
     local tarball=pycharm-community-2020.1.exe

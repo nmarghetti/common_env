@@ -105,6 +105,7 @@ If you are on Windows, you can get a portable development environment (it is not
     - **tmux**
     - **make**, **cmake**, **mingw-w64-x86_64-toolchain** for C/C++ dev (~1G)
 - **PyCharm** (~700M)
+- **Intellij IDEA** (~1.6G)
 - **PuTTY** (~5M)
 - **Cmder** (~30M)
 - **MobaXterm** (~13M)

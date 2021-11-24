@@ -246,8 +246,6 @@ if "%errorlevel%" == "0" (
   echo Enjoy ;^)
 ) else (
   echo There seems to have a problem with the installation
-  echo If you have an error like "1 [main] bash (21176) shared_info::initialize: size of shared memory region changed from 56248 to 49080"
-  echo Open Task Manager, kill gpgagent.exe and dirmngr.exe and rerun the installation
 )
 
 pause
