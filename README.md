@@ -120,6 +120,7 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Elastic ELK stack (Elasticsearch, Logstash, Kibana)** (~1.7G)
 - **Google cloud SDK** (~500M)
 - **Lens** (~850M)
+- **DBeaver** (~130M)
 - **Cygwin**
 - **XAMPP**
 - **WSL** (Install and configure Ubuntu-20.04)
