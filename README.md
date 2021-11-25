@@ -124,6 +124,7 @@ If you are on Windows, you can get a portable development environment (it is not
 - **Cygwin**
 - **XAMPP**
 - **WSL** (Install and configure Ubuntu-20.04)
+- **Docker Desktop** (Install Docker Desktop)
 
 You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):
 

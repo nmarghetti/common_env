@@ -88,6 +88,7 @@ usage() {
   echo "    gcloud: install google cloug sdk" 1>&2
   echo "    lens: install Kubernetes IDE" 1>&2
   echo "    dbeaver: install latest DBeaver" 1>&2
+  echo "    docker: install Docker Desktop" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
   echo "    wsl: configure WSL" 1>&2
@@ -110,7 +111,7 @@ while [[ $# -gt 0 ]]; do
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
       cygwin | node | nvm | insomnia | gradle | xampp | elastic | wsl | intellijidea | gcloud | lens | \
-      dbeaver)
+      dbeaver | docker)
       APPS="$APPS $1"
       ;;
     # cpp)
