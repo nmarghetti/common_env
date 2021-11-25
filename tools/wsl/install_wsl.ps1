@@ -66,7 +66,7 @@ if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '
   Write-Output 'Installing Ubuntu-20.04...'
   curl.exe -Lo Ubuntu-20.04.appx https://aka.ms/wslubuntu2004
   Add-AppxPackage .\Ubuntu-20.04.appx
-  ubuntu2004.exe install --root
+  Invoke-Expression ("{0}\Microsoft\WindowsApps\ubuntu2004.exe install --root" -f $env:LOCALAPPDATA)
 }
 
 if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu-20.04$')) {
