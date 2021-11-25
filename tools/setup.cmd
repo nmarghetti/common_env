@@ -228,10 +228,14 @@ findstr /B /R /C:"[\t ]*app[\t ]*=[\t ]*pacman" %SETUP_INI% >nul 2>&1 && (
     start "Install pacman packages" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
   )
 )
-if "%COMMON_ENV_INSTALL_ONLY_APP%" == "" (
-  "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh"
+if not "%COMMON_ENV_INSTALL_ONLY_EXTRA_APP%" == "" (
+  "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -e %COMMON_ENV_INSTALL_ONLY_EXTRA_APP%
 ) else (
-  "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k %COMMON_ENV_INSTALL_ONLY_APP%
+  if not "%COMMON_ENV_INSTALL_ONLY_APP%" == "" (
+    "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k %COMMON_ENV_INSTALL_ONLY_APP%
+  ) else (
+    "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh"
+  )
 )
 
 if "%errorlevel%" == "0" (
