@@ -86,7 +86,7 @@ EOM
     if ! (set -o pipefail && "$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" \
       --install-extension "$extension" 2>&1 | tee "$tmp_log") &&
       [[ "$extension_name" == "$extension" ]] &&
-      grep -c "unable to get local issuer certificate" "$tmp_log" &>/dev/null; then
+      grep -c -e "unable to get local issuer certificate" -e "self signed certificate in certificate chain" "$tmp_log" &>/dev/null; then
       certificate_error=1
       if grep -c "http.proxyStrictSSL" "$setting_path" &>/dev/null; then
         sed -i -re 's/"http.proxyStrictSSL": true/"http.proxyStrictSSL": false/' "$setting_path" && changed_settings_ssl=1
