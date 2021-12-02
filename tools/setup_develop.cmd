@@ -6,6 +6,8 @@ REM Change this to point to your custom setup ini files (eg. setup_test.ini)
 set COMMON_ENV_INSTALL_SETUP_INI=setup.ini
 REM Set the only few app to run, (eg. git shell), or leave empty for all
 set COMMON_ENV_INSTALL_ONLY_APP=
+REM Set the only few extra app to run comma separated, (eg. some_extra,some_other_extra), or leave empty for all
+set COMMON_ENV_INSTALL_ONLY_EXTRA_APP=
 
 set CHECK_FOR_DOWNLOAD=1
 if exist wget.exe (
