@@ -7,7 +7,7 @@ login=$2
 password=$3
 
 if [ -z "$machine" ]; then
-  machine=$(git config remote.origin.url | sed -re 's#^[^/]+//([^/]+)/.*$#\1#')
+  machine=$(git config remote.origin.url | grep -E '^http' | sed -re 's#^[^/]+//([^/]+)/.*$#\1#')
   if [ -n "$machine" ]; then
     if [ "$(echo "$machine" | grep -c '@')" -eq 1 ]; then
       login="$(echo "$machine" | cut -d'@' -f1)"

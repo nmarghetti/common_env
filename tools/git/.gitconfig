@@ -47,7 +47,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.3'
+  cv = ! echo 'gitconfig 2.1.4'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -71,8 +71,7 @@
   mail  = ! git cmd config --global user.email # git mail <email> --> set your email
   gmail = ! git cmd config --global --get user.email # get your git user email
   set-auto-login = ! "f(){ \
-      type git_auto_login &>/dev/null; \
-      if [ $? -eq 0 ]; then \
+      if type git_auto_login >/dev/null 2>&1; then \
         git_auto_login \"$@\"; \
         return $ret; \
       else \
