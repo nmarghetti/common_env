@@ -88,10 +88,11 @@ usage() {
   echo "    gcloud: install google cloug sdk" 1>&2
   echo "    lens: install Kubernetes IDE" 1>&2
   echo "    dbeaver: install latest DBeaver" 1>&2
-  echo "    docker: install Docker Desktop" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
-  echo "    wsl: configure WSL" 1>&2
+  echo "    docker: install Docker Desktop in the system, it is not portable" 1>&2
+  echo "    vcxsrv: install VcXsrv Windows X Server in the system, it is not portable" 1>&2
+  echo "    wsl: install WSL in the system, it is not portable" 1>&2
   echo "In any case it will setup some shell and git config, and (only on Windows) install python 3.8.2" 1>&2
 }
 
@@ -110,8 +111,8 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
-      cygwin | node | nvm | insomnia | gradle | xampp | elastic | wsl | intellijidea | gcloud | lens | \
-      dbeaver | docker)
+      cygwin | node | nvm | insomnia | gradle | xampp | elastic | intellijidea | gcloud | lens | dbeaver | \
+      docker | vcxsrv | wsl)
       APPS="$APPS $1"
       ;;
     # cpp)
