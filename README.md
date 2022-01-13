@@ -123,8 +123,9 @@ If you are on Windows, you can get a portable development environment (it is not
 - **DBeaver** (~130M)
 - **Cygwin**
 - **XAMPP**
-- **WSL** (Install and configure Ubuntu-20.04)
-- **Docker Desktop** (Install Docker Desktop)
+- **WSL** (Install and configure Ubuntu-20.04 in the system, it is not portable)
+- **Docker Desktop** (Install Docker Desktop in the system, it is not portable)
+- **VcXsrv** (Install VcXsrv Windows X Server in the system, it is not portable)
 
 You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):
 
