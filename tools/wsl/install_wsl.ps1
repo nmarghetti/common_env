@@ -52,8 +52,10 @@ try {
   [Environment]::Exit(1)
 }
 
-# if (wsl.exe --set-default-version 2 | Select-String -Quiet -Encoding unicode 'requires an update to its kernel') {
-if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu-20.04$')) {
+$ubuntuVersion='Ubuntu-20.04'
+$ubuntuExe='ubuntu2004.exe'
+
+if (!((wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu') -and (wsl.exe --list --verbose | Select-String -Quiet -Encoding unicode -Pattern '2$'))) {
   Write-Output 'Updating WSL kernel...'
   curl.exe -o wsl_update_x64.msi 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi'
   if ((Start-Process -Wait -PassThru -FilePath msiexec -ArgumentList ('/i', 'wsl_update_x64.msi', '/passive')).ExitCode -ne 0) {
@@ -62,26 +64,30 @@ if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '
   wsl.exe --set-default-version 2
 }
 
-if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu-20.04$')) {
+if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
   Write-Output 'Installing Ubuntu-20.04...'
   curl.exe -Lo Ubuntu-20.04.appx https://aka.ms/wslubuntu2004
   Add-AppxPackage .\Ubuntu-20.04.appx
-  Invoke-Expression ("{0}\Microsoft\WindowsApps\ubuntu2004.exe install --root" -f $env:LOCALAPPDATA)
+  if (!Test-Path ("{0}\Microsoft\WindowsApps\{1}" -f $env:LOCALAPPDATA,$ubuntuExe) -PathType leaf) {
+    $ubuntuVersion='Ubuntu'
+    $ubuntuExe='ubuntu.exe'
+  }
+  Invoke-Expression ("{0}\Microsoft\WindowsApps\{1} install --root" -f $env:LOCALAPPDATA,$ubuntuExe)
 }
 
-if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu-20.04$')) {
+if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
   Write-Output 'ERROR: Unable to install Ubuntu-20.04'
   [Environment]::Exit(1)
 } else {
   Write-Output 'Set Ubuntu-20.04 as default WSL distribution'
-  wsl.exe --set-default 'Ubuntu-20.04'
+  wsl.exe --set-default $ubuntuVersion
 }
 
 # Set encoding for the current session as ASCII to communicate with wsl
 [System.Console]::OutputEncoding = [System.Text.Encoding]::ASCII
-if (wsl.exe -d Ubuntu-20.04 -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft.*wsl2' -Quiet) {
+if (wsl.exe -d $ubuntuVersion -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft.*wsl2' -Quiet) {
   Write-Output 'Ubuntu-20.04 properly setup with WSL version 2'
-} elseif (wsl.exe -d Ubuntu -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft' -Quiet) {
+} elseif (wsl.exe -d $ubuntuVersion -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft' -Quiet) {
   Write-Output 'Ubuntu-20.04 is setup with WSL version 1 only'
 } else {
   Write-Output 'ERROR: Ubuntu-20.04 is not properly setup'

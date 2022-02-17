@@ -18,6 +18,12 @@ function setup_wsl() {
     fi
   fi
 
+  # If the specific distribution has not been installed, it is probably because it kept the main name Ubuntu, lets use it
+  if ! wsl --list --quiet | iconv -f utf-16le -t utf-8 | dos2unix | grep -qE "^${distribution}\$"; then
+    distribution='Ubuntu'
+    distribExe='ubuntu.exe'
+  fi
+
   # Ensure WSL does not generate /etc/resolv.conf
   if wsl -d $distribution -u root <<<"cat /etc/resolv.conf" | grep -q 'generateResolvConf'; then
     echoColor 36 "Updating /etc/wsl.conf and restarting distribution $distribution..."
