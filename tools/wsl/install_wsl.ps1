@@ -23,6 +23,16 @@ if ((Test-Admin) -eq $false) {
   [Environment]::Exit(1)
 }
 
+function pauseError($msg) {
+  Write-Host -ForegroundColor Red "$msg";
+  Write-Host -NoNewLine -ForegroundColor Yellow "Press any key to continue...";
+  $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+}
+
+function writeInfo($msg) {
+  Write-Host -ForegroundColor Yellow "$msg";
+}
+
 # Set encoding for the current session as unicode
 [System.Console]::OutputEncoding = [System.Text.Encoding]::Unicode
 
@@ -45,10 +55,10 @@ try {
   wsl.exe --help | out-null
 } catch {
   if ($featureInstalled) {
-    Write-Output 'Some features have been installed, please restart the computer to continue the installation.'
+    pauseError('Some features have been installed, please restart the computer to continue the installation.')
     [Environment]::Exit(1)
   }
-  Write-Output 'ERROR: WSL is not available, you migth need to restart the computer.'
+  pauseError('ERROR: WSL is not available, you migth need to restart the computer.')
   [Environment]::Exit(1)
 }
 
@@ -67,13 +77,21 @@ if (!((wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern 
 # If no version of Ubuntu is installed, lets installed it
 if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu')) {
   Write-Output 'Installing Ubuntu-20.04...'
-  curl.exe -Lo Ubuntu-20.04.appx https://aka.ms/wslubuntu2004
+
+  if (Test-Path .\Ubuntu-20.04.appx) {
+    Write-Output ("File {0}\Ubuntu-20.04.appx already exist, not downloading it again." -f (Get-Location).Path)
+    Write-Output "If installation fail, please check the integrity of the file (eg. remove it if empty)."
+  } else {
+    curl.exe -Lo Ubuntu-20.04.appx https://aka.ms/wslubuntu2004
+  }
   Add-AppxPackage .\Ubuntu-20.04.appx
   if (!Test-Path ("{0}\Microsoft\WindowsApps\{1}" -f $env:LOCALAPPDATA,$ubuntuExe) -PathType leaf) {
     $ubuntuVersion='Ubuntu'
     $ubuntuExe='ubuntu.exe'
   }
-  Invoke-Expression ("{0}\Microsoft\WindowsApps\{1} install --root" -f $env:LOCALAPPDATA,$ubuntuExe)
+  $cmd = ("{0}\Microsoft\WindowsApps\{1} install --root" -f $env:LOCALAPPDATA,$ubuntuExe)
+  writeInfo($cmd)
+  Invoke-Expression "$cmd"
 } else {
   # Check the right version installed
   if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
@@ -96,7 +114,7 @@ if (wsl.exe -d $ubuntuVersion -u root sh -c 'uname -a' | Select-String -Pattern 
 } elseif (wsl.exe -d $ubuntuVersion -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft' -Quiet) {
   Write-Output 'Ubuntu-20.04 is setup with WSL version 1 only'
 } else {
-  Write-Output 'ERROR: Ubuntu-20.04 is not properly setup'
+  pauseError('ERROR: Ubuntu-20.04 is not properly setup')
   [Environment]::Exit(1)
 }
 
