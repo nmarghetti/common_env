@@ -64,7 +64,8 @@ if (!((wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern 
   wsl.exe --set-default-version 2
 }
 
-if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
+# If no version of Ubuntu is installed, lets installed it
+if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu')) {
   Write-Output 'Installing Ubuntu-20.04...'
   curl.exe -Lo Ubuntu-20.04.appx https://aka.ms/wslubuntu2004
   Add-AppxPackage .\Ubuntu-20.04.appx
@@ -73,6 +74,11 @@ if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern (
     $ubuntuExe='ubuntu.exe'
   }
   Invoke-Expression ("{0}\Microsoft\WindowsApps\{1} install --root" -f $env:LOCALAPPDATA,$ubuntuExe)
+} else {
+  # Check the right version installed
+  if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
+    $ubuntuVersion='Ubuntu'
+  }
 }
 
 if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
