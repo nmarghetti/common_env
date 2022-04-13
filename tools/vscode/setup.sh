@@ -3,6 +3,9 @@
 download_vscode() {
   mkdir -vp "$1"
   download_tarball -e -o "VSCode.zip" -d "$1" "https://go.microsoft.com/fwlink/?Linkid=850641"
+  # Check updates there https://code.visualstudio.com/updates
+  # https://code.visualstudio.com/docs/supporting/faq#_previous-release-versions
+  # Use this link and replace {version} for a specific version: https://update.code.visualstudio.com/{version}/win32-x64-archive/stable
 }
 
 setup_vscode() {

@@ -85,7 +85,7 @@ if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '
     curl.exe -Lo Ubuntu-20.04.appx https://aka.ms/wslubuntu2004
   }
   Add-AppxPackage .\Ubuntu-20.04.appx
-  if (!Test-Path ("{0}\Microsoft\WindowsApps\{1}" -f $env:LOCALAPPDATA,$ubuntuExe) -PathType leaf) {
+  if (!(Test-Path ("{0}\Microsoft\WindowsApps\{1}" -f $env:LOCALAPPDATA,$ubuntuExe) -PathType leaf)) {
     $ubuntuVersion='Ubuntu'
     $ubuntuExe='ubuntu.exe'
   }
