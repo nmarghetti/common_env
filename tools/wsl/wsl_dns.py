@@ -114,6 +114,7 @@ def main():
     dns_servers = dns_servers + [eth0_gateway]
   else:
     dns_servers = [eth0_gateway]
+  dns_servers += ['8.8.8.8']
 
   config = generate_resolv(dns_servers, dns_search)
   print("Generated resolv.conf")
