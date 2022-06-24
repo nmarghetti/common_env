@@ -23,15 +23,20 @@ function setup_gitbash() {
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
+  # Handle symlink:
+  # https://github.com/git-for-windows/git/wiki/Symbolic-Links
+  # https://www.joshkel.com/2018/01/18/symlinks-in-windows/
+  # https://dev.to/hakonhagland/handling-of-symlinks-on-windows-perl-msys2-cygwin-52h3
+
   # Add custom ln to allow to have ln working with symlinks
   # Unfortunately it does not seem to work with executable files
   # [[ -f "/usr/bin/ln.exe" ]] && mv "/usr/bin/ln.exe" "/usr/bin/lnmsys.exe"
   # cmp --silent "/usr/bin/ln" "$SETUP_TOOLS_ROOT/shell/msys/ln" || cp -vf "$SETUP_TOOLS_ROOT/shell/msys/ln" "/usr/bin/ln"
   # Remove previous installation
-  if [[ -f "/usr/bin/lnmsys.exe" ]]; then
-    rm -f /usr/bin/ln
-    mv /usr/bin/lnmsys.exe /usr/bin/ln.exe
-  fi
+  # if [[ -f "/usr/bin/lnmsys.exe" ]]; then
+  #   rm -f /usr/bin/ln
+  #   mv /usr/bin/lnmsys.exe /usr/bin/ln.exe
+  # fi
 
   # Allow Msys2 to use the proper Home: https://sourceforge.net/p/msys2/tickets/111/?page=2
   # Replace db_home: env windows cygwin desc

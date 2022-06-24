@@ -185,9 +185,9 @@ fi
 export APPS_ROOT
 if [ -d "$APPS_ROOT/PortableApps" ]; then
   common_env_log "Setup portable apps config"
-  # https://www.joshkel.com/2018/01/18/symlinks-in-windows/
+  # https://www.joshkel.com/2018/01/18/symlinks-in-windows/ https://dev.to/hakonhagland/handling-of-symlinks-on-windows-perl-msys2-cygwin-52h3
   # Ensure to have proper symlinks
-  echo "$MSYS" | grep -q 'winsymlinks:nativestrict' || export MSYS="$MSYS winsymlinks:nativestrict"
+  echo "$MSYS" | grep -q 'winsymlinks:native' || export MSYS="$MSYS winsymlinks:native"
   common_env_check() {
     "$(system_get_current_shell_path)" "$COMMON_ENV_SHELLRC_ROOT/check_common_env.sh"
   }
