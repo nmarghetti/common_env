@@ -28,6 +28,8 @@ if [[ "$(uname -s)" = "Darwin" ]]; then
   source "$(dirname "$0")/../tools/mac/setup_mac.sh"
 fi
 
+export MSYS="winsymlinks:native"
+
 # Check 'readlink -f' is available
 readlink -f "$0" &>/dev/null || exit_error "Unable to use 'readlink -f', exiting."
 

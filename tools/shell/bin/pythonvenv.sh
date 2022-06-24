@@ -4,6 +4,8 @@
 
 SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 
+export MSYS="winsymlinks:native"
+
 # create_env [python_bin] [version]
 function create_env() {
   if [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
