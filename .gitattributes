@@ -11,6 +11,9 @@
 *.zsh text eol=lf
 sourcetool text eol=lf
 
+# Ensure git config gile use LF line endings
+.gitconfig text eol=lf
+
 # Ensure python scripts use LF line endings
 *.py text eol=lf
 
