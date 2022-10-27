@@ -47,7 +47,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.4'
+  cv = ! echo 'gitconfig 2.1.5'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -94,7 +94,9 @@
   aa   = ! "cd -- \"${GIT_PREFIX:-.}\"; git a --all" # add all files
   ax   = ! "cd -- \"${GIT_PREFIX:-.}\"; git a --chmod=+x" # add files with executable status (useful when using git on filesystem not supporting this filemode)
   aci  = ! "cd -- \"${GIT_PREFIX:-.}\"; git au && git ci" # git aci 'commit message' -> add updated files and commit with 'commit message'
+  acin = ! "cd -- \"${GIT_PREFIX:-.}\"; git aci --no-verify" # git acin 'commit message' -> add updated files and commit with 'commit message' but skip git pre-commit hook
   aca  = ! "cd -- \"${GIT_PREFIX:-.}\"; git au && git ca" # add updated files and amend it to the previous commit
+  acan = ! "cd -- \"${GIT_PREFIX:-.}\"; git aca --no-verify" # add updated files and amend it to the previous commit but skip pre-commit hook
   chmodx = ! "f() { \
       cd -- \"${GIT_PREFIX:-.}\"; \
       local regexp=\"$1\"; \
@@ -225,14 +227,17 @@
 
   # PUSH
   p      = ! git cmd push
+  pn     = ! git p --no-verify # push but skip pre-push hook
   pt     = ! git p --tags # push tags
   ptf    = ! git pt --force # force push tags
   ptu    = ! git pt upstream # push tags to upstream
   ptfu   = ! git ptf upstream # force push tags to upstream
   pushf  = ! git p --force # force push (useful when using git ca)
   pf     = ! git pushf
+  pfn    = ! git pf --no-verify # force push but skip pre-push hook
   pusho  = ! git p --set-upstream origin $(git brcurrent) # push new branch to origin
   po     = ! git pusho
+  pon    = ! git po --no-verify # push but skip pre-push hook
   pushu  = ! git p upstream $(git brcurrent) # push to upstream
   pu     = ! git pushu
   pushuf = ! git p --force upstream $(git brcurrent) # force push to upstream
