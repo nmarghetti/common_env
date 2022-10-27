@@ -7,7 +7,7 @@ function setup_lens() {
   # Install Lens
   if [ ! -f "$lens/Lens.exe" ]; then
     mkdir -vp "$lens"
-    ! download_tarball -o "$lens/LensSetup.exe" "https://api.k8slens.dev/binaries/Lens%20Setup%205.2.5-latest.20211001.2.exe" &&
+    ! download_tarball -o "$lens/LensSetup.exe" "https://api.k8slens.dev/binaries/Lens%20Setup%202022.9.280635-latest.exe" &&
       echo "Unable to get the installer" && return "$ERROR"
     "$lens/LensSetup.exe" --D="$WINDOWS_APPS_ROOT\\PortableApps\\Lens" //S
   fi
