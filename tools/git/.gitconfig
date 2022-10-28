@@ -47,7 +47,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.5'
+  cv = ! echo 'gitconfig 2.1.6'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -114,8 +114,10 @@
   # COMMIT
   ci   = ! git cmd commit -m # git ci 'commit message'
   ca   = ! "f() { local user=$(git config --global --get user.name); local lc=$(git log -1 --pretty=format:'%an'); [ ! \"$user\" = \"$lc\" ] && echo \"The last commit was made by $lc, not you ($user) !!! Please create a new commit, do not amend:\" && echo \"git ci '<your commit message>'\" && return 1; git cmd commit --amend --no-edit "$@"; }; f" # append to the previous commit
+  can  = ! "cd -- \"${GIT_PREFIX:-.}\"; git ca --no-verify" # add updated files and amend it to the previous commit but skip pre-commit hook
   cav  = ! git cmd commit -a -v -m # git cav 'commit message' --> automatically add all modified files in the commit
   acf  = ! git au && git ca && git pf # amend all modified files to the last commit and push force to origin
+  acfn = ! git au && git can && git pfn # amend all modified files to the last commit and push force to origin but skip pre-commit and pre-push hooks
   acfu = ! git au && git ca && git pfu # amend all modified files to the last commit and push force to upstream
 
   commit-amend             = ! git ca
