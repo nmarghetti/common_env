@@ -19,7 +19,7 @@ function setup_gitbash() {
 
   # Install Git for Windows
   if [[ ! -f "$git_path/bin/git.exe" ]]; then
-    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.32.0.windows.1/PortableGit-2.32.0-64-bit.7z.exe"
+    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/PortableGit-2.38.1-64-bit.7z.exe"
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
@@ -42,8 +42,17 @@ function setup_gitbash() {
   # Replace db_home: env windows cygwin desc
   sed -i -re "s#^db_home:.*#db_home: $(echo "$HOME" | sed -re 's/ /%_/g')#" /etc/nsswitch.conf
 
+  # Generate ssh keys
+  if [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
+    ssh-keygen -t rsa -b 4096 -f "$HOME/.ssh/id_rsa" -N ""
+    echo -e "\nYou can now deploy your public SSH key with the following command:\n\tssh-copy-id login@remote_machine\n"
+  fi
+
   # Update certificates
   "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh
+
+  # Enable long path
+  [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
 
   # # Install wget
   # if [[ ! -f "$git_path/usr/bin/wget.exe" ]]; then
@@ -52,12 +61,30 @@ function setup_gitbash() {
   #   [[ $? -ne 0 ]] && echo "Unable to retrieve wget" && return $ERROR
   # fi
 
+  # Intall zstd
+  if [ ! -f "$git_path/usr/bin/zstd.exe" ]; then
+    echoColor 36 "Adding zstd..."
+    if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/zstd/zstd.exe" ]; then
+      if ! download_tarball -e -d "$APPS_ROOT/PortableApps/PortableGit/zstd" -m "zstd-v1.5.2-win64" https://github.com/facebook/zstd/releases/download/v1.5.2/zstd-v1.5.2-win64.zip; then
+        echo "Unable to retrieve zstd" && return "$ERROR"
+      fi
+    fi
+    local zstd_version="1.5.2-2-x86_64"
+    download_tarball -o "$APPS_ROOT/PortableApps/PortableGit/libzstd.pkg.tar.zst" "http://repo.msys2.org/msys/x86_64/libzstd-${zstd_version}.pkg.tar.zst"
+    download_tarball -o "$APPS_ROOT/PortableApps/PortableGit/zstd.pkg.tar.zst" "http://repo.msys2.org/msys/x86_64/zstd-${zstd_version}.pkg.tar.zst"
+    "$APPS_ROOT/PortableApps/PortableGit/zstd/zstd.exe" -d "$APPS_ROOT/PortableApps/PortableGit/libzstd.pkg.tar.zst"
+    "$APPS_ROOT/PortableApps/PortableGit/zstd/zstd.exe" -d "$APPS_ROOT/PortableApps/PortableGit/zstd.pkg.tar.zst"
+    tar -xf "$APPS_ROOT/PortableApps/PortableGit/libzstd.pkg.tar" -C "$APPS_ROOT/PortableApps/PortableGit/"
+    tar -xf "$APPS_ROOT/PortableApps/PortableGit/zstd.pkg.tar" -C "$APPS_ROOT/PortableApps/PortableGit/"
+    rm -rf "$APPS_ROOT"/PortableApps/PortableGit/libzstd* "$APPS_ROOT"/PortableApps/PortableGit/zstd*
+  fi
+
   # Install rsync, zstd
   local extra_tools=(
-    'msys-zstd-1.dll:libzstd-1.4.5-2-x86_64.pkg.tar.xz'
-    'zstd.exe:zstd-1.4.5-2-x86_64.pkg.tar.xz'
-    'msys-xxhash-0.8.0.dll:libxxhash-0.8.0-1-x86_64.pkg.tar.zst'
-    'rsync.exe:rsync-3.2.2-2-x86_64.pkg.tar.zst'
+    # 'msys-zstd-1.dll:libzstd-1.4.5-2-x86_64.pkg.tar.xz'
+    # 'zstd.exe:zstd-1.4.5-2-x86_64.pkg.tar.xz'
+    'msys-xxhash-0.dll:libxxhash-0.8.1-1-x86_64.pkg.tar.zst'
+    'rsync.exe:rsync-3.2.6-1-x86_64.pkg.tar.zst'
   )
   # Install extra tools from ini
   extra_tools+=($(git --no-pager config -f "$HOME/.common_env.ini" --get-all gitbash.msystool 2>/dev/null | tr '\n' ' '))
@@ -89,15 +116,6 @@ function setup_gitbash() {
     download_tarball -o "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon5.ico" "https://icon-icons.com/downloadimage.php?id=131831&root=2148/ICO/128/&file=tmux_icon_131831.ico"
   [[ ! -f "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon6.ico" ]] &&
     cp -vf "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon5.ico" "$APPS_ROOT/PortableApps/PortableGitLauncher/App/AppInfo/appicon6.ico"
-
-  # Enable long path
-  [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
-
-  # Generate ssh keys
-  if [[ ! -f "$HOME/.ssh/id_rsa" ]]; then
-    ssh-keygen -t rsa -b 4096 -f "$HOME/.ssh/id_rsa" -N ""
-    echo -e "\nYou can now deploy your public SSH key with the following command:\n\tssh-copy-id login@remote_machine\n"
-  fi
 
   return 0
 }
