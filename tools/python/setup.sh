@@ -6,7 +6,7 @@
 function setup_python() {
   local ERROR=$SETUP_ERROR_STOP
   # if there is already python >= 3.7, error would not stop the process
-  type python &>/dev/null && python --version | cut -d' ' -f2 | cut -d'.' -f1,2 | grep -E '^3\.[7-9]' >/dev/null && ERROR=$SETUP_ERROR_CONTINUE
+  type python &>/dev/null && python --version | cut -d' ' -f2 | cut -d'.' -f1,2 | grep -E '^3\.([7-9]|1[0-9]+)' >/dev/null && ERROR=$SETUP_ERROR_CONTINUE
 
   local python_path="$APPS_ROOT/PortableApps/CommonFiles/python"
   local python_winpath="$(get_path_to_windows_back "$python_path")"
