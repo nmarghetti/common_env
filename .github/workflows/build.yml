@@ -36,13 +36,13 @@ jobs:
           echo "  * Check env:"
           env | sort
       # Checkout repo
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 5
           submodules: false
       # Configure python version
       - name: Use Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       # Upgrade bash on Mac
@@ -190,6 +190,7 @@ jobs:
         shell: bash
         run: |
           git config --global user.name runner
+          git config --global protocol.file.allow always
           bash ./tools/git/test_git.sh
       # Check update
       - name: Check update
