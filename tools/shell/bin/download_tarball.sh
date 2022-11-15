@@ -16,10 +16,11 @@ Usage: download_tarball [option] url
     -k <cookie>: cookie to pass, eg. 'Cookie: key=value; other=something'
     -v: verbose
     -e: extract the tarball
+    -j: jar extract content file
     -o <filename>: output tarball filename (guest from last part of url if empty) or '-' to write it to stdout
     -d <path>: directory where to extract
     -m <dirname>: directory name (can be regexp) where files are extracted, if specified move all files from there back to extract directory
-    -t <type>: type of tarball: zip, tgz, zst, exe (automatically guest by extension)
+    -t <type>: type of tarball: zip, tgz, zst, exe, jar (automatically guest by extension)
     -p <path>: path to the command to use to download, eg. wget, /usr/bin/curl, etc.
     -h: display this help message
 
@@ -41,15 +42,17 @@ download_tarball() {
   local downloader=
   local verbose=
   local cookie
+  local jar_content=contents.zip
   [[ "$DOWNLOAD_NO_SSL_CHECK" == "1" ]] && ssl_check=0
   # reset getopts - check https://man.cx/getopts(1)
   OPTIND=1
-  while getopts "hviec:d:k:m:o:t:p:" opt; do
+  while getopts "hviej:c:d:k:m:o:t:p:" opt; do
     case "$opt" in
       i) ssl_check=0 ;;
       c) cacert=$OPTARG ;;
       k) cookie=$OPTARG ;;
       e) extract=1 ;;
+      j) jar_content=$OPTARG ;;
       o) tarball=$OPTARG ;;
       d) directory=$OPTARG ;;
       m) extracted_directory=$OPTARG ;;
@@ -58,8 +61,15 @@ download_tarball() {
       t)
         case "$OPTARG" in
           zip | tgz | zst | exe) tarball_type=$OPTARG ;;
+          jar)
+            tarball_type=$OPTARG
+            if ! type jar &>/dev/null && ! type 7z &>/dev/null; then
+              echo "Unable to handle jar tarball, jar or 7z needs to be installed first."
+              return 2
+            fi
+            ;;
           *)
-            download_tarball_usage "Error: unsupported tarball type: '$tarball_type'."
+            download_tarball_usage "Error: unsupported tarball type: '$OPTARG'."
             return 2
             ;;
         esac
@@ -153,6 +163,7 @@ download_tarball() {
       case "${tarball#*.}" in
         *exe) tarball_type="exe" ;;
         *zip) tarball_type="zip" ;;
+        *jar) tarball_type="jar" ;;
         *tar\.gz) tarball_type="tgz" ;;
         *tar\.xz) tarball_type="txz" ;;
         *zst) tarball_type="zst" ;;
@@ -174,6 +185,7 @@ download_tarball() {
         tgz) cmd="tar -xvf '$tarball' -C '${directory%/}/'" ;;
         txz) cmd="tar -xvJf '$tarball' -C '${directory%/}/'" ;;
         zst) cmd="tar -I zstd -xvf '$tarball' -C '${directory%/}/'" ;;
+        jar) cmd="mkdir -p '${directory%/}/extract'; unzip '$tarball' -d '${directory%/}/extract/'; unzip '${directory%/}/extract/${jar_content}' -d '${directory%/}/'; rm -rvf '${directory%/}/extract'" ;;
       esac
       eval "$cmd" | awk 'BEGIN {ORS="."; limit=40; for(c=0; c<limit*2;c++){back=back"\b"; space=space" ";} } {print "."; if (NR % limit == 0) printf back space back }' || err=1
       echo

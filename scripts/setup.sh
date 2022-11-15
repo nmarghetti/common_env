@@ -75,6 +75,7 @@ usage() {
   echo "    vscode: install latest Visual Studio Code" 1>&2
   echo "    pycharm: install latest PyCharm community" 1>&2
   echo "    intellijidea: install latest IntelliJ IDEA community" 1>&2
+  echo "    springtoolsuite: install latest Spring Tool Suite 4 Eclipse" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
   echo "    mobaxterm: install MobaXterm 20.6" 1>&2
   echo "    putty: install PuTTY 0.73" 1>&2
@@ -114,7 +115,7 @@ while [[ $# -gt 0 ]]; do
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
       cygwin | node | nvm | insomnia | gradle | xampp | elastic | intellijidea | gcloud | lens | dbeaver | \
-      docker | vcxsrv | wsl)
+      springtoolsuite | docker | vcxsrv | wsl)
       APPS="$APPS $1"
       ;;
     # cpp)

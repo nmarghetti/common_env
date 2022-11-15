@@ -5,7 +5,7 @@
 
 ---
 
-<!-- TOC depthFrom:2 -->
+<!-- TOC depthfrom:2 -->
 
 - [Description](#description)
 - [Setup](#setup)
@@ -64,7 +64,7 @@ git clone https://github.com/nmarghetti/common_env.git
 
 ## Features
 
-1. ### **Common core**
+1. **Common core**
 
    The common part works for the following environment:
 
@@ -88,57 +88,58 @@ git clone https://github.com/nmarghetti/common_env.git
      - main coloration
      - many aliases to handle several usecases and for each it displays the full real git command invoked
 
-1. ### **macOS**
+1. **macOS**
 
    On macOs it will also install some extra package to have necessary GNU tools such as readlink, awk, sed, etc.
 
-1. ### **Windows portable env**
+1. **Windows portable env**
 
-If you are on Windows, you can get a portable development environment (it is not hardly installed in the system, all the applications are portable) with the following tools especially configured:
+   If you are on Windows, you can get a portable development environment (it is not hardly installed in the system, all the applications are portable) with the following tools especially configured:
 
-- **Visual Studio Code** (~250M) with several extensions
-- **Git for Windows** (~280M)
-  - tools: **curl**, **rsync**, **tree**, **wget** (~6M)
-  - **pacman** package manager (~50M) and additional packages:
-    - **man** (~130M)
-    - **zsh**
-    - **tmux**
-    - **make**, **cmake**, **mingw-w64-x86_64-toolchain** for C/C++ dev (~1G)
-- **PyCharm** (~700M)
-- **Intellij IDEA** (~1.6G)
-- **PuTTY** (~5M)
-- **Cmder** (~30M)
-- **MobaXterm** (~13M)
-- **SuperPuTTY** (~2M)
-- **Tabby** (~300M)
-- **Python** (2.7)
-- **Python** (3.8) (~50M)
-- **Java SDK** (15) (~300M)
-- **Node.js** (~65M)
-- **nvm** (~120K)
-- **Gradle** (~110M)
-- **Elastic ELK stack (Elasticsearch, Logstash, Kibana)** (~1.7G)
-- **Google cloud SDK** (~500M)
-- **Lens** (~850M)
-- **DBeaver** (~130M)
-- **Cygwin**
-- **XAMPP**
-- **WSL** (Install and configure Ubuntu-20.04 in the system, it is not portable)
-- **Docker Desktop** (Install Docker Desktop in the system, it is not portable)
-- **VcXsrv** (Install VcXsrv Windows X Server in the system, it is not portable)
+   - **Visual Studio Code** (~250M) with several extensions
+   - **Git for Windows** (~280M)
+     - tools: **curl**, **rsync**, **tree**, **wget** (~6M)
+     - **pacman** package manager (~50M) and additional packages:
+       - **man** (~130M)
+       - **zsh**
+       - **tmux**
+       - **make**, **cmake**, **mingw-w64-x86_64-toolchain** for C/C++ dev (~1G)
+   - **PyCharm** (~700M)
+   - **Intellij IDEA** (~1.6G)
+   - **Spring Tool Suite** (~800M)
+   - **PuTTY** (~5M)
+   - **Cmder** (~30M)
+   - **MobaXterm** (~13M)
+   - **SuperPuTTY** (~2M)
+   - **Tabby** (~300M)
+   - **Python** (2.7)
+   - **Python** (3.8) (~50M)
+   - **Java SDK** (15) (~300M)
+   - **Node.js** (~65M)
+   - **nvm** (~120K)
+   - **Gradle** (~110M)
+   - **Elastic ELK stack (Elasticsearch, Logstash, Kibana)** (~1.7G)
+   - **Google cloud SDK** (~500M)
+   - **Lens** (~850M)
+   - **DBeaver** (~130M)
+   - **Cygwin**
+   - **XAMPP**
+   - **WSL** (Install and configure Ubuntu-20.04 in the system, it is not portable)
+   - **Docker Desktop** (Install Docker Desktop in the system, it is not portable)
+   - **VcXsrv** (Install VcXsrv Windows X Server in the system, it is not portable)
 
-You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):
+   You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):
 
-- Notepad++
-- Google Chrome
-- Mozilla Firefox
-- 7-Zip
-- Process Explorer
-- etc.
+   - Notepad++
+   - Google Chrome
+   - Mozilla Firefox
+   - 7-Zip
+   - Process Explorer
+   - etc.
 
-Visual Studio Code and the other tools are configured to work together. It brings a common configuration between developpers to ensure to format source code, configuration file or even README the same way.\
-Each developper can contribute to the tools and everyone would benefit from it.\
-Any developper could join and install quickly everything like the others with only few simple steps.
+   Visual Studio Code and the other tools are configured to work together. It brings a common configuration between developpers to ensure to format source code, configuration file or even README the same way.\
+   Each developper can contribute to the tools and everyone would benefit from it.\
+   Any developper could join and install quickly everything like the others with only few simple steps.
 
 ## Git
 
