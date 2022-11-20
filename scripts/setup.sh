@@ -58,6 +58,7 @@ DEFAULT_APPS="shell git"
 DEFAULT_WIN_APPS="gitbash $DEFAULT_APPS portableapps"
 DEFAULT_APPS_GREP=$(echo "$DEFAULT_WIN_APPS" | tr ' ' '|')
 APPS=
+APPS_BY_ARGS=0
 UPGRADE_APPS=0
 APP_SELECTED=0
 EXTRA_APP_SELECTED=0
@@ -117,6 +118,7 @@ while [[ $# -gt 0 ]]; do
       cygwin | node | nvm | insomnia | gradle | xampp | elastic | intellijidea | gcloud | lens | dbeaver | \
       springtoolsuite | docker | vcxsrv | wsl)
       APPS="$APPS $1"
+      APPS_BY_ARGS=1
       ;;
     # cpp)
     #   APPS="$APPS make cmake msys2"
@@ -293,7 +295,7 @@ done
 
 custom_tool_folder=$(git --no-pager config -f "$HOME/.common_env.ini" --get install.custom-app-folder 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
 if [[ -d "$custom_tool_folder" ]]; then
-  if [ -z "$EXTRA_APPS" ]; then
+  if [ -z "$EXTRA_APPS" ] && [ "$APPS_BY_ARGS" -ne 1 ]; then
     EXTRA_APPS=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.custom-app)
   fi
   for tool in $EXTRA_APPS; do

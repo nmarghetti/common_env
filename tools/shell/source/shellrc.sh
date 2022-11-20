@@ -353,6 +353,7 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
       common_env_check_update
       [ ! "$current_commit" = "$(cd "$COMMON_ENV_SHELLRC_ROOT" && git log -1 --pretty=format:%H)" ] && COMMON_ENV_CHANGED=1
     fi
+    COMMON_ENV_CHECK_UPDATE_SCRIPT=$(git --no-pager config -f "$HOME/.common_env.ini" --get update.check-update-script | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
   fi
   touch "$COMMON_ENV_LAST_CHECK"
 
@@ -364,7 +365,12 @@ if [ "$COMMON_ENV_FORCE_CHECK" = "1" ] || [ ! -f "$COMMON_ENV_LAST_CHECK" ] || [
   source "${COMMON_ENV_SHELLRC_ROOT}/../bin/sourcetool" "${HOME}/bin"
 fi
 
-# If an update occured, refresh the setup if on Windows with APPS_ROOT
-[ $COMMON_ENV_CHANGED -eq 1 ] && type setup_common_env &>/dev/null && setup_common_env
+# If there is a specific script to handle checking for update, run it
+if [ -n "$COMMON_ENV_CHECK_UPDATE_SCRIPT" ]; then
+  "$COMMON_ENV_CHECK_UPDATE_SCRIPT" "$COMMON_ENV_CHANGED"
+else
+  # If an update occured, refresh the setup if on Windows with APPS_ROOT
+  [ $COMMON_ENV_CHANGED -eq 1 ] && type setup_common_env >/dev/null 2>&1 && setup_common_env
+fi
 
 common_env_log "'$COMMON_ENV_SHELLRC' sourced"
