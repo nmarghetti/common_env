@@ -40,6 +40,7 @@
       "args": ["--init-file", "${env:HOME}\\.bashrc"]
     }
   },
+  "terminal.integrated.defaultProfile.windows": "GitBash",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.scrollback": 10000
 }

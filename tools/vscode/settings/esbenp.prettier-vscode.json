@@ -3,7 +3,7 @@
   "prettier.endOfLine": "lf",
   "prettier.htmlWhitespaceSensitivity": "css",
   "prettier.insertPragma": false,
-  "prettier.jsxBracketSameLine": false,
+  "prettier.bracketSameLine": false,
   "prettier.jsxSingleQuote": false,
   "prettier.printWidth": 140,
   "prettier.proseWrap": "preserve",
