@@ -14,6 +14,13 @@ setup_vscode() {
   local VSCodeData="$APPS_ROOT/PortableApps/VSCodeLauncher/data"
   local WinVSCodeData="$WIN_APPS_ROOT/PortableApps/VSCodeLauncher/data"
 
+  # Check for version upgrade
+  if [ -f "$VSCode/Code.exe" ] &&
+    ! printf '%s\n%s\n' "$(powershell -Command "(Get-Item -path $WIN_APPS_ROOT/PortableApps/VSCode/Code.exe).VersionInfo.ProductVersion")" "1.74" |
+    sort -r --check=quiet --version-sort; then
+    upgrade_vscode
+  fi
+
   # Install VSCode
   if [ ! -f "$VSCode/Code.exe" ]; then
     download_vscode "$VSCode"
@@ -150,7 +157,13 @@ EOM
 upgrade_vscode() {
   local ERROR=$SETUP_ERROR_CONTINUE
   local VSCode="$APPS_ROOT/PortableApps/VSCode"
+  local backup="$APPS_ROOT/PortableApps_backup"
   tasklist //FI "IMAGENAME eq Code.exe" | grep -q Code.exe && echo "Please close all instances of VSCode before upgrading it" && return "$ERROR"
-  rm -rf "$VSCode"
+  if [ -e "$backup/VSCode" ]; then
+    rm -rf "$VSCode"
+  else
+    mkdir -p "$backup"
+    mv "$VSCode" "$backup/"
+  fi
   download_vscode "$VSCode"
 }

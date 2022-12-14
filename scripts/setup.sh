@@ -75,7 +75,7 @@ usage() {
   echo "    java: install java jdk 8, 11 or 16 (16 by default)" 1>&2
   echo "    vscode: install latest Visual Studio Code" 1>&2
   echo "    pycharm: install latest PyCharm community" 1>&2
-  echo "    intellijidea: install latest IntelliJ IDEA community" 1>&2
+  echo "    intellijidea: install IntelliJ IDEA community 2022.3" 1>&2
   echo "    springtoolsuite: install latest Spring Tool Suite 4 Eclipse" 1>&2
   echo "    cmder: install cmder 1.3.14" 1>&2
   echo "    mobaxterm: install MobaXterm 20.6" 1>&2
