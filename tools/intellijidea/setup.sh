@@ -1,8 +1,13 @@
 #! /usr/bin/env bash
 
 download_intellijidea() {
+  # Default to community edition
+  local edition="ideaIC"
+  if [ "$(git --no-pager config -f "$HOME/.common_env.ini" --get intellijidea.edition)" = "ultimate" ]; then
+    edition="ideaIU"
+  fi
   mkdir -vp "$1"
-  download_tarball -e -d "$1" "https://download.jetbrains.com/idea/ideaIC-2022.3.win.zip"
+  download_tarball -e -d "$1" "https://download.jetbrains.com/idea/${edition}-2022.3.1.win.zip"
 }
 
 # https://www.jetbrains.com/help/idea/installation-guide.html#standalone
@@ -11,8 +16,10 @@ function setup_intellijidea() {
   local intellijidea_path="$APPS_ROOT/PortableApps/IntelliJIdea"
 
   # Check for version upgrade
+  local minimumVersion
+  minimumVersion=$(git --no-pager config -f "$HOME/.common_env.ini" --get intellijidea.minimum-version || echo "2022.3.1.0")
   if [ -f "$intellijidea_path/bin/idea64.exe" ] &&
-    ! printf '%s\n%s\n' "$(powershell -Command "(Get-Command $WIN_APPS_ROOT/PortableApps/IntelliJIdea/bin/idea64.exe).Version -join \".\"")" "2022.3.0.0" |
+    ! printf '%s\n%s\n' "$(powershell -Command "(Get-Command $WIN_APPS_ROOT/PortableApps/IntelliJIdea/bin/idea64.exe).Version -join \".\"")" "$minimumVersion" |
     sort -r --check=quiet --version-sort; then
     upgrade_intellijidea
   fi

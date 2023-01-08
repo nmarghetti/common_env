@@ -15,8 +15,10 @@ setup_vscode() {
   local WinVSCodeData="$WIN_APPS_ROOT/PortableApps/VSCodeLauncher/data"
 
   # Check for version upgrade
+  local minimumVersion
+  minimumVersion=$(git --no-pager config -f "$HOME/.common_env.ini" --get vscode.minimum-version || echo "1.74")
   if [ -f "$VSCode/Code.exe" ] &&
-    ! printf '%s\n%s\n' "$(powershell -Command "(Get-Item -path $WIN_APPS_ROOT/PortableApps/VSCode/Code.exe).VersionInfo.ProductVersion")" "1.74" |
+    ! printf '%s\n%s\n' "$(powershell -Command "(Get-Item -path $WIN_APPS_ROOT/PortableApps/VSCode/Code.exe).VersionInfo.ProductVersion")" "$minimumVersion" |
     sort -r --check=quiet --version-sort; then
     upgrade_vscode
   fi
