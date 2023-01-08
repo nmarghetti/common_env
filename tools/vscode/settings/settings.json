@@ -12,7 +12,8 @@
   "files.insertFinalNewline": true,
   "files.associations": {
     "*.snap": "log",
-    "*.md": "markdown"
+    "*.md": "markdown",
+    "*.feature": "feature"
   },
   "files.exclude": {
     "**/*.pyc": true
@@ -29,11 +30,6 @@
 
   "javascript.preferences.quoteStyle": "single",
 
-  "terminal.integrated.shell.windows": "%APPS_ROOT%/PortableApps/PortableGit/usr/bin/bash.exe",
-  "terminal.integrated.shellArgs.windows": [
-    "--init-file",
-    "${env:HOME}\\.bashrc"
-  ],
   "terminal.integrated.profiles.windows": {
     "GitBash": {
       "path": "%APPS_ROOT%/PortableApps/PortableGit/usr/bin/bash.exe",
