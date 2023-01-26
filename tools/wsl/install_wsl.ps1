@@ -74,6 +74,16 @@ if (!((wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern 
   wsl.exe --set-default-version 2
 }
 
+# Check Windows version
+$systemVersion = [System.Version](Get-CimInstance Win32_OperatingSystem).version
+if ($systemVersion -lt [System.Version]'10.0.19043') {
+  Write-Output ("You Windows version ({0}) is too old to update wsl to its latest version, you might have issue" -f $systemVersion)
+} else {
+  wsl --update
+  wsl --version
+}
+
+
 # If no version of Ubuntu is installed, lets installed it
 if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu')) {
   Write-Output 'Installing Ubuntu-20.04...'
