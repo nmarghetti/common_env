@@ -45,3 +45,6 @@ if exist "%HOME%\.venv\3\bin" set PATH=%HOME%\.venv\3\bin;%PATH%
 
 REM PATH to git
 set PATH=%APPS_ROOT%\PortableApps\PortableGit\bin;%PATH%
+
+REM PATH to gcloud, kubectl, gke-gcloud-auth-plugin, etc.
+if exist "%APPS_ROOT%\PortableApps\CommonFiles\gcloud\bin\gcloud" set PATH=%APPS_ROOT%\PortableApps\CommonFiles\gcloud\bin;%PATH%
