@@ -11,6 +11,7 @@ function setup_vcxsrv() {
     echo "Press 'Enter' when the installation of VcXsrv is completed"
     START //B "$tarball"
     read -r
+    rm -f "$tarball"
   fi
   [ ! -f "$PROGRAMFILES/VcXsrv/vcxsrv.exe" ] && echo "Binary file not installed" && return "$ERROR"
 
