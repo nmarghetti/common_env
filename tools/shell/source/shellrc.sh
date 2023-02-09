@@ -225,6 +225,12 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     pathPrepend "${APPS_ROOT}/PortableApps/PortableGit/cmd" "${APPS_ROOT}/PortableApps/PortableGit/bin"
   fi
   pathPrepend "${HOME}/bin"
+  if [ -d "$HOME/.pyenv/pyenv-win/bin" ]; then
+    pathPrepend "$HOME/.pyenv/pyenv-win/shims" "$HOME/.pyenv/pyenv-win/bin"
+    export PYENV="$HOME/.pyenv/pyenv-win"
+    export PYENV_ROOT="$HOME/.pyenv/pyenv-win"
+    export PYENV_HOME="$HOME/.pyenv/pyenv-win"
+  fi
 
   # https://github.com/cypress-io/cypress/issues/1401#issuecomment-393591520
   export NODE_EXTRA_CA_CERTS='/mingw64/ssl/certs/ca-bundle.crt'
@@ -309,7 +315,7 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     fi
   fi
 
-  [ ! "$OSTYPE" = "cygwin" ] && [ -n "$COMMON_ENV_PYTHON_VENV" ] && [ -d "$HOME/.venv/$COMMON_ENV_PYTHON_VENV" ] && {
+  [ ! "$OSTYPE" = "cygwin" ] && [ ! -d "$HOME/.pyenv" ] && [ -n "$COMMON_ENV_PYTHON_VENV" ] && [ -d "$HOME/.venv/$COMMON_ENV_PYTHON_VENV" ] && {
     common_env_log "Setup python venv"
     _python_venv_set "$COMMON_ENV_PYTHON_VENV"
   }

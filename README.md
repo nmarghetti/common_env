@@ -117,6 +117,7 @@ git clone https://github.com/nmarghetti/common_env.git
    - **Java SDK** (15) (~300M)
    - **Node.js** (~65M)
    - **nvm** (~120K)
+   - **pyenv** (~150M)
    - **Gradle** (~110M)
    - **Elastic ELK stack (Elasticsearch, Logstash, Kibana)** (~1.7G)
    - **Google cloud SDK** (~500M)
