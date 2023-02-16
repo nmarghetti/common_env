@@ -39,6 +39,15 @@ function setup_wsl() {
       WSL_SETUP_TOOLS_ROOT="$(cygpath -w "$SETUP_TOOLS_ROOT")" &&
       export WSL_SETUP_TOOLS_ROOT &&
       echoColor 36 "Configuring WSL $distribution..." && {
+
+      # Remove pyenv from the path as it seems to conflict under WSL
+      local path
+      for path in "$HOME/.pyenv/pyenv-win/bin" "$HOME/.pyenv/pyenv-win/shims"; do
+        if echo "$PATH" | tr ':' '\n' | grep -qFx "$path"; then
+          PATH="$(echo "$PATH" | tr ':' '\n' | sed -e "/$(echo "$path" | sed -re 's#/#\\/#g')\$/d" | tr '\n' ':')"
+        fi
+      done
+
       # Configure WSL as root, ensuring to have sudoer user setup etc.
       WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d $distribution -u root <"$SETUP_TOOLS_ROOT/wsl/wsl_ubuntu_root.sh" || return "$ERROR"
       ! wsl -d $distribution -u root <<<"grep -qEe '^$WSL_USER:' /etc/passwd" && echo "$distribution user '$WSL_USER' not found" && return "$ERROR"
