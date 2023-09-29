@@ -25,14 +25,14 @@ Set-Location $PSScriptRoot
 # Command to run
 # https://gist.github.com/pyther/b7c03579a5ea55fe431561b502ec1ba8
 # Write-Output (Get-Location).Path
-Write-Output "Current Cisco metric:"
-Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Get-NetIPInterface
-Write-Output "`nSetting Cisco metric..."
-Get-NetAdapter | Where-Object InterfaceDescription -Match "Cisco AnyConnect" | Set-NetIPInterface -InterfaceMetric 6000
-Start-Sleep -Seconds 1
-Write-Output "`nCurrent Cisco metric:"
-Get-NetAdapter | Where-Object InterfaceDescription -Match "Cisco AnyConnect" | Get-NetIPInterface
-Start-Sleep -Seconds 1
+# Write-Output "Current Cisco metric:"
+# Get-NetAdapter | Where-Object {$_.InterfaceDescription -Match "Cisco AnyConnect"} | Get-NetIPInterface
+# Write-Output "`nSetting Cisco metric..."
+# Get-NetAdapter | Where-Object InterfaceDescription -Match "Cisco AnyConnect" | Set-NetIPInterface -InterfaceMetric 6000
+# Start-Sleep -Seconds 1
+# Write-Output "`nCurrent Cisco metric:"
+# Get-NetAdapter | Where-Object InterfaceDescription -Match "Cisco AnyConnect" | Get-NetIPInterface
+# Start-Sleep -Seconds 1
 Write-Output ""
 .\setDns.ps1
 [Environment]::Exit(0)

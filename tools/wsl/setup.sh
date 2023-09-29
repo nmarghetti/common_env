@@ -31,6 +31,17 @@ function setup_wsl() {
     wsl --terminate $distribution
   fi
 
+  # Ensure the network is well setup if needed
+  natNetwork=$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl.nat-network 2>/dev/null)
+  natGatewayIp=$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl.gateway-ip-address 2>/dev/null)
+  if [ -n "$natNetwork" ] && [ -n "$natGatewayIp" ]; then
+    currentNatNetwork="$(powershell -Command "Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss' -Name NatNetwork")"
+    currentNatGatewayIp="$(powershell -Command "Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Lxss' -Name NatGatewayIpAddress")"
+    if [ ! "$currentNatNetwork" = "$natNetwork" ] || [ ! "$currentNatGatewayIp" = "$natGatewayIp" ]; then
+      powershell.exe -ExecutionPolicy RemoteSigned -Command "$WINDOWS_SETUP_TOOLS_ROOT/wsl/update_network.ps1" "$natNetwork" "$natGatewayIp"
+    fi
+  fi
+
   # Setup wsl
   if wsl --list --quiet | iconv -f utf-16le -t utf-8 | dos2unix | grep -qE "^${distribution}\$"; then
     export WSL_USER="${USER:-${USERNAME}}" &&
