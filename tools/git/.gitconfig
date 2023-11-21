@@ -47,7 +47,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.8'
+  cv = ! echo 'gitconfig 2.1.9'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -358,6 +358,11 @@
   lg10    = ! git --no-pager lg -10 && echo # limit to 10 commits
   lg20    = ! git --no-pager lg -20 && echo # limit to 20 commits
   lg40    = ! git --no-pager lg -40 && echo # limit to 40 commits
+  lgm     = ! git lg HEAD --remotes='*/develop' --remotes='*/main' --remotes='*/master' --remotes='*/release/*' --tags  # current branch and all important remote branches and tag
+  lgm5    = ! git --no-pager lgm -5 && echo # limit to 5 commits
+  lgm10   = ! git --no-pager lgm -10 && echo # limit to 10 commits
+  lgm20   = ! git --no-pager lgm -20 && echo  # limit to 20 commits
+  lgm40   = ! git --no-pager lgm -40 && echo  # limit to 40 commits
   lga     = ! git lg --all  # full all branches log
   lga5    = ! git --no-pager lga -5 && echo # limit to 5 commits
   lga10   = ! git --no-pager lga -10 && echo # limit to 10 commits
