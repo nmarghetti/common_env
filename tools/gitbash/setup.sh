@@ -19,7 +19,7 @@ function setup_gitbash() {
 
   # Install Git for Windows
   if [[ ! -f "$git_path/bin/git.exe" ]]; then
-    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/PortableGit-2.38.1-64-bit.7z.exe"
+    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe"
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 

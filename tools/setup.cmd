@@ -24,7 +24,7 @@ if "%COMMON_ENV_INSTALL_SETUP_INI%" == "" (
 )
 set APPS_LINK=https://download2.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_22.0.1.paf.exe
 set APPS_EXE=PortableApps.exe
-set APP_GIT_LINK=https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/PortableGit-2.38.1-64-bit.7z.exe
+set APP_GIT_LINK=https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe
 set APP_GIT_EXE=PortableGit.exe
 
 

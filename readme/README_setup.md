@@ -2,7 +2,7 @@
 
 ---
 
-<!-- TOC depthFrom:2 -->
+<!-- TOC depthfrom:2 -->
 
 - [**Steps**](#steps)
 - [**Installation**](#installation)
@@ -155,7 +155,7 @@ C:/PortableEnv
 
 1. Error during download (eg. 'unable to get local issuer certificate')
 
-   In that case you can manually download [PortableApps 22.0.1](https://download2.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_22.0.1.paf.exe) and [64-bit Git for Windows Portable 2.38.1](https://github.com/git-for-windows/git/releases/download/v2.38.1.windows.1/PortableGit-2.38.1-64-bit.7z.exe) and start again the installation. Notice that you should save the files as follow:
+   In that case you can manually download [PortableApps 22.0.1](https://download2.portableapps.com/portableapps/PortableApps.comPlatform/PortableApps.com_Platform_Setup_22.0.1.paf.exe) and [64-bit Git for Windows Portable 2.38.1](https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe) and start again the installation. Notice that you should save the files as follow:
 
    ```text
      C:/PortableEnv
