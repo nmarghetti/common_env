@@ -131,6 +131,9 @@ if not exist PortableApps (
   exit 1
 )
 
+set first_install=1
+:install_git_for_windows
+
 REM Install Git for Windows
 if not exist PortableApps\PortableGit (
   if exist %APP_GIT_EXE% (
@@ -209,6 +212,30 @@ if "%branch%" NEQ "%COMMON_ENV_BRANCH%" (
   exit 1
 )
 "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" pull --rebase
+
+REM Ensure to have a version recent enough of gitbash
+cd "%APPS_ROOT%"
+start "Configure gitbash" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\tools\gitbash\check_version.sh"
+if "%errorlevel%" == "0" (
+  echo Git for Windows version is recent enough
+) else (
+  echo Git for Windows is too old, removing it and installing new version.
+  mkdir "%APPS_ROOT%\PortableApps_backup" 2>nul
+  move /Y "%APPS_ROOT%\PortableApps\PortableGit" "%APPS_ROOT%\PortableApps_backup\PortableGit"
+  if "%first_install%" == "1" (
+    set first_install=0
+    if exist "%APPS_ROOT%\PortableApps\PortableGit" (
+      echo Unable to remove old Git for Windows, exiting...
+      pause
+      exit 1
+    )
+    goto :install_git_for_windows
+  ) else (
+    echo Unable to install Git for Windows, exiting...
+    pause
+    exit 1
+  )
+)
 
 REM Setup
 cd "%APPS_ROOT%"
