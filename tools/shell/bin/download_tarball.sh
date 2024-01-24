@@ -12,6 +12,7 @@ Download tarball:
 Usage: download_tarball [option] url
   options:
     -i: ignore ssl certificate check (not secure)
+    -r: do not check revoked certificate (not secure)
     -c: ca certificate path
     -k <cookie>: cookie to pass, eg. 'Cookie: key=value; other=something'
     -v: verbose
@@ -36,6 +37,7 @@ download_tarball() {
   local directory=.
   local extracted_directory=
   local ssl_check=1
+  local revoked_check=1
   local cacert=
   local extract=0
   local tarball_type
@@ -44,11 +46,13 @@ download_tarball() {
   local cookie
   local jar_content=contents.zip
   [[ "$DOWNLOAD_NO_SSL_CHECK" == "1" ]] && ssl_check=0
+  [[ "$DOWNLOAD_NO_REVOKED_CHECK" == "1" ]] && revoked_check=0
   # reset getopts - check https://man.cx/getopts(1)
   OPTIND=1
-  while getopts "hviej:c:d:k:m:o:t:p:" opt; do
+  while getopts "hvirej:c:d:k:m:o:t:p:" opt; do
     case "$opt" in
       i) ssl_check=0 ;;
+      r) revoked_check=0 ;;
       c) cacert=$OPTARG ;;
       k) cookie=$OPTARG ;;
       e) extract=1 ;;
@@ -93,6 +97,9 @@ download_tarball() {
 
   # Download the tarball
   [[ -z "$tarball" ]] && tarball=$(basename "$url")
+  if [ ! "$tarball" = "-" ] && [ -f "$tarball" ]; then
+    echo "$tarball already exists, skipping download."
+  fi
   if [[ "$tarball" = "-" || ! -f "$tarball" ]]; then
     # Check how to download tarball
     local downloader_option
@@ -116,6 +123,11 @@ download_tarball() {
       [curl]="-k"
       [wget]="--no-check-certificate"
     )
+    local downloader_option_norevoked
+    declare -A downloader_option_norevoked=(
+      [curl]="--ssl-no-revoke"
+      [wget]="--no-check-certificate"
+    )
     local downloader_option_cacert
     declare -A downloader_option_cacert=(
       [curl]="--cacert"
@@ -131,18 +143,30 @@ download_tarball() {
     local option="${downloader_option[$downloader_name]}"
     [[ -n "$tarball" ]] && option="$option '$tarball'"
     [[ $ssl_check -eq 0 ]] && option="${downloader_option_nossl[$downloader_name]} $option"
+    [[ $revoked_check -eq 0 ]] && option="${downloader_option_norevoked[$downloader_name]} $option"
     [[ -n "$cacert" ]] && option="${downloader_option_cacert[$downloader_name]} '$cacert' $option"
     local tmp_output=$(mktemp)
     # Would be better not to use eval but did not find a way to handle parameters with space in it
+    [ -n "$verbose" ] && echo "Downloading tarball with: '$downloader' $option '$url'"
     (set -o pipefail && eval "'$downloader' $option '$url'" 2> >(tee -a "$tmp_output" >&2) | cat)
     local download_ok=$?
     # Check what to do in case of error
-    if [[ $download_ok -ne 0 ]] && [[ $ssl_check -eq 1 ]]; then
-      if grep -E "(unable to get local issuer certificate|Unable to locally verify the issuer's authority|server certificate verification failed)" "$tmp_output" &>/dev/null; then
+    if [ $download_ok -ne 0 ]; then
+      if [ $ssl_check -eq 1 ] && grep -E "(unable to get local issuer certificate|Unable to locally verify the issuer's authority|server certificate verification failed)" "$tmp_output" &>/dev/null; then
         local answer=y
         read -rep "There is a problem with SSL certificate, do you want to bypass it (Y/n) ? " -i $answer answer
         if [[ "$answer" =~ ^[yY]$ ]]; then
           option="${downloader_option_nossl[$downloader_name]} $option"
+          [ -n "$verbose" ] && echo "Downloading tarball with: '$downloader' $option '$url'"
+          eval "'$downloader' $option '$url'"
+          download_ok=$?
+        fi
+      elif [ $revoked_check -eq 1 ] && grep "The revocation function was unable to check revocation for the certificate." "$tmp_output" &>/dev/null; then
+        local answer=y
+        read -rep "There is a problem while checking if SSL certificate is revoked, do you want to bypass it (Y/n) ? " -i $answer answer
+        if [[ "$answer" =~ ^[yY]$ ]]; then
+          option="${downloader_option_norevoked[$downloader_name]} $option"
+          [ -n "$verbose" ] && echo "Downloading tarball with: '$downloader' $option '$url'"
           eval "'$downloader' $option '$url'"
           download_ok=$?
         fi
