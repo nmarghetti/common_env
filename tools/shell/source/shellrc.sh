@@ -233,7 +233,11 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
   fi
 
   # https://github.com/cypress-io/cypress/issues/1401#issuecomment-393591520
-  export NODE_EXTRA_CA_CERTS='/mingw64/ssl/certs/ca-bundle.crt'
+  if [ -f /mingw64/ssl/certs/ca-bundle.crt ]; then
+    export NODE_EXTRA_CA_CERTS='/mingw64/ssl/certs/ca-bundle.crt'
+  elif [ -f /mingw64/etc/ssl/certs/ca-bundle.crt ]; then
+    export NODE_EXTRA_CA_CERTS='/mingw64/etc/ssl/certs/ca-bundle.crt'
+  fi
   # export YARN_CA_FILE_PATH="$WIN_APPS_ROOT/PortableApps/PortableGit/mingw64/ssl/certs/ca-bundle.crt"
 
   # Ensure terminal output are UTF8 https://www.debian.org/doc/manuals/fr/debian-fr-howto/ch3.html
