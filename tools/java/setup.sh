@@ -48,6 +48,18 @@ function setup_java() {
         download_tarball -e -d "$java_path" -m "jdk-17.0.3+7" \
           "https://github.com/adoptium/temurin18-binaries/releases/download/jdk-18.0.1%2B10/OpenJDK18U-jdk_x64_windows_hotspot_18.0.1_10.zip"
         ;;
+      19)
+        download_tarball -e -d "$java_path" -m "jdk-19.0.2+7" \
+          "https://github.com/adoptium/temurin19-binaries/releases/download/jdk-19.0.2%2B7/OpenJDK19U-jdk_x64_windows_hotspot_19.0.2_7.zip"
+        ;;
+      20)
+        download_tarball -e -d "$java_path" -m "jdk-20.0.2+9" \
+          "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_x64_windows_hotspot_20.0.2_9.zip"
+        ;;
+      21)
+        download_tarball -e -d "$java_path" -m "jdk-21.0.2+13" \
+          "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.2%2B13/OpenJDK21U-jdk_x64_windows_hotspot_21.0.2_13.zip"
+        ;;
       *)
         download_tarball -e -d "$java_path" -m "jdk-16.0.1+9" \
           "https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_x64_windows_hotspot_16.0.1_9.zip"
