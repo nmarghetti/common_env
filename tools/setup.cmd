@@ -220,6 +220,9 @@ if "%errorlevel%" == "0" (
   echo Git for Windows version is recent enough
 ) else (
   echo Git for Windows is too old, removing it and installing new version.
+  if exist %APP_GIT_EXE% (
+    del /F %APP_GIT_EXE%
+  )
   mkdir "%APPS_ROOT%\PortableApps_backup" 2>nul
   move /Y "%APPS_ROOT%\PortableApps\PortableGit" "%APPS_ROOT%\PortableApps_backup\PortableGit"
   if "%first_install%" == "1" (
