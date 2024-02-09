@@ -85,6 +85,7 @@ function setup_gitbash() {
     # 'zstd.exe:zstd-1.4.5-2-x86_64.pkg.tar.xz'
     'msys-xxhash-0.dll:libxxhash-0.8.1-1-x86_64.pkg.tar.zst'
     'rsync.exe:rsync-3.2.6-1-x86_64.pkg.tar.zst'
+    'msys-crypto-1.1.dll:libopenssl-1.1.1.o-1-x86_64.pkg.tar.zst'
   )
   # Install extra tools from ini
   extra_tools+=($(git --no-pager config -f "$HOME/.common_env.ini" --get-all gitbash.msystool 2>/dev/null | tr '\n' ' '))
