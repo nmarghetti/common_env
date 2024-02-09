@@ -27,6 +27,13 @@ function setup_pyenv() {
   fi
   local wished_packages
   wished_packages="$(git --no-pager config -f "$HOME/.common_env.ini" --get-all pyenv.package | tr '\n' ' ')"
+  # If pipx is whished, set some environment variables to configure it
+  if echo "$wished_packages" | grep -q pipx; then
+    export PIPX_HOME="$HOME/.local/pipx"
+    export PIPX_BIN_DIR="$HOME/.local/bin"
+    mkdir -p "$PIPX_HOME" "$PIPX_BIN_DIR"
+    export PATH="$PIPX_BIN_DIR:$PATH"
+  fi
   if [ -n "$wished_packages" ]; then
     # shellcheck disable=SC2086
     pip install $wished_packages

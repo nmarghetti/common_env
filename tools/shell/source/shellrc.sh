@@ -230,6 +230,11 @@ if [ -d "$APPS_ROOT/PortableApps" ]; then
     export PYENV="$HOME/.pyenv/pyenv-win"
     export PYENV_ROOT="$HOME/.pyenv/pyenv-win"
     export PYENV_HOME="$HOME/.pyenv/pyenv-win"
+    if [ -f "$HOME/.pyenv/pyenv-win/shims/pipx" ]; then
+      export PIPX_HOME="$HOME/.local/pipx"
+      export PIPX_BIN_DIR="$HOME/.local/bin"
+      pathPrepend "$PIPX_BIN_DIR" 2>/dev/null
+    fi
   fi
 
   # https://github.com/cypress-io/cypress/issues/1401#issuecomment-393591520
