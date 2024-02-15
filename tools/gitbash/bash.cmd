@@ -9,6 +9,10 @@ set PORTABLEAPPS_GIT=%PORTABLEAPPS_ROOT%\PortableApps\PortableGit
 : Set HOME to source sh profile when launching git-bash on the project
 set HOME=%PORTABLEAPPS_ROOT%\home
 
+: Set APPDATA and LOCALAPPDATA to point the the portableapps folder instead of the system
+set APPDATA=%PORTABLEAPPS_ROOT%\AppData\Roaming
+set LOCALAPPDATA=%PORTABLEAPPS_ROOT%\AppData\Local
+
 : Set project where to go
 set PRJ_ROOT=%PORTABLEAPPS_ROOT%\Documents\dev
 cd "%PRJ_ROOT%"
