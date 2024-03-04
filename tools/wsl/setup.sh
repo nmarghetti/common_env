@@ -91,5 +91,17 @@ function setup_wsl() {
     return "$ERROR"
   fi
 
+  # Upgrade the distribution if needed
+  local minimumVersion
+  minimumVersion=$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl.minimum-version || echo "20.04")
+  if ! printf '%s\n%s\n' "$(wsl -d $distribution bash -c 'lsb_release -sr')" "$minimumVersion" |
+    sort -r --check=quiet --version-sort; then
+    echoColor 36 "Upgrading WSL Ubuntu..."
+    wsl -d "$distribution" bash -c 'sudo apt update && sudo apt full-upgrade -y' &&
+      wsl --terminate "$distribution" &&
+      wsl -d "$distribution" bash -c 'sudo do-release-upgrade' &&
+      wsl -d "$distribution" bash -c 'sudo apt autoremove -y'
+  fi
+
   return 0
 }
