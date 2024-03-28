@@ -49,7 +49,7 @@ def get_cisco_vpn_dns_servers():
 
 
 def get_dns_servers():
-  p = subprocess.run([PSCMD, '(Get-NetAdapter | Where-Object Status -Match "Up" | Where-Object InterfaceDescription -NotLike "Cisco AnyConnect*" | Get-DnsClientServerAddress -AddressFamily IPv4).ServerAddresses | Sort-Object | Get-Unique | ConvertTo-Json -Compress'],
+  p = subprocess.run([PSCMD, '(Get-NetAdapter | Where-Object Status -Match "Up" | Where-Object InterfaceDescription -NotLike "Cisco AnyConnect*" | Get-DnsClientServerAddress -AddressFamily IPv4).ServerAddresses | ConvertTo-Json -Compress'],
                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
   if p.stderr:
@@ -59,7 +59,12 @@ def get_dns_servers():
     return []
 
   address = json.loads(p.stdout.decode('utf-8'))
-  return [address] if type(address) == str else address
+  address = [address] if type(address) == str else address
+  result = []
+  for x in address:
+    if x not in result:
+      result.append(x)
+  return result
 
 
 def get_dns_search_list():
