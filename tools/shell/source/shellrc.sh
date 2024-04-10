@@ -72,7 +72,7 @@ if [ "$current_shell" = "bash" ]; then
     bind '"\e[1;3D"':backward-word         # Alt-Left
     bind '"\e[1;3C"':forward-word          # Alt-Right
 
-    [ ! "$OSTYPE" = "cygwin" ] && export PS4=$'+ \t\t''\e[33m\s@\v ${BASH_SOURCE}#\e[35m${LINENO} \e[34m${FUNCNAME[0]:+${FUNCNAME[0]}() }''\e[36m\t\e[0m\n'
+    [ ! "$OSTYPE" = "cygwin" ] && export PS4=$'+ \t\t''\e[33m\s@\v ${BASH_SOURCE:-}#\e[35m${LINENO} \e[34m${FUNCNAME[0]:+${FUNCNAME[0]}() }''\e[36m\t\e[0m\n'
 
     if [ "$OSTYPE" = "linux-gnu" ]; then
       case "$(uname -r | tr '[:upper:]' '[:lower:]')" in
