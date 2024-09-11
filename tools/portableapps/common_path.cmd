@@ -8,6 +8,9 @@ set HOME=%APPS_ROOT%\home
 set APPDATA=%APPS_ROOT%\AppData\Roaming
 set LOCALAPPDATA=%APPS_ROOT%\AppData\Local
 
+if exist "%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt" set NODE_EXTRA_CA_CERTS=%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt
+if exist "%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt" set REQUESTS_CA_BUNDLE=%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt
+
 REM PATH to /usr/bin
 set PATH=%APPS_ROOT%\PortableApps\PortableGit\usr\bin;%PATH%
 
