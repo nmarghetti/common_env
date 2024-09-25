@@ -7,6 +7,9 @@ function main() {
   if [[ -f "$cacert" ]]; then
     local bundle
     for bundle in /mingw64/ssl/certs/ca-bundle.crt /mingw64/etc/ssl/certs/ca-bundle.crt /usr/ssl/certs/ca-bundle.crt; do
+      if [ ! -d "$(dirname "$bundle")" ]; then
+        continue
+      fi
       if [[ ! -f "$bundle" ]] || ! cmp --silent "$cacert" "$bundle"; then
         [[ -f "$bundle" && ! -f "$bundle.backup" ]] && mv "$bundle" "$bundle.backup"
         cp -vf "$cacert" "$bundle"
