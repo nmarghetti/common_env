@@ -98,6 +98,7 @@ usage() {
   echo "    docker: install Docker Desktop in the system, it is not portable" 1>&2
   echo "    vcxsrv: install VcXsrv Windows X Server in the system, it is not portable" 1>&2
   echo "    wsl: install WSL in the system, it is not portable" 1>&2
+  echo "    wsl_ubuntu: install WSL in the system, it is not portable" 1>&2
   echo "In any case it will setup some shell and git config, and (only on Windows) install python 3.8.2" 1>&2
 }
 
@@ -117,7 +118,7 @@ while [[ $# -gt 0 ]]; do
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
       cygwin | node | nvm | pyenv | insomnia | gradle | xampp | elastic | intellijidea | gcloud | lens | dbeaver | \
-      springtoolsuite | docker | vcxsrv | wsl)
+      springtoolsuite | docker | vcxsrv | wsl | wsl_ubuntu)
       APPS="$APPS $1"
       APPS_BY_ARGS=1
       ;;
