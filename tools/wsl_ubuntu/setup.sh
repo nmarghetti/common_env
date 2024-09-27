@@ -3,7 +3,7 @@
 function setup_wsl_ubuntu() {
   local ERROR=$SETUP_ERROR_CONTINUE
   local distribution
-  distribution="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.distribution || echo 'Ubuntu-20.04')"
+  distribution="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.distribution || echo 'Ubuntu-22.04')"
 
   type wsl &>/dev/null || return "$ERROR"
 
@@ -12,7 +12,7 @@ function setup_wsl_ubuntu() {
     :
   else
     echoColor 36 "Installing WSL $distribution..."
-    if ! powershell.exe "$(cygpath -w "$SETUP_TOOLS_ROOT/wsl/install_wsl.ps1")" "$distribution"; then
+    if ! powershell.exe "$(cygpath -w "$SETUP_TOOLS_ROOT/wsl_ubuntu/install_wsl.ps1")" "$distribution"; then
       echo "Unable to install $distribution distribution"
       return "$ERROR"
     fi
@@ -21,7 +21,7 @@ function setup_wsl_ubuntu() {
   # Ensure WSL does not generate /etc/resolv.conf
   if wsl -d "$distribution" -u root <<<"cat /etc/resolv.conf" | grep -q 'generateResolvConf'; then
     echoColor 36 "Updating /etc/wsl.conf and restarting distribution $distribution..."
-    wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl/wsl_ubuntu_config_network.sh"
+    wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_config_network.sh"
     wsl --terminate "$distribution"
   fi
 
@@ -54,11 +54,12 @@ function setup_wsl_ubuntu() {
       done
 
       # Configure WSL as root, ensuring to have sudoer user setup etc.
-      WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl/wsl_ubuntu_root.sh" || return "$ERROR"
+      echoColor 36 "Configuring with root with '$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh'"
+      WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh" || return "$ERROR"
       ! wsl -d "$distribution" -u root <<<"grep -qEe '^$WSL_USER:' /etc/passwd" && echo "$distribution user '$WSL_USER' not found" && return "$ERROR"
       # Check user is sudoer etc.
       echoColor 36 "Checking user '$WSL_USER'..."
-      WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u "$WSL_USER" <"$SETUP_TOOLS_ROOT/wsl/wsl_ubuntu_user.sh" || return "$ERROR"
+      WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u "$WSL_USER" <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_user.sh" || return "$ERROR"
       # Add some scheduler tasks to ensure cisco network connectivity
       if tasklist //FI "IMAGENAME eq vpnui.exe" | grep -q vpnui.exe; then
         if [ "$(powershell -Command 'Get-ScheduledTask -TaskPath "\wsl\"' | grep -c 'wsl')" -lt 4 ]; then
@@ -67,7 +68,7 @@ function setup_wsl_ubuntu() {
         fi
       fi
       local custom_settings
-      custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all wsl.settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
+      custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all wsl-ubuntu.settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
       # Run custom root script
       if test -f "$custom_settings/root.sh" &&
         echoColor 36 "Running custom root script '$custom_settings/root.sh'..."; then
@@ -86,7 +87,7 @@ function setup_wsl_ubuntu() {
 
   # Upgrade the distribution if needed
   local minimumVersion
-  minimumVersion=$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl.minimum-version || echo "24.04")
+  minimumVersion=$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.minimum-version || echo "22.04")
   if ! printf '%s\n%s\n' "$(wsl -d "$distribution" bash -c 'lsb_release -sr')" "$minimumVersion" |
     sort -r --check=quiet --version-sort; then
     echoColor 36 "Upgrading WSL Ubuntu..."

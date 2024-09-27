@@ -62,10 +62,12 @@ EOF
   fi
 
   # Upgrade the system if not done during the last 24h
+  echo "Checking to upgrade the system..."
   if [ ! -f "/var/lib/apt/periodic/update-success-stamp" ] || [ "$(("$(date +%s)" - "$(date -r "/var/lib/apt/periodic/update-success-stamp" +%s)"))" -ge 86400 ]; then
     echo "Upgrading the system..."
     apt-get update -y
     apt-get upgrade -y
+    touch /var/lib/apt/periodic/update-success-stamp
   fi
 
   return 0
