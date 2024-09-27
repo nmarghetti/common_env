@@ -9,11 +9,18 @@ if ((Test-Admin) -eq $false) {
     # tried to elevate, did not work, aborting
   } else {
     try {
-      # Ensure to have the right to run script
-      if ((Get-ExecutionPolicy -Scope CurrentUser) -ne "RemoteSigned") {
-        Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList '-noprofile -Command "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force"'
+      # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4
+      # Ensure to have the rights to run script and run it
+      $policy='Bypass'
+      if ((Get-ExecutionPolicy -Scope CurrentUser) -ne $policy) {
+        $setPolicy = ('Write-Host "Temporary set execution policy to {0}"; Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy {0} -Force; ' -f $policy)
+        $unblock = ('Unblock-File -Path {0}; ' -f $myinvocation.MyCommand.Definition)
+        $script = ('{0} {1}' -f ($myinvocation.MyCommand.Definition, ($args -join ' ')))
+        Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -Command "{0}{1}{2}"' -f ($setPolicy, $unblock, $script))
+      } else {
+        # Simply run the script if the rights are there
+        $process = Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -file "{0}" -elevated {1}' -f ($myinvocation.MyCommand.Definition, ($args -join ' ')))
       }
-      $process = Start-Process powershell.exe -Wait -PassThru -Verb RunAs -ArgumentList ('-noprofile -noexit -file "{0}" -elevated {1}' -f ($myinvocation.MyCommand.Definition, ($args -join ' ')))
       [Environment]::Exit($process.ExitCode)
     }
     catch {
@@ -21,10 +28,28 @@ if ((Test-Admin) -eq $false) {
     }
   }
   [Environment]::Exit(1)
+} else {
+  # Set back script restrictions
+  $policy='RemoteSigned'
+  if ((Get-ExecutionPolicy -Scope CurrentUser) -ne $policy) {
+    Write-Output ('Set back execution policy to {0}' -f $policy)
+    Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy $policy -Force
+  }
+}
+
+$ubuntuVersion='Ubuntu-22.04'
+if ($args[0]) {
+  $ubuntuVersion=$args[0]
 }
 
 function pauseError($msg) {
   Write-Host -ForegroundColor Red "$msg";
+  Write-Host -NoNewLine -ForegroundColor Yellow "Press any key to continue...";
+  $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+}
+
+function pauseInfo($msg) {
+  Write-Host -ForegroundColor Green "$msg";
   Write-Host -NoNewLine -ForegroundColor Yellow "Press any key to continue...";
   $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
 }
@@ -50,6 +75,7 @@ foreach($feature in $features) {
     $featureInstalled = $true
   }
 }
+Write-Output ''
 
 try {
   wsl.exe --help | out-null
@@ -62,9 +88,6 @@ try {
   [Environment]::Exit(1)
 }
 
-$ubuntuVersion='Ubuntu-20.04'
-$ubuntuExe='ubuntu2004.exe'
-
 if (!((wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu') -and (wsl.exe --list --verbose | Select-String -Quiet -Encoding unicode -Pattern '2$'))) {
   Write-Output 'Updating WSL kernel...'
   curl.exe -o wsl_update_x64.msi 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi'
@@ -72,6 +95,7 @@ if (!((wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern 
     Write-Output 'ERROR: Unable to update WSL kernel, it will not be possible to take advantage of WSL 2 improvements'
   }
   wsl.exe --set-default-version 2
+  Write-Output ''
 }
 
 # Check Windows version
@@ -81,27 +105,30 @@ if ($systemVersion -lt [System.Version]'10.0.19043') {
 } else {
   wsl --update
   wsl --version
+  Write-Output ''
 }
 
 
 # If no version of Ubuntu is installed, lets installed it
-if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '^Ubuntu')) {
-  Write-Output 'Installing Ubuntu-20.04...'
-
-  if (Test-Path .\Ubuntu-20.04.appx) {
-    Write-Output ("File {0}\Ubuntu-20.04.appx already exist, not downloading it again." -f (Get-Location).Path)
-    Write-Output "If installation fail, please check the integrity of the file (eg. remove it if empty)."
-  } else {
-    curl.exe -Lo Ubuntu-20.04.appx https://aka.ms/wslubuntu2004
+if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
+  Write-Output ('Installing {0}...' -f $ubuntuVersion)
+  wsl --install --no-launch $ubuntuVersion
+  $ubuntuExePath = ("{0}\Microsoft\WindowsApps\{1}" -f $env:LOCALAPPDATA,('{0}.exe' -f ($ubuntuVersion.ToLower() -replace '[-.]', '')))
+  if (!(Test-Path $ubuntuExePath -PathType leaf)) {
+    Write-Output ('ERROR: Unable to install {0}' -f $ubuntuVersion)
+    pauseError('File {0} does not exist' -f $ubuntuExePath)
+    [Environment]::Exit(1)
   }
-  Add-AppxPackage .\Ubuntu-20.04.appx
-  if (!(Test-Path ("{0}\Microsoft\WindowsApps\{1}" -f $env:LOCALAPPDATA,$ubuntuExe) -PathType leaf)) {
-    $ubuntuVersion='Ubuntu'
-    $ubuntuExe='ubuntu.exe'
-  }
-  $cmd = ("{0}\Microsoft\WindowsApps\{1} install --root" -f $env:LOCALAPPDATA,$ubuntuExe)
-  writeInfo($cmd)
+  $cmd = ("{0} install --root" -f $ubuntuExePath)
   Invoke-Expression "$cmd"
+
+  if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
+    Write-Output ('ERROR: Unable to install {0}' -f $ubuntuVersion)
+    [Environment]::Exit(1)
+  } else {
+    Write-Output ('Set {0} as default WSL distribution' -f $ubuntuVersion)
+    wsl.exe --set-default $ubuntuVersion
+  }
 } else {
   # Check the right version installed
   if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
@@ -109,22 +136,15 @@ if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern '
   }
 }
 
-if (!(wsl.exe --list --quiet | Select-String -Quiet -Encoding unicode -Pattern ('^{0}$' -f $ubuntuVersion))) {
-  Write-Output 'ERROR: Unable to install Ubuntu-20.04'
-  [Environment]::Exit(1)
-} else {
-  Write-Output 'Set Ubuntu-20.04 as default WSL distribution'
-  wsl.exe --set-default $ubuntuVersion
-}
 
 # Set encoding for the current session as ASCII to communicate with wsl
 [System.Console]::OutputEncoding = [System.Text.Encoding]::ASCII
 if (wsl.exe -d $ubuntuVersion -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft.*wsl2' -Quiet) {
-  Write-Output 'Ubuntu-20.04 properly setup with WSL version 2'
+  Write-Output ('{0} properly setup with WSL version 2' -f $ubuntuVersion)
 } elseif (wsl.exe -d $ubuntuVersion -u root sh -c 'uname -a' | Select-String -Pattern 'linux.*microsoft' -Quiet) {
-  Write-Output 'Ubuntu-20.04 is setup with WSL version 1 only'
+  Write-Output ('{0} is setup with WSL version 1 only' -f $ubuntuVersion)
 } else {
-  pauseError('ERROR: Ubuntu-20.04 is not properly setup')
+  pauseError(('ERROR: {0} is not properly setup' -f $ubuntuVersion))
   [Environment]::Exit(1)
 }
 
