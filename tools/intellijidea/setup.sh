@@ -13,7 +13,12 @@ download_intellijidea() {
 # https://www.jetbrains.com/help/idea/installation-guide.html#standalone
 function setup_intellijidea() {
   local ERROR=$SETUP_ERROR_CONTINUE
+  local edition
+  edition="$(git --no-pager config -f "$HOME/.common_env.ini" --get intellijidea.edition) || echo community"
   local intellijidea_path="$APPS_ROOT/PortableApps/IntelliJIdea"
+  if [ "$edition" = "community" ]; then
+    intellijidea_path="$APPS_ROOT/PortableApps/IntelliJIdeaCommunity"
+  fi
 
   # Check for version upgrade
   local minimumVersion
@@ -31,13 +36,22 @@ function setup_intellijidea() {
   [ ! -f "$intellijidea_path/bin/idea64.exe" ] && echo "Binary file not installed" && return "$ERROR"
 
   # Better integrate in PortableApps menu
-  rsync -vau "$SETUP_TOOLS_ROOT/intellijidea/IntelliJIdea" "$APPS_ROOT/PortableApps/"
+  if [ "$edition" = "community" ]; then
+    rsync -vau "$SETUP_TOOLS_ROOT/intellijidea/IntelliJIdeaCommunity" "$APPS_ROOT/PortableApps/"
+  else
+    rsync -vau "$SETUP_TOOLS_ROOT/intellijidea/IntelliJIdea" "$APPS_ROOT/PortableApps/"
+  fi
   return 0
 }
 
 upgrade_intellijidea() {
   local ERROR=$SETUP_ERROR_CONTINUE
+  local edition
+  edition="$(git --no-pager config -f "$HOME/.common_env.ini" --get intellijidea.edition) || echo community"
   local intellijidea_path="$APPS_ROOT/PortableApps/IntelliJIdea"
+  if [ "$edition" = "community" ]; then
+    intellijidea_path="$APPS_ROOT/PortableApps/IntelliJIdeaCommunity"
+  fi
   local backup="$APPS_ROOT/PortableApps_backup"
   tasklist //FI "IMAGENAME eq idea64.exe" | grep -q idea64.exe && echo "Please close all instances of IntelliJ IDEA before upgrading it" && return "$ERROR"
   if [ -e "$backup/IntelliJIdea" ]; then
