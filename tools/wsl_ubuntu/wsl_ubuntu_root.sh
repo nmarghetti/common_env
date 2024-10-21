@@ -43,6 +43,11 @@ initSystem() {
   # Set user as sudoer without asking password to call sudo command
   test ! -f /etc/sudoers.d/"$WSL_USER" && echo "create sudoer file" && echo "$WSL_USER ALL=(ALL) NOPASSWD:ALL" >/etc/sudoers.d/"$WSL_USER" && chmod 0440 /etc/sudoers.d/"$WSL_USER"
 
+  # Set /run/user/ for user
+  local user_id
+  user_id=$(id -u "$WSL_USER")
+  test ! -d /run/user/"$user_id" && mkdir -p /run/user/"$user_id" && chown "$user_id":"$(id -g "$WSL_USER")" /run/user/"$user_id"
+
   # Configure WSL
   git --no-pager config -f /etc/wsl.conf --replace-all boot.systemd true
   git --no-pager config -f /etc/wsl.conf --replace-all interop.enabled true
