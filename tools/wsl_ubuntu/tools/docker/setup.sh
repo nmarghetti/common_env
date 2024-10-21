@@ -35,5 +35,8 @@ setup_docker() {
     /etc/profile.d/dockerd_autoload.sh
   fi
 
+  # Ensure to be added to the docker group
+  groups | tr '[:space:]' '\n' | grep -qFx docker || sudo usermod -aG docker "$USER"
+
   return 0
 }
