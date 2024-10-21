@@ -3,8 +3,8 @@
 download_lens() {
   local lens="$1"
   mkdir -vp "$lens"
-  # Can also be downloaded from there "https://api.k8slens.dev/binaries/Lens%20Setup%202023.1.110749-latest.exe"
-  ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%202023.1.110749-latest.exe" &&
+  # Can also be downloaded from there "https://api.k8slens.dev/binaries/Lens%20Setup%202024.9.300059-latest.exe"
+  ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%202024.9.300059-latest.exe" &&
     echo "Unable to get the installer" && return 1
   "$lens/LensSetup.exe" --D="$WINDOWS_APPS_ROOT\\PortableApps\\Lens" //S
 }

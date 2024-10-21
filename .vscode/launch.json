@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "install_wsl.ps1",
+      "type": "PowerShell",
+      "request": "launch",
+      "script": "${workspaceFolder}/tools/wsl_ubuntu/install_wsl.ps1",
+      "cwd": "${cwd}"
+    },
+    {
       "type": "bashdb",
       "request": "launch",
       "name": "Bash-Debug (type in script name)",

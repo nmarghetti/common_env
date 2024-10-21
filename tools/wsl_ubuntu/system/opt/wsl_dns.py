@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! /usr/bin/env python3
 
 # Downloaded from https://gist.githubusercontent.com/pyther/20bba4aee1a7e1485dd065adbf736891/raw/bb00f46d30da1b1eb7ba0fec4e6946a654c7b186/wsl_dns.py
 
@@ -138,8 +138,8 @@ def main():
     dns_servers += ["8.8.8.8"]
 
     domain_to_check = None
-    if os.path.exists(os.path.join(os.environ["HOME"], ".wsl_dns")):
-        with open(os.path.join(os.environ["HOME"], ".wsl_dns"), "r") as fd:
+    if os.path.exists(os.path.join(os.environ["HOME"], ".wsl_check_domain")):
+        with open(os.path.join(os.environ["HOME"], ".wsl_check_domain"), "r") as fd:
             domain_to_check = fd.read().strip()
             if not len(domain_to_check):
                 domain_to_check = None

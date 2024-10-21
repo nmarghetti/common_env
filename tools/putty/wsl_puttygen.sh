@@ -23,8 +23,8 @@ setupVpn() {
 
 createSshKey() {
   if [[ "$(type puttygen sshpass git 2>&1 >/dev/null | wc -l)" -ne 0 ]]; then
-    sudo apt-get update
-    sudo apt-get -qq install putty-tools sshpass git
+    sudo apt update
+    sudo apt -qq install putty-tools sshpass git
   fi
 
   type puttygen >/dev/null || return 1

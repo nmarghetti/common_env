@@ -22,7 +22,7 @@ jobs:
       # Install zsh on Linux
       - name: Install zsh on Linux
         if: runner.os == 'Linux'
-        run: sudo apt-get install zsh
+        run: sudo apt install zsh
       # Install zsh on Mac
       - name: Install zsh on Mac
         if: runner.os == 'macOs'
