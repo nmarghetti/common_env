@@ -23,6 +23,8 @@ main() {
   ! sudo echo "" >/dev/null && echo "Error: '$WSL_USER' user is not sudoer" && return $ERROR
 
   [ ! -f ~/.wsl_check_domain ] && echo "archive.ubuntu.com" >~/.wsl_check_domain
+  rsync -vau "$WSL_SETUP_TOOLS_ROOT/wsl_ubuntu/system/home/.wsl_portable" ~
+  grep -q 'source ~/.wsl_portable/conf/shellrc.sh' ~/.bashrc || printf 'source ~/.wsl_portable/conf/shellrc.sh\n\n' >>~/.bashrc
 
   tmp=$(mktemp)
   apt list --installed >"$tmp"

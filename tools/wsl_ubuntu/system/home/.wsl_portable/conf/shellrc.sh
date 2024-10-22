@@ -1,28 +1,30 @@
 #! /bin/sh
 
-# Check for X server
-xserver="$(head -1 ~/.last_windows_host.txt 2>/dev/null | tr -d '[:space:]')"
-# Ensure the last IP used (if any) is still part of local ips
-[ -n "$xserver" ] && ! (hostserver.sh -d | grep -q "$xserver") && unset xserver
-if [ -z "$xserver" ] || ! ping -c 1 -W 1 "$xserver" >/dev/null 2>&1; then
-  # Try to get the ip address quick
-  xserver=$(timeout 1 bash /usr/local/bin/hostserver.sh -q 2>/dev/null)
-  # Try a bit longer to get the ip in parallel
-  [ -z "$xserver" ] && xserver=$(timeout 3 bash /usr/local/bin/hostserver.sh -qf 2>/dev/null)
-  [ -n "$xserver" ] && echo "$xserver" >~/.last_windows_host.txt
-  # Do it in the background if still not found, it would at least update ~/.last_windows_host.txt for next session
-  [ -z "$xserver" ] && hostserver.sh -qf -s ~/.last_windows_host.txt >/dev/null 2>&1
-fi
-if [ -n "$xserver" ]; then
-  export LIBGL_ALWAYS_INDIRECT=1
-  export DISPLAY="$xserver":0
-  # Set xpaste alias that would give the clipboard data from X server
-  alias xpaste='xclip -o | xargs -r echo'
+if [ -f ~/.Xauthority ] && [ -z "$DISPLAY" ]; then
+  # Check for X server
+  xserver="$(head -1 ~/.last_windows_host.txt 2>/dev/null | tr -d '[:space:]')"
+  # Ensure the last IP used (if any) is still part of local ips
+  [ -n "$xserver" ] && ! (hostserver.sh -d | grep -q "$xserver") && unset xserver
+  if [ -z "$xserver" ] || ! ping -c 1 -W 1 "$xserver" >/dev/null 2>&1; then
+    # Try to get the ip address quick
+    xserver=$(timeout 1 bash /usr/local/bin/hostserver.sh -q 2>/dev/null)
+    # Try a bit longer to get the ip in parallel
+    [ -z "$xserver" ] && xserver=$(timeout 3 bash /usr/local/bin/hostserver.sh -qf 2>/dev/null)
+    [ -n "$xserver" ] && echo "$xserver" >~/.last_windows_host.txt
+    # Do it in the background if still not found, it would at least update ~/.last_windows_host.txt for next session
+    [ -z "$xserver" ] && hostserver.sh -qf -s ~/.last_windows_host.txt >/dev/null 2>&1
+  fi
+  if [ -n "$xserver" ]; then
+    export LIBGL_ALWAYS_INDIRECT=1
+    export DISPLAY="$xserver":0
+    # Set xpaste alias that would give the clipboard data from X server
+    alias xpaste='xclip -o | xargs -r echo'
 
-  # Ensure the config for X server
-  /usr/local/bin/refresh-xserver.sh &
+    # Ensure the config for X server
+    /usr/local/bin/refresh-xserver.sh &
+  fi
+  unset xserver
 fi
-unset xserver
 
 # Add pipx binary, go in the path
 pathAppend ~/.local/bin /usr/local/go/bin
