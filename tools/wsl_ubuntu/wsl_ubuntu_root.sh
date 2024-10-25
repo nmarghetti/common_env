@@ -78,7 +78,7 @@ fullInstall() {
 
   # Install certificates
   local ca_bundle
-  ca_bundle="$(git config -f "$WSL_APPS_ROOT/setup.ini" install.cacert | sed -re 's#%APPS_ROOT%#'"$(echo "$WSL_APPS_ROOT" | sed -re 's#/#\\/#g')"'#')"
+  ca_bundle="$(git config -f "$WSL_APPS_ROOT/home/.common_env.ini" install.cacert | sed -re 's#%APPS_ROOT%#'"$(echo "$WSL_APPS_ROOT" | sed -re 's#/#\\/#g')"'#')"
   if [ -f "$ca_bundle" ]; then
     local bundle_dir
     bundle_dir=$(dirname "$ca_bundle")

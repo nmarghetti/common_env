@@ -115,12 +115,20 @@ EOM
 
   # Set VSCode settings with all installed extension
   echo "Configuring settings..."
-  local custom_settings
-  custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension-settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
+  local custom_settings=()
+  local custom_setting
+  while read -r custom_setting; do
+    if [ -n "$custom_setting" ]; then
+      custom_settings+=("$custom_setting")
+    fi
+  done < <(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension-settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
   installed_extensions="$("$APPS_ROOT/PortableApps/VSCode/bin/code" --extensions-dir "$WinVSCodeData/extensions" --user-data-dir "$WinVSCodeData/user-data" --list-extensions)"
   # Always remember to double backslash anytime you manipulate the settings content: ... | sed -re 's#\\#\\\\#g'
   local common_settings="$SETUP_TOOLS_ROOT/vscode/settings/settings.json"
-  [[ -n "$custom_settings" ]] && [[ -f "$custom_settings/settings.json" ]] && common_settings="$custom_settings/settings.json"
+  for custom_setting in "${custom_settings[@]}"; do
+    [[ -n "$custom_setting" ]] && [[ -f "$custom_setting/settings.json" ]] && common_settings="$custom_setting/settings.json"
+  done
+  echo "Using $common_settings"
   local settings_content
   settings_content="$(echo -e "\n  // VSCode")\n$(sed '1d;$d' "$common_settings" | sed -re 's#\\#\\\\#g'),"
 
@@ -130,8 +138,11 @@ EOM
     echoColor 36 "Checking $extension..."
     lextension=$(echo "$extension" | tr '[:upper:]' '[:lower:]')
     local extension_setting="$SETUP_TOOLS_ROOT/vscode/settings/$lextension.json"
-    [[ -n "$custom_settings" ]] && [[ -f "$custom_settings/$lextension.json" ]] && extension_setting="$custom_settings/$lextension.json"
+    for custom_setting in "${custom_settings[@]}"; do
+      [[ -n "$custom_setting" ]] && [[ -f "$custom_setting/$lextension.json" ]] && extension_setting="$custom_setting/$lextension.json"
+    done
     if [[ -f "$extension_setting" ]]; then
+      echo "Using $extension_setting"
       extra_settings_content="$(sed '1d;$d' "$extension_setting" | sed -re 's#\\#\\\\#g'),"
       settings_content=$(echo -e "$settings_content\n\n  // $extension\n$extra_settings_content\n\n" | sed -re 's#\\#\\\\#g')
     fi

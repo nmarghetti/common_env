@@ -41,7 +41,7 @@ SCRIPT_NAME=$(basename "$SCRIPT")
 SETUP_SCRIPT_ROOT=$(cd "$(dirname "$(readlink -f "$SCRIPT")")" && pwd)
 SETUP_SCRIPT_PATH="$SETUP_SCRIPT_ROOT/$SCRIPT_NAME"
 SETUP_ROOT="$(dirname "$SETUP_SCRIPT_ROOT")"
-SETUP_TOOLS_ROOT="$SETUP_ROOT/tools"
+export SETUP_TOOLS_ROOT="$SETUP_ROOT/tools"
 
 # Tweak debug mode
 [[ "$(basename "$0")" == "bashdb" ]] && {
@@ -91,6 +91,8 @@ usage() {
   echo "    cygwin: install Cygwin" 1>&2
   echo "    elastic: install Elasticsearch, Logstash and Kibana (you would need to install java also)" 1>&2
   echo "    gcloud: install google cloug sdk" 1>&2
+  echo "    podman: install podman" 1>&2
+  echo "    podmandesktop: install Podman Desktop" 1>&2
   echo "    lens: install Kubernetes IDE" 1>&2
   echo "    dbeaver: install latest DBeaver" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
@@ -98,7 +100,7 @@ usage() {
   echo "    docker: install Docker Desktop in the system, it is not portable" 1>&2
   echo "    vcxsrv: install VcXsrv Windows X Server in the system, it is not portable" 1>&2
   echo "    wsl: install WSL in the system, it is not portable" 1>&2
-  echo "    wsl_ubuntu: install WSL in the system, it is not portable" 1>&2
+  echo "    wsl_ubuntu: install WSL Ubuntu" 1>&2
   echo "In any case it will setup some shell and git config, and (only on Windows) install python 3.8.2" 1>&2
 }
 
@@ -117,7 +119,7 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
-      cygwin | node | nvm | pyenv | insomnia | gradle | xampp | elastic | intellijidea | gcloud | lens | dbeaver | \
+      cygwin | node | nvm | pyenv | insomnia | gradle | xampp | elastic | intellijidea | gcloud | podman | podmandesktop | lens | dbeaver | \
       springtoolsuite | docker | vcxsrv | wsl | wsl_ubuntu)
       APPS="$APPS $1"
       APPS_BY_ARGS=1
@@ -266,6 +268,9 @@ fi
 # Get functions to download tarball
 # shellcheck source=../tools/shell/bin/download_tarball.sh
 source "$SETUP_TOOLS_ROOT/$tool/shell/bin/download_tarball.sh"
+# Get functions to download msys packages
+# shellcheck source=../tools/shell/bin/download_msys_package.sh
+source "$SETUP_TOOLS_ROOT/$tool/shell/bin/download_msys_package.sh"
 
 # Install or update the selected apps
 for tool in $APPS; do

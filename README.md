@@ -125,8 +125,11 @@ git clone https://github.com/nmarghetti/common_env.git
    - **DBeaver** (~130M)
    - **Cygwin**
    - **XAMPP**
+   - **Podman Deskptio**
+   - **WSL Ubuntu** (Install and configure Ubuntu-24.04 within the common_env, but not fully portable)
    - **WSL** (Install and configure Ubuntu-20.04 in the system, it is not portable)
    - **Docker Desktop** (Install Docker Desktop in the system, it is not portable)
+   - **Podman** (Install podman, it is not portable)
    - **VcXsrv** (Install VcXsrv Windows X Server in the system, it is not portable)
 
    You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):

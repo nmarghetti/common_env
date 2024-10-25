@@ -2,11 +2,7 @@
 REM EnableDelayedExpansion would be needed inside subprocess in () to call variables with !!, eg. set PATH=some_path;!PATH!
 REM setlocal EnableDelayedExpansion
 
-cd ..\..
-set APPS_ROOT=%CD%
-set HOME=%APPS_ROOT%\home
-set APPDATA=%APPS_ROOT%\AppData\Roaming
-set LOCALAPPDATA=%APPS_ROOT%\AppData\Local
+call ..\CommonFiles\common_variable.cmd
 
 if exist "%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt" set NODE_EXTRA_CA_CERTS=%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt
 if exist "%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt" set REQUESTS_CA_BUNDLE=%APPS_ROOT%\PortableApps\PortableGit\usr\ssl\certs\ca-bundle.crt

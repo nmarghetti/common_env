@@ -1,3 +1,6 @@
 @echo off
-cd ..\..\home
+
+call ..\CommonFiles\common_variable.cmd
+cd %HOME%
+
 bash.cmd

@@ -18,7 +18,6 @@ rogalmic.bash-debug                        : Bash debugger
 mads-hartmann.bash-ide-vscode              : Bash IDE
 MS-vsliveshare.vsliveshare                 : Live sharing
 ms-vscode.powershell                       : PowerShell
-tyriar.shell-launcher                      : Multi shell
 ms-python.python                           : Python
 ms-vscode.cpptools                         : C++
 twxs.cmake                                 : CMake
