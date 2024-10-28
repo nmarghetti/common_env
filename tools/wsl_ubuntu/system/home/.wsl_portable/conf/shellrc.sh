@@ -29,7 +29,7 @@ fi
 # Add pipx binary, go in the path
 pathAppend ~/.local/bin /usr/local/go/bin
 
-alias dockerd_kill="ps -eaux | grep nohup | grep dockerd | tr -s '[:space:]' | cut -d' ' -f2 | xargs --no-run-if-empty sudo kill"
+alias dockerd_kill="pgrep dockerd | xargs --no-run-if-empty sudo kill"
 
 # For some reason python is not able to find the certificates
 export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
