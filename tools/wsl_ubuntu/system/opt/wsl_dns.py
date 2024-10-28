@@ -140,9 +140,12 @@ def main():
     domain_to_check = None
     if os.path.exists(os.path.join(os.environ["HOME"], ".wsl_check_domain")):
         with open(os.path.join(os.environ["HOME"], ".wsl_check_domain"), "r") as fd:
-            domain_to_check = fd.read().strip()
-            if not len(domain_to_check):
-                domain_to_check = None
+            domain_to_check = [domain.strip() for domain in fd.read().strip().split('\n') if len(domain.strip())]
+        if not len(domain_to_check):
+            domain_to_check = None
+        else:
+            # Check only the first domain listed
+            domain_to_check = domain_to_check[0]
     if domain_to_check:
         working_dns = None
         for dns in dns_servers:

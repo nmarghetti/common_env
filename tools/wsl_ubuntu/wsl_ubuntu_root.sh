@@ -95,9 +95,9 @@ fullInstall() {
     /opt/wsl_dns.py
   fi
 
-  # Upgrade the system if not done during the last 24h
+  # Upgrade the system if not done during the last 30 days
   echo "Checking to upgrade the system..."
-  if [ ! -f "/var/lib/apt/periodic/update-success-stamp" ] || [ "$(("$(date +%s)" - "$(date -r "/var/lib/apt/periodic/update-success-stamp" +%s)"))" -ge 86400 ]; then
+  if [ ! -f "/var/lib/apt/periodic/update-success-stamp" ] || [ "$(("$(date +%s)" - "$(date -r "/var/lib/apt/periodic/update-success-stamp" +%s)"))" -ge 2592000 ]; then
     echo "Upgrading the system..."
     apt update -y
     apt upgrade -y
