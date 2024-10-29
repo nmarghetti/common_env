@@ -289,3 +289,4 @@ if "%errorlevel%" == "0" (
 )
 
 pause
+exit 0

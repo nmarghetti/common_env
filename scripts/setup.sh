@@ -95,6 +95,7 @@ usage() {
   echo "    podmandesktop: install Podman Desktop" 1>&2
   echo "    lens: install Kubernetes IDE" 1>&2
   echo "    dbeaver: install latest DBeaver" 1>&2
+  echo "    mongodbcompass: install latest MongoDB Compass" 1>&2
   # echo "    cpp: install make, cmake and GNU C++ compiler" 1>&2
   echo "    xampp: install apache" 1>&2
   echo "    docker: install Docker Desktop in the system, it is not portable" 1>&2
@@ -120,7 +121,7 @@ while [[ $# -gt 0 ]]; do
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
       cygwin | node | nvm | pyenv | insomnia | gradle | xampp | elastic | intellijidea | gcloud | podman | podmandesktop | lens | dbeaver | \
-      springtoolsuite | docker | vcxsrv | wsl | wsl_ubuntu)
+      mongodbcompass | springtoolsuite | docker | vcxsrv | wsl | wsl_ubuntu)
       APPS="$APPS $1"
       APPS_BY_ARGS=1
       ;;
