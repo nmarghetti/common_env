@@ -68,5 +68,33 @@ function setup_java() {
   fi
   [[ ! -f "$java_path/bin/java.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
+  # Install certificates
+  local ca_bundle
+  ca_bundle="$(git config -f "$APPS_ROOT/home/.common_env.ini" install.cacert | sed -re 's#%APPS_ROOT%#'"$(echo "$APPS_ROOT" | sed -re 's#/#\\/#g')"'#')"
+  if [ -f "$ca_bundle" ]; then
+    local bundle_dir
+    local bundle_name
+    bundle_dir=$(dirname "$ca_bundle")
+    bundle_name=$(basename "$ca_bundle")
+    local keytool="$APPS_ROOT/PortableApps/CommonFiles/java/bin/keytool.exe"
+    local cacerts="$APPS_ROOT/PortableApps/CommonFiles/java/lib/security/cacerts"
+    local cert
+    local cert_alias
+    while read -r cert; do
+      cert=$(echo "$cert" | cut -b 3-)
+      cert_alias=$(basename -s '.crt' "$(echo "$cert" | tr '/' '_')")
+      cert="$bundle_dir/$cert"
+      echo "Installing certificate '$cert' into '$cacerts' with alias '$cert_alias'"
+      # if ! "$keytool" -list -keystore "$cacerts" -v | grep -q "$cert_alias"; then
+      #   "$keytool" -import -noprompt -v -trustcacerts -file "$cert" -keystore "$cacerts" -alias "$cert_alias"
+      # fi
+      # if ! "$keytool" -list -keystore "$cacerts" -v | grep -q "$cert_alias"; then
+      #   echo "ERROR: Unable to install certificate '$cert' into '$cacerts'"
+      # fi
+    done < <(cd "$bundle_dir" && find . -not -name "$bundle_name" -type f -name '*.crt')
+  else
+    echo "Your certificate bundle does not exist: '$ca_bundle'"
+  fi
+
   return 0
 }

@@ -81,8 +81,10 @@ fullInstall() {
   ca_bundle="$(git config -f "$WSL_APPS_ROOT/home/.common_env.ini" install.cacert | sed -re 's#%APPS_ROOT%#'"$(echo "$WSL_APPS_ROOT" | sed -re 's#/#\\/#g')"'#')"
   if [ -f "$ca_bundle" ]; then
     local bundle_dir
+    local bundle_name
     bundle_dir=$(dirname "$ca_bundle")
-    if rsync -vaurm --exclude "ca-bundle.crt" --include "*/" --include "*.crt" --exclude "*" "$bundle_dir" /usr/local/share/ca-certificates/ | grep -qE '^.*\.crt$'; then
+    bundle_name=$(basename "$ca_bundle")
+    if rsync -vaurm --exclude "$bundle_name" --include "*/" --include "*.crt" --exclude "*" "$bundle_dir" /usr/local/share/ca-certificates/ | grep -qE '^.*\.crt$'; then
       update-ca-certificates -f
     fi
   else
