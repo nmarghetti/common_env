@@ -84,11 +84,11 @@ function setup_java() {
       cert=$(echo "$cert" | cut -b 3-)
       cert_alias=$(basename -s '.crt' "$(echo "$cert" | tr '/' '_')" | tr '[:upper:]' '[:lower:]')
       cert="$bundle_dir/$cert"
-      echo "Installing certificate '$cert' into '$cacerts' with alias '$cert_alias'"
-      if ! "$keytool" -list -keystore "$cacerts" -v | grep -q "$cert_alias"; then
+      if ! "$keytool" -list -keystore "$cacerts" -v 2>/dev/null | grep -q "$cert_alias"; then
+        echo "Installing certificate '$cert' into '$cacerts' with alias '$cert_alias'"
         "$keytool" -import -noprompt -v -trustcacerts -file "$cert" -keystore "$cacerts" -alias "$cert_alias"
       fi
-      if ! "$keytool" -list -keystore "$cacerts" -v | grep -q "$cert_alias"; then
+      if ! "$keytool" -list -keystore "$cacerts" -v 2>/dev/null | grep -q "$cert_alias"; then
         echo "ERROR: Unable to install certificate '$cert' into '$cacerts'"
       fi
     done < <(cd "$bundle_dir" && find . -not -name "$bundle_name" -type f -name '*.crt')
