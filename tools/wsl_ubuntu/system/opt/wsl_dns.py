@@ -35,9 +35,13 @@ def get_first_network_address(net):
 
 
 def get_default_gateway():
-    return re.search(
+    result = re.search(
         re.compile(r"via ([0-9.]+)", re.M), os.popen(f"ip route list default").read()
-    ).groups()[0]
+    )
+    if result is None:
+        print('ERROR: unable to retrieve network default gateway. You might need to restart wsl: "wsl --shutdown"')
+        return None
+    return result.groups()[0]
 
 
 def get_cisco_vpn_dns_servers():
