@@ -47,3 +47,6 @@ set PATH=%APPS_ROOT%\PortableApps\PortableGit\bin;%PATH%
 
 REM PATH to gcloud, kubectl, gke-gcloud-auth-plugin, etc.
 if exist "%APPS_ROOT%\PortableApps\CommonFiles\gcloud\bin\gcloud" set PATH=%APPS_ROOT%\PortableApps\CommonFiles\gcloud\bin;%PATH%
+
+REM PATH to docker via podman
+if exist "%APPS_ROOT%\PortableApps\Podman\bin\docker.cmd" set PATH=%PATH%;%APPS_ROOT%\PortableApps\Podman\bin
