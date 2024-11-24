@@ -3,10 +3,22 @@
 download_lens() {
   local lens="$1"
   mkdir -vp "$lens"
-  # Can also be downloaded from there "https://api.k8slens.dev/binaries/Lens%20Setup%202024.9.300059-latest.exe"
-  ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%202024.9.300059-latest.exe" &&
+  local version
+  version="$(download_tarball -o - https://downloads.k8slens.dev/ | grep -oE '<Key>ide/Lens Setup [^<]+-latest.exe</Key>' | sed -re 's#^<Key>ide/Lens Setup (.+)-latest.exe</Key>$#\1#' | sort -r --version-sort | head -1)"
+
+  # Can also be downloaded from there "https://api.k8slens.dev/binaries/Lens%20Setup%${version}-latest.exe"
+  ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%20${version}-latest.exe" &&
     echo "Unable to get the installer" && return 1
   "$lens/LensSetup.exe" --D="$WINDOWS_APPS_ROOT\\PortableApps\\Lens" //S
+  [ -f "$lens/Lens.exe" ] && return 0
+}
+
+download_lens_old_ui() {
+  local lens="$1"
+  mkdir -vp "$lens"
+  ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%202024.8.291605-latest.exe" &&
+    echo "Unable to get the installer" && return 1
+  "$lens/LensSetup.exe" --D="$WINDOWS_APPS_ROOT\\PortableApps\\LensOldUI" //S
 }
 
 function setup_lens() {
@@ -31,6 +43,19 @@ function setup_lens() {
 
   # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/lens/Lens" "$APPS_ROOT/PortableApps/"
+  rsync -vau "$SETUP_TOOLS_ROOT/lens/LensUpgrader" "$APPS_ROOT/PortableApps/"
+
+  local old_ui
+  old_ui=$(git --no-pager config -f "$HOME/.common_env.ini" --get lens.old-ui || echo "false")
+  # Also install Lens with old UI
+  if [ "$old_ui" = 'true' ]; then
+    lens="$APPS_ROOT/PortableApps/LensOldUI"
+    if [ ! -f "$lens/Lens.exe" ]; then
+      ! download_lens_old_ui "$lens" && return "$ERROR"
+    fi
+    [ ! -f "$lens/Lens.exe" ] && echo "Error: binary for old Lens is not installed" && return "$ERROR"
+    rsync -vau "$SETUP_TOOLS_ROOT/lens/LensOldUI" "$APPS_ROOT/PortableApps/"
+  fi
 
   return 0
 }
@@ -47,4 +72,7 @@ upgrade_lens() {
     mv "$lens" "$backup/"
   fi
   ! download_lens "$lens" && return "$ERROR"
+  # Better integrate in PortableApps menu
+  rsync -vau "$SETUP_TOOLS_ROOT/lens/Lens" "$APPS_ROOT/PortableApps/"
+  return 0
 }
