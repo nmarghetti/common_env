@@ -18,6 +18,7 @@
 - [AutoHotkey](#autohotkey)
   - [AutoHotkey shorcuts](#autohotkey-shorcuts)
 - [Usefull links](#usefull-links)
+- [Troubleshoot](#troubleshoot)
 
 <!-- /TOC -->
 
@@ -125,9 +126,8 @@ git clone https://github.com/nmarghetti/common_env.git
    - **DBeaver** (~130M)
    - **Cygwin**
    - **XAMPP**
-   - **Podman Deskptio**
+   - **Podman Desktop**
    - **WSL Ubuntu** (Install and configure Ubuntu-24.04 within the common_env, but not fully portable)
-   - **WSL** (Install and configure Ubuntu-20.04 in the system, it is not portable)
    - **Docker Desktop** (Install Docker Desktop in the system, it is not portable)
    - **Podman** (Install podman, it is not portable)
    - **VcXsrv** (Install VcXsrv Windows X Server in the system, it is not portable)
@@ -236,3 +236,7 @@ You can define those environment variables to customize git:
    - [Batch tutorial](https://www.tutorialspoint.com/batch_script/index.htm), [help](https://ss64.com/nt/)
    - [Cygwin](https://cygwin.com/): [Portable Cygwin](https://github.com/vegardit/cygwin-portable-installer)
    - Pacman: [homepage](https://www.archlinux.org/pacman/), [documentation](https://www.archlinux.org/pacman/pacman.8.html), [wiki](https://wiki.archlinux.org/index.php/pacman)
+
+## Troubleshoot
+
+While installing WSL, you might have issue while create VHD drive. You need some rights. Go to `Computer manager` -> `System Tools` -> `Local Users and Groups` -> `Groups` and add yourself to the `Hyper-V Administrators` group.
