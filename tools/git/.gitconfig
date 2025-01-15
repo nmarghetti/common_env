@@ -47,7 +47,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.9'
+  cv = ! echo 'gitconfig 2.1.10'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -172,7 +172,7 @@
   ls  = ! "cd -- \"${GIT_PREFIX:-.}\"; git cmd ls-tree HEAD --abbrev" # list files from . or the given path
   lsr = ! "cd -- \"${GIT_PREFIX:-.}\"; git ls -rt" # recursively list files from . or the given path
   lso = ! "cd -- \"${GIT_PREFIX:-.}\"; git cmd ls-files --directory --no-empty-directory -o" # list untracked files
-  lsi = ! "cd -- \"${GIT_PREFIX:-.}\"; git cmd ls-files --directory --no-empty-directory --exclude-standard -i" # List files in the repository that matche an ignore rule
+  lsi = ! "cd -- \"${GIT_PREFIX:-.}\"; git cmd ls-files --directory --no-empty-directory --exclude-standard -ic" # List files in the repository that matche an ignore rule
 
   ls-all = ! "cd -- \"${GIT_PREFIX:-.}\"; git lsr"
   ls-untracked = ! "cd -- \"${GIT_PREFIX:-.}\"; git lso"
