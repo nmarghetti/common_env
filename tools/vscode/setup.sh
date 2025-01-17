@@ -59,9 +59,11 @@ EOM
   local extension
   # Get all default extensions
   declare -A extensions
-  for extension in $(git --no-pager config -f "tools/setup.ini" --get-all vscode.extension | grep -vE '^-'); do
-    extensions[$extension]=1
-  done
+  if [ ! "$(git --no-pager config -f "$HOME/.common_env.ini" --get vscode.default-extensions)" = '0' ]; then
+    for extension in $(git --no-pager config -f "tools/setup.ini" --get-all vscode.extension | grep -vE '^-'); do
+      extensions[$extension]=1
+    done
+  fi
   # Handle requested wanted/unwanted extensions
   for extension in $(git --no-pager config -f "$HOME/.common_env.ini" --get-all vscode.extension); do
     extension=$(echo "$extension" | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
