@@ -5,9 +5,6 @@ function setup_gitbash() {
   local ERROR=$SETUP_ERROR_STOP
   local git_path="$APPS_ROOT/PortableApps/PortableGit"
 
-  # Ensure to create Desktop folder
-  mkdir -p "$HOME/Desktop"
-
   for file in bash.cmd; do
     [[ ! -f "$HOME/$file" || "$SETUP_TOOLS_ROOT/gitbash/$file" -nt "$HOME/$file" ]] && cp -vf "$SETUP_TOOLS_ROOT/gitbash/$file" "$HOME/"
   done

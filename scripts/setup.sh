@@ -237,7 +237,8 @@ if [[ -n "$APPS_ROOT" ]]; then
   export APPS_COMMON="$APPS_ROOT/PortableApps/CommonFiles"
   export WIN_APPS_COMMON="$(get_path_to_windows "$APPS_COMMON")"
 
-  mkdir -p "$APPDATA" "$LOCALAPPDATA"
+  # Ensure to create some folders
+  mkdir -pv "$HOME/Desktop" "$HOME/AppData" "$APPDATA" "$LOCALAPPDATA"
 
   # Ensure that git will be in the path if not yet the case
   type git &>/dev/null || export PATH=$APPS_ROOT/PortableApps/PortableGit/bin:$PATH
