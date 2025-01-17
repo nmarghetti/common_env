@@ -17,7 +17,7 @@ set appPath=${appsRoot}\PortableApps\${ubuntuVersion}
 set userHome=${appsRoot}\home
 set wslUser=${wslUser}
 call :mount-user-home
-wsl.exe --cd ~ -d ${ubuntuVersion}-portable -u root
+wsl.exe --cd ~ -d ${distribution} -u root
 goto :eof
 
 @REM RUNNING AS USER
@@ -28,7 +28,7 @@ cd ../../home
 set userHome=%cd%
 set wslUser=%USERNAME%
 call :mount-user-home
-wsl.exe --cd ~ -d ${ubuntuVersion}-portable
+wsl.exe --cd ~ -d ${distribution}
 goto :eof
 
 
@@ -37,23 +37,23 @@ goto :eof
 set terminateWsl=0
 cd %ProgramFiles%\WSL >nul 2>&1
 cd %ProgramW6432%\WSL >nul 2>&1
-wsl.exe -u root -d ${ubuntuVersion}-portable bash -c "lsblk | grep -q ${wslUserHomeSize}"
+wsl.exe -u root -d ${distribution} bash -c "lsblk | grep -q ${wslUserHomeSize}G"
 if errorlevel 1 (
-  echo %userHome%\wsl.vhdx needs to be mounted to ${ubuntuVersion}-portable
-  powershell.exe %appPath%\App\setup.ps1 -InstallName ${ubuntuVersion}-portable -InstallUserHome %userHome%\wsl.vhdx
+  echo %userHome%\wsl.vhdx needs to be mounted to ${distribution}
+  powershell.exe %appPath%\App\setup.ps1 -InstallName ${distribution} -InstallUserHome %userHome%\wsl.vhdx
   set terminateWsl=1
 )
 
-wsl.exe -u root -d ${ubuntuVersion}-portable bash -c "lsblk | grep -q /home/%wslUser%"
+wsl.exe -u root -d ${distribution} bash -c "lsblk | grep /home/%wslUser% | grep -q ${wslUserHomeSize}G"
 if errorlevel 1 (
   echo /home/%wslUser% needs to be mounted
   set WSL_USER=%wslUser%
   set WSL_USER_HOME_SIZE=${wslUserHomeSize}
   set WSLENV=WSL_USER:WSL_USER_HOME_SIZE:/p
-  wsl.exe -u root -d ${ubuntuVersion}-portable <"%appPath%\App\setup.sh"
+  wsl.exe -u root -d ${distribution} <"%appPath%\App\setup.sh"
   set terminateWsl=1
 
-  wsl.exe -u root -d ${ubuntuVersion}-portable bash -c "lsblk | grep -q /home/%wslUser%"
+  wsl.exe -u root -d ${distribution} bash -c "lsblk | grep /home/%wslUser% | grep -q ${wslUserHomeSize}G"
   if errorlevel 1 (
     echo Unable to mount user home /home/%wslUser% from %userHome%\wsl.vhdx
     pause
@@ -68,8 +68,8 @@ goto :eof
 @REM TERMINATE DISTRIBUTION
 :terminate
 @REM Terminate WSL to reload the environment and avoid fstab warnings
-echo Restart ${ubuntuVersion}-portable
-wsl.exe --terminate ${ubuntuVersion}-portable >nul
+echo Restart ${distribution}
+wsl.exe --terminate ${distribution} >nul
 goto :eof
 
 @REM ENSURE TO HAVE VcXsrv X SERVER RUNNING IF INSTALLED

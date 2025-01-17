@@ -31,7 +31,7 @@ if [ -n "$XDG_RUNTIME_DIR" ] && [ ! -d "$XDG_RUNTIME_DIR" ]; then
 fi
 
 # Add pipx binary, go in the path
-pathAppend ~/.local/bin /usr/local/go/bin
+pathAppend ~/.local/bin /usr/local/go/bin >/dev/null 2>&1
 
 alias dockerd_kill="pgrep dockerd | xargs --no-run-if-empty sudo kill"
 

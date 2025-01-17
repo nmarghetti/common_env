@@ -27,7 +27,7 @@ function setup_wsl_ubuntu() {
   # shellcheck disable=SC2016
   ubuntuVersion=$ubuntuVersion envsubst '${ubuntuVersion}' <"$SETUP_TOOLS_ROOT/wsl_ubuntu/Ubuntu/App/AppInfo/appinfo.ini" >"$APPS_ROOT/PortableApps/$ubuntuVersion/App/AppInfo/appinfo.ini"
   # shellcheck disable=SC2016
-  appsRoot=$WINDOWS_APPS_ROOT ubuntuVersion=$ubuntuVersion wslUser=${USER:-$USERNAME} wslUserHomeSize=$wslUserHomeSize envsubst '${appsRoot},${ubuntuVersion},${wslUser},${wslUserHomeSize}' <"$SETUP_TOOLS_ROOT/wsl_ubuntu/Ubuntu/launch.cmd" >"$APPS_ROOT/PortableApps/$ubuntuVersion/launch.cmd"
+  appsRoot=$WINDOWS_APPS_ROOT ubuntuVersion=$ubuntuVersion distribution=$distribution wslUser=${USER:-$USERNAME} wslUserHomeSize=$wslUserHomeSize envsubst '${appsRoot},${ubuntuVersion},${distribution},${wslUser},${wslUserHomeSize}' <"$SETUP_TOOLS_ROOT/wsl_ubuntu/Ubuntu/launch.cmd" >"$APPS_ROOT/PortableApps/$ubuntuVersion/launch.cmd"
 
   # Ensure the network is well setup if needed
   if [ -n "$natNetwork" ] && [ -n "$natGatewayIp" ]; then
