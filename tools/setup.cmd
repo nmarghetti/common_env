@@ -28,6 +28,33 @@ set APP_GIT_LINK=https://github.com/git-for-windows/git/releases/download/v2.43.
 set APP_GIT_EXE=PortableGit.exe
 
 
+::::: ---- defining the assign macro ---- ::::::::
+setlocal DisableDelayedExpansion
+(set LF=^
+%=EMPTY=%
+)
+set ^"\n=^^^%LF%%LF%^%LF%%LF%^^"
+
+::set argv=Empty
+set assign=for /L %%n in (1 1 2) do ( %\n%
+   if %%n==2 (%\n%
+      setlocal EnableDelayedExpansion%\n%
+      for /F "tokens=1,2 delims=," %%A in ("!argv!") do (%\n%
+         for /f "tokens=* delims=" %%# in ('%%~A') do endlocal^&set "%%~B=%%#" %\n%
+      ) %\n%
+   ) %\n%
+) ^& set argv=,
+
+::::: -------- ::::::::
+
+REM Retrieve gitbash wished version if set
+set result=
+%assign% "ini.bat /s gitbash /i minimum-version %SETUP_INI%",result
+for /f "tokens=1-3 delims=." %%a in ("%result%") do set version=%%a.%%b.%%c
+for /f "tokens=1-5 delims=." %%a in ("%result%") do set lastpart=%%e
+set version=%version%.%lastpart%
+set APP_GIT_LINK=https://github.com/git-for-windows/git/releases/download/v%result%/PortableGit-%version%-64-bit.7z.exe
+
 REM Check we have wget or curl in case exe are not there
 set CHECK_FOR_DOWNLOAD=1
 if exist PortableApps (
@@ -189,29 +216,31 @@ if exist "%SETUP_INI%" (
   copy "%SETUP_INI%" "%HOME%\.common_env.ini"
 )
 
-REM Clone common_env
-if not exist "%APPS_ROOT%\Documents\dev" (
-  mkdir "%APPS_ROOT%\Documents\dev"
-)
-if not exist "%APPS_ROOT%\Documents\dev\common_env" (
-  "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" clone -b %COMMON_ENV_BRANCH% https://github.com/nmarghetti/common_env.git "%APPS_ROOT%\Documents\dev\common_env"
-  if errorlevel 1 (
-    echo "An error occured durring installation, please retry..."
+if "%COMMON_ENV_INSTALL_APPS_ROOT%" == "" (
+  REM Clone common_env
+  if not exist "%APPS_ROOT%\Documents\dev" (
+    mkdir "%APPS_ROOT%\Documents\dev"
+  )
+  if not exist "%APPS_ROOT%\Documents\dev\common_env" (
+    "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" clone -b %COMMON_ENV_BRANCH% https://github.com/nmarghetti/common_env.git "%APPS_ROOT%\Documents\dev\common_env"
+    if errorlevel 1 (
+      echo "An error occured durring installation, please retry..."
+      pause
+      exit 1
+    )
+  )
+  REM Ensure to have the repo on the right branch and up to date
+  cd "%APPS_ROOT%\Documents\dev\common_env"
+  "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout %COMMON_ENV_BRANCH%
+  "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout origin/%COMMON_ENV_BRANCH% --track 2>nul
+  for /f %%i in ('"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" symbolic-ref --short HEAD') do set branch=%%i
+  if "%branch%" NEQ "%COMMON_ENV_BRANCH%" (
+    echo "Unable to checkout branch %branch% (current branch is %COMMON_ENV_BRANCH%). Exiting..."
     pause
     exit 1
   )
+  "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" pull --rebase
 )
-REM Ensure to have the repo on the right branch and up to date
-cd "%APPS_ROOT%\Documents\dev\common_env"
-"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout %COMMON_ENV_BRANCH%
-"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout origin/%COMMON_ENV_BRANCH% --track 2>nul
-for /f %%i in ('"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" symbolic-ref --short HEAD') do set branch=%%i
-if "%branch%" NEQ "%COMMON_ENV_BRANCH%" (
-  echo "Unable to checkout branch %branch% (current branch is %COMMON_ENV_BRANCH%). Exiting..."
-  pause
-  exit 1
-)
-"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" pull --rebase
 
 REM Ensure to have a version recent enough of gitbash
 cd "%APPS_ROOT%"
@@ -224,7 +253,11 @@ if "%errorlevel%" == "0" (
     del /F %APP_GIT_EXE%
   )
   mkdir "%APPS_ROOT%\PortableApps_backup" 2>nul
-  move /Y "%APPS_ROOT%\PortableApps\PortableGit" "%APPS_ROOT%\PortableApps_backup\PortableGit"
+  if exist "%APPS_ROOT%\PortableApps_backup\PortableGit" (
+    rmdir /S /Q "%APPS_ROOT%\PortableApps\PortableGit"
+  ) else (
+    move /Y "%APPS_ROOT%\PortableApps\PortableGit" "%APPS_ROOT%\PortableApps_backup\PortableGit"
+  )
   if "%first_install%" == "1" (
     set first_install=0
     if exist "%APPS_ROOT%\PortableApps\PortableGit" (
@@ -273,20 +306,24 @@ if not "%COMMON_ENV_INSTALL_ONLY_EXTRA_APP%" == "" (
 )
 
 if "%errorlevel%" == "0" (
-  echo Installation completed
-  echo You can now execute Start.exe
-  echo From there you can :
-  echo     * launch 'Git bash'
-  echo     * run setup_common_env -h
-  echo     * check the usage to get more custom application
-  echo You can also install many application from PortableApps:
-  echo     * Apps -^> Get More Apps... -^> By Category
-  echo Enjoy ;^)
+  if not "%COMMON_ENV_INSTALL_NO_EXIT%" == "1" (
+    echo Installation completed
+    echo You can now execute Start.exe
+    echo From there you can :
+    echo     * launch 'Git bash'
+    echo     * run setup_common_env -h
+    echo     * check the usage to get more custom application
+    echo You can also install many application from PortableApps:
+    echo     * Apps -^> Get More Apps... -^> By Category
+    echo Enjoy ;^
+  )
 ) else (
   echo There seems to have a problem with the installation
   echo If you have an message like "1 [main] bash (21176) shared_info::initialize: size of shared memory region changed from 56248 to 49080"
   echo Open Task Manager, kill gpgagent.exe, dirmngr.exe, bash.exe and rerun the installation. Restart the computer if still failing.
 )
 
-pause
-exit 0
+if not "%COMMON_ENV_INSTALL_NO_EXIT%" == "1" (
+  pause
+  exit 0
+)
