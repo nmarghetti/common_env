@@ -42,7 +42,8 @@ main() {
   if [ -n "$packages" ]; then
     logColor 36 "Install packages:$packages"
     # shellcheck disable=SC2086
-    sudo apt install -y $packages
+    sudo apt update &&
+      sudo apt install -y $packages
   fi
 
   for tool in $(git config -f "$WSL_APPS_ROOT"/home/.common_env.ini --get-all wsl-ubuntu.app); do
