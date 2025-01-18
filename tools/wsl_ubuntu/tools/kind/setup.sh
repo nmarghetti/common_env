@@ -7,9 +7,9 @@ setup_kind() {
 
   if ! type kind >/dev/null 2>&1 || ! printf '%s\n%s\n' "$(kind version | awk '{ print $2}' | sed -re 's/^[^0-9]+(.+)$/\1/')" "$minimumVersion" |
     sort -r --check=quiet --version-sort; then
-    curl -LO "https://storage.googleapis.com/minikube/releases/v${minimumVersion}/minikube-linux-amd64" &&
-      sudo curl -fsSLo /usr/bin/kind "https://kind.sigs.k8s.io/dl/v${minimumVersion}/kind-linux-amd64" &&
-      sudo chmod a+x /usr/bin/kind
+    curl -fsSLO "https://kind.sigs.k8s.io/dl/v${minimumVersion}/kind-linux-amd64" &&
+      sudo install -m 555 kind-linux-amd64 /usr/local/bin/kind &&
+      rm kind-linux-amd64
   fi
   ! type kind >/dev/null 2>&1 && return $ERROR
 

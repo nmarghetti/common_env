@@ -7,8 +7,8 @@ setup_minikube() {
 
   if ! type minikube >/dev/null 2>&1 || ! printf '%s\n%s\n' "$(minikube version --short | sed -re 's/^[^0-9]+(.+)$/\1/')" "$minimumVersion" |
     sort -r --check=quiet --version-sort; then
-    curl -LO "https://storage.googleapis.com/minikube/releases/v${minimumVersion}/minikube-linux-amd64" &&
-      sudo install minikube-linux-amd64 /usr/local/bin/minikube &&
+    sudo curl -fsSLO "https://storage.googleapis.com/minikube/releases/v${minimumVersion}/minikube-linux-amd64" &&
+      sudo install -m 555 minikube-linux-amd64 /usr/local/bin/minikube &&
       rm minikube-linux-amd64
   fi
   ! type minikube >/dev/null 2>&1 && return $ERROR
