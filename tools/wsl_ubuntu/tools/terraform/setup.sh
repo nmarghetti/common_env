@@ -2,6 +2,7 @@
 
 # https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 setup_terraform() {
+  local ERROR=1
   if ! type terraform >/dev/null 2>&1; then
     sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
     wget -O- https://apt.releases.hashicorp.com/gpg |
@@ -16,6 +17,19 @@ setup_terraform() {
     sudo apt-get install terraform
     terraform -install-autocomplete
   fi
+  ! type terraform >/dev/null 2>&1 && return $ERROR
+
+  # Add terraform autocompletion
+  grep -qE '^# terraform autocompletion$' ~/.bashrc || cat >>~/.bashrc <<EOM
+# terraform autocompletion
+complete -C /usr/bin/terraform terraform
+
+EOM
+  grep -qE '^# terraform autocompletion$' ~/.zshrc || cat >>~/.zshrc <<'EOM'
+# terraform autocompletion
+complete -C /usr/bin/terraform terraform
+
+EOM
 
   return 0
 }
