@@ -47,7 +47,7 @@
   default = upstream
 
 [alias]
-  cv = ! echo 'gitconfig 2.1.10'
+  cv = ! echo 'gitconfig 2.1.11'
   alias = ! git --no-pager config --get-regexp '^alias\\.' | sed -e 's/^alias\\.//' -e 's/\\ /\\ =\\ /' # Display all the aliases
   v = ! git --version
   mg = ! git cmd merge --no-edit
@@ -227,6 +227,22 @@
   rebase-abort            = ! git rba
   rebase-continue         = ! git rbc
   rebase-interactive      = ! git rbi
+
+  # HISTORY
+  history-remove-file = ! "f() { \
+    [ $# -lt 1 ] && git echoe \"You should specify the file to remove from history\" && return 1; \
+    local file=$1; \
+    shift; \
+    git cmd filter-branch --force --index-filter \"git rm --cached --ignore-unmatch '$file'\" --prune-empty --tag-name-filter cat -- \"$@\"; \
+    }; f"
+  history-remove-file-all = ! "f() { \
+    [ $# -lt 1 ] && git echoe \"You should specify the file to remove from history\" && return 1; \
+    local file=$1; \
+    shift; \
+    git history-remove-file \"$file\" --all \"$@\"; \
+    }; f"
+  hrf = ! git history-remove-file # remove file from history of current-branch
+  hrfa = ! git history-remove-file-all # remove file from history of all branches
 
   # PUSH
   p      = ! git cmd push
