@@ -17,7 +17,9 @@ set appPath=${appsRoot}\PortableApps\${ubuntuVersion}
 set userHome=${appsRoot}\home
 set wslUser=${wslUser}
 call :mount-user-home
-wsl.exe --cd ~ -d ${distribution} -u root
+if not "%1%" == "exit" (
+  wsl.exe --cd ~ -d ${distribution} -u root
+)
 goto :eof
 
 @REM RUNNING AS USER
@@ -28,7 +30,9 @@ cd ../../home
 set userHome=%cd%
 set wslUser=%USERNAME%
 call :mount-user-home
-wsl.exe --cd ~ -d ${distribution}
+if not "%1%" == "exit" (
+  wsl.exe --cd ~ -d ${distribution}
+)
 goto :eof
 
 

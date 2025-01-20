@@ -48,6 +48,15 @@ EOM
   # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeLauncher" "$APPS_ROOT/PortableApps/"
   rsync -vau "$SETUP_TOOLS_ROOT/vscode/VSCodeUpgrader" "$APPS_ROOT/PortableApps/"
+  if git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app | grep -qFx wsl_ubuntu; then
+    local ubuntuVersion
+    local distribution
+    ubuntuVersion="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.distribution || echo 'Ubuntu-22.04')"
+    distribution="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.name || echo "${ubuntuVersion}-portable")"
+    rsync -vau "$SETUP_TOOLS_ROOT/vscode/WslVSCodeLauncher" "$APPS_ROOT/PortableApps/"
+    # shellcheck disable=SC2016
+    ubuntuVersion=$ubuntuVersion distribution=$distribution envsubst '${ubuntuVersion},${distribution}' <"$SETUP_TOOLS_ROOT/vscode/WslVSCodeLauncher/launch.cmd" >"$APPS_ROOT/PortableApps/WslVSCodeLauncher/launch.cmd"
+  fi
 
   # Install extensions
   echo "Checking extensions..."
