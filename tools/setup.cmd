@@ -229,12 +229,13 @@ if "%COMMON_ENV_INSTALL_APPS_ROOT%" == "" (
       exit 1
     )
   )
+  setlocal EnableDelayedExpansion
   REM Ensure to have the repo on the right branch and up to date
   cd "%APPS_ROOT%\Documents\dev\common_env"
   "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout %COMMON_ENV_BRANCH%
   "%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" checkout origin/%COMMON_ENV_BRANCH% --track 2>nul
   for /f %%i in ('"%APPS_ROOT%\PortableApps\PortableGit\bin\git.exe" symbolic-ref --short HEAD') do set branch=%%i
-  if "%branch%" NEQ "%COMMON_ENV_BRANCH%" (
+  if "!branch!" NEQ "%COMMON_ENV_BRANCH%" (
     echo "Unable to checkout branch %branch% (current branch is %COMMON_ENV_BRANCH%). Exiting..."
     pause
     exit 1
