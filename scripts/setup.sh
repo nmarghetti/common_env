@@ -162,8 +162,23 @@ if [[ -f "$HOME/.common_env.ini" ]]; then
   cat -v "$HOME/.common_env.ini" | grep '\^M' >/dev/null && dos2unix "$HOME/.common_env.ini"
   # If no apps given, take the ones from config file
   if [[ -z "$APPS" ]]; then
-    common_env_app=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
-    [[ -n "$common_env_app" ]] && APPS="$DEFAULT_APPS $common_env_app"
+    common_env_apps_only=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app-only)
+    if [ -n "$common_env_apps_only" ]; then
+      APPS="$common_env_apps_only"
+      APP_SELECTED=1
+      SETUP_SKIP_DEFAULT=1
+    else
+      common_env_app=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app | grep -vE "^($DEFAULT_APPS_GREP)$" | tr '\n' ' ')
+      [[ -n "$common_env_app" ]] && APPS="$DEFAULT_APPS $common_env_app"
+    fi
+  fi
+  if [ -z "$EXTRA_APPS" ]; then
+    common_env_extra_apps_only=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.custom-app-only)
+    if [ -n "$common_env_extra_apps_only" ]; then
+      EXTRA_APPS="$common_env_extra_apps_only"
+      EXTRA_APP_SELECTED=1
+      SETUP_SKIP_DEFAULT=1
+    fi
   fi
   if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get install.sslcheck 2>/dev/null)" == "0" ]]; then
     export DOWNLOAD_NO_SSL_CHECK=1
