@@ -9,7 +9,7 @@ setup_tmux() {
   if [ ! -f ~/.etc/tmux.conf ] || ! cmp --silent ~/.etc/tmux.conf "$WSL_SETUP_TOOLS_ROOT"/wsl_ubuntu/tools/tmux/tmux.conf; then
     cp -vf "$WSL_SETUP_TOOLS_ROOT"/wsl_ubuntu/tools/tmux/tmux.conf ~/.etc/tmux.conf
   fi
-  ! type kind >/dev/null 2>&1 && return $ERROR
+  ! type tmux >/dev/null 2>&1 && return $ERROR
 
   grep -qE '^source-file ~/.etc/tmux.conf$' ~/.tmux.conf || echo 'source-file ~/.etc/tmux.conf' >>~/.tmux.conf
 
