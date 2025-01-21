@@ -162,7 +162,7 @@ if [[ -f "$HOME/.common_env.ini" ]]; then
   cat -v "$HOME/.common_env.ini" | grep '\^M' >/dev/null && dos2unix "$HOME/.common_env.ini"
   # If no apps given, take the ones from config file
   if [[ -z "$APPS" ]]; then
-    common_env_apps_only=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app-only)
+    common_env_apps_only=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.app-only | tr ':' ' ')
     if [ -n "$common_env_apps_only" ]; then
       APPS="$common_env_apps_only"
       APP_SELECTED=1
@@ -173,7 +173,7 @@ if [[ -f "$HOME/.common_env.ini" ]]; then
     fi
   fi
   if [ -z "$EXTRA_APPS" ]; then
-    common_env_extra_apps_only=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.custom-app-only)
+    common_env_extra_apps_only=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all install.custom-app-only | tr ':' ' ')
     if [ -n "$common_env_extra_apps_only" ]; then
       EXTRA_APPS="$common_env_extra_apps_only"
       EXTRA_APP_SELECTED=1
