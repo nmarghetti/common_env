@@ -1,24 +1,36 @@
 #! /usr/bin/env bash
 
 download_lens() {
+  local ERROR=$SETUP_ERROR_CONTINUE
   local lens="$1"
   mkdir -vp "$lens"
   local version
   version="$(download_tarball -o - https://downloads.k8slens.dev/ | grep -oE '<Key>ide/Lens Setup [^<]+-latest.exe</Key>' | sed -re 's#^<Key>ide/Lens Setup (.+)-latest.exe</Key>$#\1#' | sort -r --version-sort | head -1)"
+  if [ -z "$version" ]; then
+    version="$(download_tarball -o - https://k8slens.dev/api/binaries/latest.json | "$APPS_ROOT"/PortableApps/PortableGit/bin/jq -r '.path' | sed -re 's#^Lens Setup (.+)-latest.exe$#\1#')"
+  fi
+  [ -z "$version" ] && echo "Unable to get Lens latest version" && return "$ERROR"
 
   # Can also be downloaded from there "https://api.k8slens.dev/binaries/Lens%20Setup%${version}-latest.exe"
-  ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%20${version}-latest.exe" &&
-    echo "Unable to get the installer" && return 1
+  if ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%20${version}-latest.exe"; then
+    rm -f "$lens/LensSetup.exe"
+    echo "Unable to get the installer" && return "$ERROR"
+  fi
   "$lens/LensSetup.exe" --D="$WINDOWS_APPS_ROOT\\PortableApps\\Lens" //S
+  rm -f "$lens/LensSetup.exe"
   [ -f "$lens/Lens.exe" ] && return 0
 }
 
 download_lens_old_ui() {
   local lens="$1"
   mkdir -vp "$lens"
-  ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%202024.8.291605-latest.exe" &&
-    echo "Unable to get the installer" && return 1
+  if ! download_tarball -o "$lens/LensSetup.exe" "https://downloads.k8slens.dev/ide/Lens%20Setup%202024.8.291605-latest.exe"; then
+    rm -f "$lens/LensSetup.exe"
+    echo "Unable to get the installer" && return "$ERROR"
+  fi
   "$lens/LensSetup.exe" --D="$WINDOWS_APPS_ROOT\\PortableApps\\LensOldUI" //S
+  rm -f "$lens/LensSetup.exe"
+  [ -f "$lens/Lens.exe" ] && return 0
 }
 
 function setup_lens() {

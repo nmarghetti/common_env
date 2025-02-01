@@ -61,6 +61,12 @@ function setup_gitbash() {
   #   [[ $? -ne 0 ]] && echo "Unable to retrieve wget" && return $ERROR
   # fi
 
+  # Install jq
+  if [ ! -f "$git_path/bin/jq.exe" ]; then
+    echoColor 36 "Adding jq..."
+    download_tarball -o "$git_path/bin/jq.exe" "https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-windows-i386.exe"
+  fi
+
   # Intall zstd
   local zstd_version="1.5.6"
   if [ ! -f "$git_path/usr/bin/zstd.exe" ]; then
@@ -80,7 +86,7 @@ function setup_gitbash() {
     rm -rf "$APPS_ROOT"/PortableApps/PortableGit/libzstd* "$APPS_ROOT"/PortableApps/PortableGit/zstd*
   fi
 
-  # Install rsync, zstd
+  # Install rsync
   local extra_tools=(
     'msys-xxhash-0.dll:libxxhash-0.8.1-1-x86_64.pkg.tar.zst'
     'rsync.exe:rsync-3.3.0-1-x86_64.pkg.tar.zst'

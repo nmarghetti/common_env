@@ -200,6 +200,12 @@ if not exist "%HOME%" (
 if not exist "%HOME%\AppData" (
   mkdir "%HOME%\AppData"
 )
+if not exist "%HOME%\AppData\Local" (
+  mkdir "%HOME%\AppData\Local"
+)
+if not exist "%HOME%\AppData\Roaming" (
+  mkdir "%HOME%\AppData\Roaming"
+)
 if not exist "%HOME%\Desktop" (
   mkdir "%HOME%\Desktop"
 )
