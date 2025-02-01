@@ -49,7 +49,7 @@ function setup_gitbash() {
   fi
 
   # Update certificates
-  "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh && echo "Error while generating certificates" && return "$ERROR"
+  ! "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh && echo "Error while generating certificates" && return "$ERROR"
 
   # Enable long path
   [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
