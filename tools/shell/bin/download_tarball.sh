@@ -45,8 +45,8 @@ download_tarball() {
   local verbose=
   local cookie
   local jar_content=contents.zip
-  [[ "$DOWNLOAD_NO_SSL_CHECK" == "1" ]] && ssl_check=0
-  [[ "$DOWNLOAD_NO_REVOKED_CHECK" == "1" ]] && revoked_check=0
+  [ "$(git --no-pager config -f "$HOME/.common_env.ini" --get install.sslcheck 2>/dev/null)" == "0" ] && ssl_check=0
+  [ "$(git --no-pager config -f "$HOME/.common_env.ini" --get install.revokedcheck 2>/dev/null)" == "0" ] && revoked_check=0
   # reset getopts - check https://man.cx/getopts(1)
   OPTIND=1
   while getopts "hvirej:c:d:k:m:o:t:p:" opt; do

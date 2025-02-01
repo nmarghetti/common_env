@@ -93,7 +93,7 @@ EOM
   # For PortableApps on Windows
   if [[ -n "$APPS_ROOT" ]]; then
     # Install Bash-it
-    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.bash-it)" != "0" ]]; then
+    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.bash-it)" = "1" ]]; then
       if [[ ! -d "$HOME/.bash-it" ]]; then
         git clone 'https://github.com/Bash-it/bash-it.git' "$HOME/.bash-it"
         "$HOME/.bash-it/install.sh" --silent
@@ -114,7 +114,7 @@ EOM
     fi
 
     # Check zsh
-    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.oh-my-zsh)" != "0" ]]; then
+    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.oh-my-zsh)" = "1" ]]; then
       type zsh &>/dev/null && {
         # Install oh-my-zsh
         if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
@@ -135,7 +135,7 @@ EOM
 
         if [[ -d "$HOME/.oh-my-zsh" ]]; then
           # Update common-env theme
-          if [[ ! -f "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" || \
+          if [[ ! -f "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ||
             "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" -nt "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme" ]]; then
             cp -vf "$SETUP_TOOLS_ROOT/shell/oh-my-zsh/custom/themes/common-env.zsh-theme" "$HOME/.oh-my-zsh/custom/themes/common-env.zsh-theme"
           fi
@@ -147,7 +147,7 @@ EOM
     # https://github.com/rothgar/awesome-tmux
     # http://marklodato.github.io/2013/10/31/autostart-tmux-on-ssh.html
     # https://awesomeopensource.com/project/samoshkin/tmux-config
-    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.tmux)" != "0" ]]; then
+    if [[ "$(git --no-pager config -f "$HOME/.common_env.ini" --get shell.tmux)" = "1" ]]; then
       type tmux &>/dev/null && {
         # Install oh-my-tmux
         if [[ ! -d "$HOME/.oh-my-tmux" ]]; then

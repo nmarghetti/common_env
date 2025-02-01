@@ -245,7 +245,9 @@ if "%COMMON_ENV_INSTALL_APPS_ROOT%" == "" (
 
 REM Ensure to have a version recent enough of gitbash
 cd "%APPS_ROOT%"
-start "Configure gitbash" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\tools\gitbash\check_version.sh"
+@REM start "Checking gitbash version" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\tools\gitbash\check_version.sh"
+echo Checking gitbash version
+"%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\tools\gitbash\check_version.sh"
 if "%errorlevel%" == "0" (
   echo Git for Windows version is recent enough
 ) else (
@@ -281,15 +283,18 @@ REM First light install with pacman package manager
 findstr /B /R /C:"[\t ]*app[\t ]*=[\t ]*pacman" %SETUP_INI% >nul 2>&1 && (
   if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
     echo First ensure to configure gitbash
-    start "Configure gitbash" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" gitbash
+    @REM start "Configure gitbash" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" gitbash
+    "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" gitbash
     echo Install pacman package manager
-    start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
+    @REM start "Install pacman package manager" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
+    "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
     if not exist "%APPS_ROOT%\PortableApps\PortableGit\usr\bin\pacman.exe" (
       echo Pacman package installer not installed. Exiting...
       pause
       exit 1
     )
-    start "Install pacman packages" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
+    @REM start "Install pacman packages" /W "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
+    "%APPS_ROOT%\PortableApps\PortableGit\bin\bash.exe" "%SETUP_PATH%\Documents\dev\common_env\scripts\setup.sh" -k pacman
   )
 )
 if not "%COMMON_ENV_INSTALL_ONLY_EXTRA_APP%" == "" (

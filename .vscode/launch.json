@@ -32,7 +32,7 @@
       "request": "launch",
       "name": "Bash-Debug (hardcoded script name)",
       "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/scripts/setup.sh",
+      "program": "${workspaceFolder}/scripts/setup_internal.sh",
       "args": []
     },
 
