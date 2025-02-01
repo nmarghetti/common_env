@@ -19,7 +19,7 @@ function setup_gitbash() {
 
   # Install Git for Windows
   if [[ ! -f "$git_path/bin/git.exe" ]]; then
-    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe"
+    download_tarball -e -d "$git_path" "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.2/PortableGit-2.47.1.2-64-bit.7z.exe"
   fi
   [[ ! -f "$git_path/bin/git.exe" ]] && echo "Binary file not installed" && return "$ERROR"
 
@@ -49,7 +49,7 @@ function setup_gitbash() {
   fi
 
   # Update certificates
-  "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh
+  "$SETUP_TOOLS_ROOT"/helper/update_certificate.sh && echo "Error while generating certificates" && return "$ERROR"
 
   # Enable long path
   [[ "$(powershell -Command "Get-ItemPropertyValue -path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -name LongPathsEnabled")" -ne 1 ]] && cmd //C regedit.exe //S "$WINDOWS_SETUP_TOOLS_ROOT\\gitbash\\settings.reg"
