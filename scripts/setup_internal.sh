@@ -19,8 +19,9 @@ ps -p $$ | grep -qc bash || exit_error "Please run with: bash $0"
 
 [[ "$(echo "$BASH_VERSION" | cut -b 1)" -lt 4 ]] && exit_error "Please use bash 4 or above"
 
-export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
-[[ "$COMMON_ENV_FULL_DEBUG" == "1" ]] && eval "$COMMON_ENV_DEBUG_CMD"
+# export COMMON_ENV_DEBUG_CMD="[ \"\$COMMON_ENV_FULL_DEBUG\" = \"1\" ] && { system_trace_debug() { echo \"DEBUG: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; system_trace_error() { echo \"ERROR: \$2 --> \$1 [\${BASH_SOURCE[0]}:\${BASH_LINENO[0]}]\"; }; trap 'system_trace_debug \"\$?\" \"\$BASH_COMMAND\" ' DEBUG;  trap 'system_trace_error \"\$?\" \"\$BASH_COMMAND\" ' ERR; }"
+# [[ "$COMMON_ENV_FULL_DEBUG" == "1" ]] && eval "$COMMON_ENV_DEBUG_CMD"
+[ "$COMMON_ENV_FULL_DEBUG" == "1" ] && set -x
 
 if [[ "$(uname -s)" = "Darwin" ]]; then
   echo "Setup for MAC"
@@ -277,10 +278,10 @@ fi
 
 # Get functions to download tarball
 # shellcheck source=../tools/shell/bin/download_tarball.sh
-source "$SETUP_TOOLS_ROOT/$tool/shell/bin/download_tarball.sh"
+source "$SETUP_TOOLS_ROOT/shell/bin/download_tarball.sh"
 # Get functions to download msys packages
 # shellcheck source=../tools/shell/bin/download_msys_package.sh
-source "$SETUP_TOOLS_ROOT/$tool/shell/bin/download_msys_package.sh"
+source "$SETUP_TOOLS_ROOT/shell/bin/download_msys_package.sh"
 
 # Install or update the selected apps
 for tool in $APPS; do

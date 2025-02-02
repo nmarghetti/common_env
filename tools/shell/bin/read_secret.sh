@@ -26,21 +26,21 @@ read_secret() {
   local hide_character='*'
   while getopts hc: opt; do
     case "$opt" in
-    c)
-      hide_character=$OPTARG
-      [[ "${#hide_character}" -gt 1 ]] && {
-        read_secret_usage "Error: the hidding character must be one character only: '$hide_character'."
+      c)
+        hide_character=$OPTARG
+        [[ "${#hide_character}" -gt 1 ]] && {
+          read_secret_usage "Error: the hidding character must be one character only: '$hide_character'."
+          return 2
+        }
+        ;;
+      h)
+        read_secret_usage
+        return 0
+        ;;
+      \? | *)
+        read_secret_usage
         return 2
-      }
-      ;;
-    h)
-      read_secret_usage
-      return 0
-      ;;
-    \? | *)
-      read_secret_usage
-      return 2
-      ;;
+        ;;
     esac
   done
   shift $(expr $OPTIND - 1)
@@ -74,4 +74,4 @@ read_secret() {
   echo "$secret"
 }
 
-[[ "$0" == "$BASH_SOURCE" ]] && read_secret "$@"
+[ "$0" == "${BASH_SOURCE[0]}" ] && read_secret "$@"

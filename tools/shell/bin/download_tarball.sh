@@ -232,4 +232,4 @@ download_tarball() {
   return 0
 }
 
-[[ "$0" == "${BASH_SOURCE[0]}" ]] && download_tarball "$@"
+[ "$0" == "${BASH_SOURCE[0]}" ] && download_tarball "$@"

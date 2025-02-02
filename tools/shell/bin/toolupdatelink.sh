@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 
-[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
-
 SCRIPT_PATH=$(readlink -f "$0")
 SCRIPT_NAME=$(basename "${SCRIPT_PATH}")
 SCRIPT_DIR=$(cd "$(dirname "${SCRIPT_PATH}")" && pwd)

@@ -1,5 +1,16 @@
 #! /usr/bin/env bash
 
+# Due to the fact WSL returns DOS EOL and that we want to log the output and display it in the terminal
+# It is done like that to read each line and have the script run progressively
+# That would buffer it all with dos2unix, tr, sed, awk, etc.
+wsl_output() {
+  while read -r line; do
+    # Go back at the beggining of the line for the output to be displayed properly in the terminal
+    tput cr
+    printf "%s\n" "$line"
+  done
+}
+
 function setup_wsl_ubuntu() {
   local ERROR=$SETUP_ERROR_CONTINUE
   local ubuntuVersion
@@ -39,7 +50,7 @@ function setup_wsl_ubuntu() {
   fi
 
   # Install wsl
-  if ! wsl --list --quiet | iconv -f utf-16le -t utf-8 | dos2unix | grep -qE "^${distribution}\$" || [ ! -f "$APPS_ROOT/home/wsl.vhdx" ] || [ $setupNatNetwork -eq 1 ]; then
+  if ! wsl --list --quiet | iconv -f utf-16le -t utf-8 2>&1 | dos2unix | grep -qE "^${distribution}\$" || [ ! -f "$APPS_ROOT/home/wsl.vhdx" ] || [ $setupNatNetwork -eq 1 ]; then
     echoColor 36 "Installing WSL $distribution..."
     freshInstall=1
     if ! powershell.exe "$(cygpath -w "$SETUP_TOOLS_ROOT/wsl_ubuntu/install_wsl.ps1")" -UbuntuVersion "$ubuntuVersion" -InstallName "$distribution" -InstallPath "$WINDOWS_APPS_ROOT\\PortableApps\\$ubuntuVersion" -InstallUserHome "$WINDOWS_APPS_ROOT\\home\\wsl.vhdx" -NatNetwork "'$natNetwork'" -NatGatewayIp "'$natGatewayIp'" -UserHomeSize "$wslUserHomeSize"; then
@@ -52,7 +63,7 @@ function setup_wsl_ubuntu() {
   wsl --update
 
   # Setup wsl
-  if wsl --list --quiet | iconv -f utf-16le -t utf-8 | dos2unix | grep -qE "^${distribution}\$"; then
+  if wsl --list --quiet | iconv -f utf-16le -t utf-8 2>&1 | dos2unix | grep -qE "^${distribution}\$"; then
     export WSL_USER="${USER:-${USERNAME}}" &&
       WSL_APPS_ROOT="$(cygpath -w "$APPS_ROOT")" &&
       export WSL_APPS_ROOT &&
@@ -71,23 +82,23 @@ function setup_wsl_ubuntu() {
 
       # Configure WSL as root, ensuring to have sudoer user setup etc.
       echoColor 36 "Checking WSL system with '$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh' check"
-      if ! WSL_ACTION=check WSLENV=WSL_ACTION:WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:WSL_USER_HOME_SIZE:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh"; then
+      if ! (set -o pipefail && WSL_ACTION=check WSLENV=WSL_ACTION:WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:WSL_USER_HOME_SIZE:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh" 2>&1 | wsl_output); then
         echoColor 36 "Initializing WSL system with '$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh' init"
-        WSL_ACTION=init WSLENV=WSL_ACTION:WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:WSL_USER_HOME_SIZE:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh" || return "$ERROR"
+        (set -o pipefail && WSL_ACTION=init WSLENV=WSL_ACTION:WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:WSL_USER_HOME_SIZE:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh" 2>&1 | wsl_output) || return "$ERROR"
         wsl --terminate "$distribution"
       fi
 
       # Ensure to mount the user home disk
       if ! wsl -d "$distribution" -u root bash -c "lsblk | grep -q '${wslUserHomeSize}'"; then
         echoColor 36 "Mounting user home disk"
-        powershell.exe "$(cygpath -w "$SETUP_TOOLS_ROOT/wsl_ubuntu/Ubuntu/App/setup.ps1")" -InstallName "$distribution" -InstallUserHome "$WINDOWS_APPS_ROOT\\home\\wsl.vhdx"
+        ! powershell.exe "$(cygpath -w "$SETUP_TOOLS_ROOT/wsl_ubuntu/Ubuntu/App/setup.ps1")" -InstallName "$distribution" -InstallUserHome "$WINDOWS_APPS_ROOT\\home\\wsl.vhdx" && echo "Unable to mount the user home disk" && return "$ERROR"
         wsl --terminate "$distribution"
         ! wsl -d "$distribution" -u root bash -c "lsblk | grep -q '${wslUserHomeSize}'" && echo "Unable to mount the user home disk" && return "$ERROR"
       fi
 
       # Configure WSL as root, ensuring to have sudoer user setup etc.
       echoColor 36 "Configuring root with '$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh' full"
-      WSL_ACTION=full WSLENV=WSL_ACTION:WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:WSL_USER_HOME_SIZE:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh" || return "$ERROR"
+      (set -o pipefail && WSL_ACTION=full WSLENV=WSL_ACTION:WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:WSL_USER_HOME_SIZE:/p wsl -d "$distribution" -u root <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_root.sh" 2>&1 | wsl_output) || return "$ERROR"
       ! wsl -d "$distribution" -u root <<<"grep -qEe '^$WSL_USER:' /etc/passwd" && echo "$distribution user '$WSL_USER' not found" && return "$ERROR"
 
       # Restart the distribution for a fresh install
@@ -97,19 +108,29 @@ function setup_wsl_ubuntu() {
 
       # Check user is sudoer etc.
       echoColor 36 "Checking user '$WSL_USER' with '$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_user.sh'"
-      WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u "$WSL_USER" <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_user.sh" || return "$ERROR"
+      (set -o pipefail && WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u "$WSL_USER" <"$SETUP_TOOLS_ROOT/wsl_ubuntu/wsl_ubuntu_user.sh" 2>&1 | wsl_output) || return "$ERROR"
 
       local custom_settings
       custom_settings=$(git --no-pager config -f "$HOME/.common_env.ini" --get-all wsl-ubuntu.settings 2>/dev/null | sed -re "s#%APPS_ROOT%#$APPS_ROOT#g")
       # Run custom root script
       if test -f "$custom_settings/root.sh" &&
         echoColor 36 "Running custom root script '$custom_settings/root.sh'..."; then
-        WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u root <"$custom_settings/root.sh" || return "$ERROR"
+        (set -o pipefail && WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u root <"$custom_settings/root.sh" 2>&1 | wsl_output) || return "$ERROR"
       fi
       # Run custom user script
       if test -f "$custom_settings/user.sh" &&
         echoColor 36 "Running custom user script '$custom_settings/user.sh'..."; then
-        WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u "$WSL_USER" <"$custom_settings/user.sh" || return "$ERROR"
+        (set -o pipefail && WSLENV=WSL_USER:WSL_APPS_ROOT:WSL_SETUP_TOOLS_ROOT:/p wsl -d "$distribution" -u "$WSL_USER" <"$custom_settings/user.sh" 2>&1 | wsl_output) || return "$ERROR"
+      fi
+
+      # Add VSCode extensions to install under WSL
+      if git config -f ~/.common_env.ini --get-all install.app | grep -qFx 'vscode'; then
+        local extensions
+        extensions="$(git config -f ~/.common_env.ini --get-all vscode-wsl-ubuntu.extension)"
+        if [ -n "$extensions" ]; then
+          echoColor 36 "Sending VSCode extensions to install under WSL"
+          wsl -d "$distribution" -u "$WSL_USER" bash -c "echo '""$extensions""' > ~/.wsl_portable/vscode-wished-extensions.txt"
+        fi
       fi
     }
   else

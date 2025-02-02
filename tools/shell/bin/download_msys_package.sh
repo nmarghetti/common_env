@@ -18,4 +18,4 @@ function download_msys_package() {
   return 0
 }
 
-[[ "$0" == "${BASH_SOURCE[0]}" ]] && download_msys_package "$@"
+[ "$0" == "${BASH_SOURCE[0]}" ] && download_msys_package "$@"

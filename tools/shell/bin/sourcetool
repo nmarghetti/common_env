@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 
-[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
-
 SOURCETOOL_SCRIPT=${BASH_SOURCE[0]}
 if [ -z "$SOURCETOOL_SCRIPT" ] || [ "$SOURCETOOL_SCRIPT" = "bash" ]; then
   SOURCETOOL_SCRIPT=$0

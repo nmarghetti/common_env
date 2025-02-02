@@ -39,3 +39,6 @@ alias dockerd_kill="pgrep dockerd | xargs --no-run-if-empty sudo kill"
 export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
 # It can also happen for npm
 export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+
+# Ensure to install VSCode extensions
+[ -f /usr/local/bin/vscode_extensions_install.sh ] && nohup /usr/local/bin/vscode_extensions_install.sh >/dev/null 2>&1 &

@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 
-[ "$COMMON_ENV_FULL_DEBUG" = "1" ] && eval "$COMMON_ENV_DEBUG_CMD"
-
 SCRIPT_ROOT=$(dirname "$(readlink -f "$0")")
 
 export MSYS="winsymlinks:native"
