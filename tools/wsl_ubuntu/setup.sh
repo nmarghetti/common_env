@@ -21,7 +21,7 @@ function setup_wsl_ubuntu() {
   local natGatewayIp
   local wslUserHomeSize
 
-  ubuntuVersion="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.distribution || echo 'Ubuntu-22.04')"
+  ubuntuVersion="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.distribution || echo 'Ubuntu-24.04')"
   wslUserHomeSize="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.home-size || echo '172')"
   distribution="$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.name || echo "${ubuntuVersion}-portable")"
   natNetwork=$(git --no-pager config -f "$HOME/.common_env.ini" --get wsl-ubuntu.nat-network 2>/dev/null)
