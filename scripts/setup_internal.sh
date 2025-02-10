@@ -94,6 +94,7 @@ usage() {
   echo "    gcloud: install google cloug sdk" 1>&2
   echo "    podman: install podman" 1>&2
   echo "    podmandesktop: install Podman Desktop" 1>&2
+  echo "    openlens: install OpenLens" 1>&2
   echo "    lens: install Kubernetes IDE" 1>&2
   echo "    dbeaver: install latest DBeaver" 1>&2
   echo "    mongodbcompass: install latest MongoDB Compass" 1>&2
@@ -121,7 +122,7 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     shell | git | gitbash | pacman | portableapps | python | \
       java | python2 | vscode | pycharm | cmder | mobaxterm | putty | superputty | tabby | autohotkey | \
-      cygwin | node | nvm | pyenv | insomnia | gradle | xampp | elastic | intellijidea | gcloud | podman | podmandesktop | lens | dbeaver | \
+      cygwin | node | nvm | pyenv | insomnia | gradle | xampp | elastic | intellijidea | gcloud | podman | podmandesktop | openlens | lens | dbeaver | \
       mongodbcompass | springtoolsuite | docker | vcxsrv | wsl | wsl_ubuntu)
       APPS="$APPS $1"
       APPS_BY_ARGS=1
