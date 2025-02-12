@@ -30,8 +30,12 @@ if [ -n "$XDG_RUNTIME_DIR" ] && [ ! -d "$XDG_RUNTIME_DIR" ]; then
   sudo mkdir -p "$XDG_RUNTIME_DIR" && sudo chown "$USER" "$XDG_RUNTIME_DIR"
 fi
 
-# Add pipx binary, go in the path
-pathAppend ~/.local/bin /usr/local/go/bin >/dev/null 2>&1
+# Add pipx binary, go, waterfox in the path
+pathAppend \
+  ~/.local/bin \
+  /usr/local/go/bin \
+  /usr/local/waterfox \
+  >/dev/null 2>&1
 
 alias dockerd_kill="pgrep dockerd | xargs --no-run-if-empty sudo kill"
 
