@@ -3,6 +3,7 @@
 function setup_openlens() {
   local ERROR=$SETUP_ERROR_CONTINUE
   local lens="$APPS_ROOT/PortableApps/OpenLens"
+  local git_path="$APPS_ROOT/PortableApps/PortableGit"
 
   mkdir -p "$lens"
 
@@ -13,6 +14,11 @@ function setup_openlens() {
   fi
 
   [ ! -f "$lens/OpenLens.exe" ] && echo "Error: binary is not installed" && return "$ERROR"
+
+  if [ ! -f "$git_path/bin/stern.exe" ]; then
+    echoColor 36 "Adding stern..."
+    download_tarball -e -d "$git_path/bin" "https://github.com/stern/stern/releases/download/v1.32.0/stern_1.32.0_windows_amd64.tar.gz"
+  fi
 
   # Better integrate in PortableApps menu
   rsync -vau "$SETUP_TOOLS_ROOT/openlens/OpenLens" "$APPS_ROOT/PortableApps/"

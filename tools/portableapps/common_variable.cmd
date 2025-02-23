@@ -5,7 +5,7 @@ set APPS_ROOT=%CD%
 set HOME=%APPS_ROOT%\home
 
 if not "%WINDOWS_USERPROFILE%" EQU "" (
-  goto: override
+  goto :override
 )
 @REM Save some system variables
 set WINDOWS_HOMEDRIVE=%HOMEDRIVE%
