@@ -35,7 +35,7 @@ main() {
   tmp=$(mktemp)
   apt list --installed >"$tmp"
   packages=
-  for package in jq $(git config -f "$WSL_APPS_ROOT"/home/.common_env.ini wsl-ubuntu.apt-packages); do
+  for package in jq $(git config -f "$WSL_APPS_ROOT"/home/.common_env.ini wsl-ubuntu.apt-packages | tr ',' ' '); do
     grep -qEe "^$package/" "$tmp" && continue
     packages="$packages $package"
   done
