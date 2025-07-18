@@ -68,7 +68,7 @@ function setup_gitbash() {
   fi
 
   # Intall zstd
-  local zstd_version="1.5.6"
+  local zstd_version="1.5.7"
   if [ ! -f "$git_path/usr/bin/zstd.exe" ]; then
     echoColor 36 "Adding zstd..."
     if [ ! -f "$APPS_ROOT/PortableApps/PortableGit/zstd/zstd.exe" ]; then
@@ -76,7 +76,7 @@ function setup_gitbash() {
         echo "Unable to retrieve zstd" && return "$ERROR"
       fi
     fi
-    zstd_version="1.5.6-1-x86_64"
+    zstd_version="1.5.7-1-x86_64"
     download_tarball -o "$APPS_ROOT/PortableApps/PortableGit/libzstd.pkg.tar.zst" "http://repo.msys2.org/msys/x86_64/libzstd-${zstd_version}.pkg.tar.zst"
     download_tarball -o "$APPS_ROOT/PortableApps/PortableGit/zstd.pkg.tar.zst" "http://repo.msys2.org/msys/x86_64/zstd-${zstd_version}.pkg.tar.zst"
     "$APPS_ROOT/PortableApps/PortableGit/zstd/zstd.exe" -d "$APPS_ROOT/PortableApps/PortableGit/libzstd.pkg.tar.zst"
@@ -88,8 +88,8 @@ function setup_gitbash() {
 
   # Install rsync
   local extra_tools=(
-    'msys-xxhash-0.dll:libxxhash-0.8.1-1-x86_64.pkg.tar.zst'
-    'rsync.exe:rsync-3.3.0-1-x86_64.pkg.tar.zst'
+    'msys-xxhash-0.dll:libxxhash-0.8.3-1-x86_64.pkg.tar.zst'
+    'rsync.exe:rsync-3.4.1-1-x86_64.pkg.tar.zst'
   )
   # Install extra tools from ini
   extra_tools+=($(git --no-pager config -f "$HOME/.common_env.ini" --get-all gitbash.msystool 2>/dev/null | tr '\n' ' '))
