@@ -72,9 +72,6 @@ if ((Test-Admin) -eq $false) {
   }
   else {
     try {
-      # Create a virtual drive for the user home not as admin
-      Create-User-VHD
-
       # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.4
       # Ensure to have the rights to run script and run it
       $policy = 'Bypass'
@@ -303,6 +300,7 @@ function Check-WSL-Setup {
 
 Setup-WSL
 Setup-NatNetwork
+Create-User-VHD
 Install-WSL
 Mount-User-VHD
 
