@@ -1,7 +1,7 @@
 # Ensure to have elevated rights
 param(
   [switch]$elevated,
-  [string]$ubuntuVersion = 'Ubuntu-24.04',
+  [string]$ubuntuVersion = 'Ubuntu-26.04',
   [string]$installName = '',
   [string]$installPath = '',
   [string]$installUserHome = '',
@@ -212,28 +212,33 @@ function Install-Standard-WSL {
 }
 
 function Install-Custom-WSL {
-  if ($ubuntuVersion -eq 'Ubuntu-24.04') {
-    $url = 'https://cloud-images.ubuntu.com/daily/server/noble/current/noble-server-cloudimg-amd64-root.tar.xz'
+  if ($ubuntuVersion -eq 'Ubuntu-26.04') {
+    $url = 'https://cloud-images.ubuntu.com/daily/server/resolute/current/resolute-server-cloudimg-amd64-root.tar.xz'
   }
   else {
-    if ($ubuntuVersion -eq 'Ubuntu-22.04') {
-      $url = 'https://cloud-images.ubuntu.com/daily/server/jammy/current/jammy-server-cloudimg-amd64-root.tar.xz'
+    if ($ubuntuVersion -eq 'Ubuntu-24.04') {
+      $url = 'https://cloud-images.ubuntu.com/daily/server/noble/current/noble-server-cloudimg-amd64-root.tar.xz'
     }
     else {
-      if ($ubuntuVersion -eq 'Ubuntu-20.04') {
-        $url = 'https://cloud-images.ubuntu.com/daily/server/focal/current/focal-server-cloudimg-amd64-root.tar.xz'
+      if ($ubuntuVersion -eq 'Ubuntu-22.04') {
+        $url = 'https://cloud-images.ubuntu.com/daily/server/jammy/current/jammy-server-cloudimg-amd64-root.tar.xz'
       }
       else {
-        if ($ubuntuVersion -eq 'Ubuntu-18.04') {
-          $url = 'https://cloud-images.ubuntu.com/daily/server/bionic/current/bionic-server-cloudimg-amd64-root.tar.xz'
+        if ($ubuntuVersion -eq 'Ubuntu-20.04') {
+          $url = 'https://cloud-images.ubuntu.com/daily/server/focal/current/focal-server-cloudimg-amd64-root.tar.xz'
         }
         else {
-          if ($ubuntuVersion -eq 'Ubuntu-16.04') {
-            $url = 'https://cloud-images.ubuntu.com/daily/server/xenial/current/xenial-server-cloudimg-amd64-root.tar.xz'
+          if ($ubuntuVersion -eq 'Ubuntu-18.04') {
+            $url = 'https://cloud-images.ubuntu.com/daily/server/bionic/current/bionic-server-cloudimg-amd64-root.tar.xz'
           }
           else {
-            pauseError('ERROR: Unsupported Ubuntu version "{0}"' -f $ubuntuVersion)
-            [Environment]::Exit(1)
+            if ($ubuntuVersion -eq 'Ubuntu-16.04') {
+              $url = 'https://cloud-images.ubuntu.com/daily/server/xenial/current/xenial-server-cloudimg-amd64-root.tar.xz'
+            }
+            else {
+              pauseError('ERROR: Unsupported Ubuntu version "{0}"' -f $ubuntuVersion)
+              [Environment]::Exit(1)
+            }
           }
         }
       }

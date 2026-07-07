@@ -29,7 +29,6 @@
 This project aim to facilitate the setup of a common environment for people with completely different computer skills (developper, tester, business analyst, etc.). It's first part facilitate a common usage of GIT and python for **Linux**, **macOS** and **Windows**. The second part, for Windows users, is focused on installing a portable tools environment.
 
 1. **Common core**
-
    - **Git**: common configuration and aliases to simplify git usage, check this [**_GIT GUIDE_**](readme/README_git_guide.md).
    - **Python**: brings a simple way to create, list and switch between several python environments (eg. between python 2.x 3.x)
 
@@ -68,7 +67,6 @@ git clone https://github.com/nmarghetti/common_env.git
 1. **Common core**
 
    The common part works for the following environment:
-
    - Linux via bash or zsh
    - macOS via bash or zsh
    - Windows
@@ -77,7 +75,6 @@ git clone https://github.com/nmarghetti/common_env.git
      - Powershell by invoking wsl or bash (requires the corresponding one above)
 
    Either you are on **Windows**, **Linux** or **macOS** and using **bash** or **zsh**, you would get:
-
    - **Python** virtual environment easy to handle with few simple shell functions:
      - **pyinfo**: display information about the current python in use
      - **pylist**: list your available python venv
@@ -96,7 +93,6 @@ git clone https://github.com/nmarghetti/common_env.git
 1. **Windows portable env**
 
    If you are on Windows, you can get a portable development environment (it is not hardly installed in the system, all the applications are portable) with the following tools especially configured:
-
    - **Visual Studio Code** (~250M) with several extensions
    - **Git for Windows** (~280M)
      - tools: **curl**, **rsync**, **tree**, **wget** (~6M)
@@ -127,13 +123,12 @@ git clone https://github.com/nmarghetti/common_env.git
    - **Cygwin**
    - **XAMPP**
    - **Podman Desktop**
-   - **WSL Ubuntu** (Install and configure Ubuntu-24.04 within the common_env, but not fully portable)
+   - **WSL Ubuntu** (Install and configure Ubuntu-26.04 within the common_env, but not fully portable)
    - **Docker Desktop** (Install Docker Desktop in the system, it is not portable)
    - **Podman** (Install podman, it is not portable)
    - **VcXsrv** (Install VcXsrv Windows X Server in the system, it is not portable)
 
    You could optionnally get a bunch of other applications from [PortableApps](https://portableapps.com/):
-
    - Notepad++
    - Google Chrome
    - Mozilla Firefox
@@ -159,20 +154,17 @@ You can define those environment variables to customize git:
 ### Cmder shortcuts
 
 1. Tasks
-
    - alt+shift+1: open task 1 --> open Git-bash
    - alt+shift+2: open task 2 --> ssh remote machine 1
    - etc.
 
 1. Split screen
-
    - ctrl+alt+right arrow: split vertically
    - ctrl+alt+down arrow: split horizontally
    - ctrl+shift+arrow (up, down, left, right): change the focus to the terminal of the arrow direction
    - ctrl+alt+shift+arrow (up, down, left, right): increase the size of the current terminal in the arrow direction
 
 1. Tabs
-
    - ctrl+tab: focus on next tab on the right
    - ctrl+shift+tab: focus on next tab on the left
    - win+alf+arrow (left, right): move the current tab to the arrow direction
@@ -188,12 +180,10 @@ You can define those environment variables to customize git:
 ## Usefull links
 
 1. **Git**
-
    - [Git for Windows](https://git-scm.com/), [Git command description](https://git-scm.com/docs/git), [Git cheatsheet](https://ndpsoftware.com/git-cheatsheet.html)
    - [Reference Manual](https://git-scm.com/docs), [Pro Git online book](https://git-scm.com/book/en/v2), [Tutorials](https://git-scm.com/doc/ext)
 
 1. **Python**
-
    - [Homepage](https://www.python.org/)
    - Documentation: [Python2.7](https://docs.python.org/2.7/) / [Python 3.x](https://docs.python.org/3/)
    - [Pip](https://pip.pypa.io/en/stable/reference/pip_config/)
@@ -207,18 +197,15 @@ You can define those environment variables to customize git:
      - [Python(x-y)](http://python-xy.github.io/)
 
 1. **Visual Studio Code**
-
    - [Portable mode](https://code.visualstudio.com/docs/editor/portable)
    - [Setup network](https://code.visualstudio.com/docs/setup/network)
    - [Command Line Interface](https://code.visualstudio.com/docs/editor/command-line)
 
 1. **PortableApps**
-
    - [Homepage](https://portableapps.com/)
    - [App setting](https://portableapps.com/development/portableapps.com_format#appinfo)
 
 1. **Xterm**
-
    - [PuTTY](https://www.putty.org/)
    - [SuperPutty](https://github.com/jimradford/superputty)
    - [Cmder](https://cmder.net/): [ConEmu](https://conemu.github.io/), [Clink](https://mridgers.github.io/clink/)
@@ -228,7 +215,6 @@ You can define those environment variables to customize git:
    - [Tabby](https://tabby.sh/)
 
 1. **Other**
-
    - [Bash/Unix/Linux tutorial](https://www.tutorialspoint.com/unix_commands/bash.htm)
    - Bash: [Reference manual](https://www.gnu.org/software/bash/manual/html_node/index.html#SEC_Contents), [style](https://github.com/progrium/bashstyle), [obsolete](https://wiki.bash-hackers.org/scripting/obsolete), [cheatsheet](https://bertvv.github.io/cheat-sheets/Bash.html), [parse args](https://unix.stackexchange.com/questions/62950/getopt-getopts-or-manual-parsing-what-to-use-when-i-want-to-support-both-shor), [ArgBash](https://argbash.io/send_template#generated), [Parameter expansion](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html), [set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
    - [Bash-it](https://github.com/Bash-it/bash-it): [doc](https://bash-it.readthedocs.io/en/latest/themes-list/)
