@@ -3,10 +3,11 @@
 setup_waterfox() {
   local ERROR=1
   local wishVersion
-  wishVersion=$(git --no-pager config -f "$WSL_APPS_ROOT/home/.common_env.ini" --get wsl-ubuntu-waterfox.version || echo "6.5.4")
+  wishVersion=$(git --no-pager config -f "$WSL_APPS_ROOT/home/.common_env.ini" --get wsl-ubuntu-waterfox.version || echo "6.6.15")
   if [ ! -f /usr/local/waterfox/waterfox ] || ! /usr/local/waterfox/waterfox --version | grep -q "$wishVersion"; then
     curl -sSfLO "https://cdn1.waterfox.net/waterfox/releases/${wishVersion}/Linux_x86_64/waterfox-${wishVersion}.tar.bz2" &&
       sudo tar -xvjf "waterfox-${wishVersion}.tar.bz2" -C /usr/local/ &&
+      sudo ln -s /usr/local/waterfox/waterfox /usr/local/bin/waterfox &&
       rm -f "waterfox-${wishVersion}.tar.bz2"
   fi
 
